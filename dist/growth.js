@@ -101,9 +101,6 @@
     comparisonSlots.innerHTML = state
       .map((slot, slotIndex) => {
         const totals = getTotals(slot);
-        const filled = categories.filter(({ key }) => slot[key]).length;
-        const effectiveFilled = filled + (slot.class && !getClassMountType(slot.class) && !slot.animal ? 1 : 0);
-        const statTotal = Object.values(totals).reduce((sum, value) => sum + value, 0);
         const selectionHtml = categories
           .map(({ key, label }) => {
             const item = itemById.get(slot[key]);
@@ -151,11 +148,7 @@
         return `
           <article class="comparison-card" aria-label="比較枠${slotIndex + 1}">
             <div class="comparison-card-title">
-              <div>
-                <span>比較枠 ${slotIndex + 1}</span>
-                <strong>${effectiveFilled === 3 ? "合計成長率" : `${effectiveFilled}/3 選択中`}</strong>
-              </div>
-              <div class="growth-grand-total"><span>総計</span><strong>${statTotal}</strong></div>
+              <strong>比較枠 ${slotIndex + 1}</strong>
             </div>
             <div class="growth-selection-grid">${selectionHtml}</div>
             <div class="growth-stats-grid">${statsHtml}</div>

@@ -677,7 +677,7 @@ dialog p {
 
 .comparison-stack {
   display: grid;
-  gap: 14px;
+  gap: 10px;
 }
 
 .comparison-card {
@@ -688,58 +688,32 @@ dialog p {
 }
 
 .comparison-card-title {
-  min-height: 58px;
+  min-height: 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
-  padding: 10px 14px;
+  padding: 6px 12px;
   color: white;
   background: var(--navy-soft);
 }
 
-.comparison-card-title > div:first-child {
-  display: grid;
-  gap: 2px;
-}
-
-.comparison-card-title span {
-  color: #c9dce7;
-  font-size: 0.72rem;
-  font-weight: 700;
-}
-
 .comparison-card-title strong {
-  font-size: 1rem;
-}
-
-.growth-grand-total {
-  min-width: 76px;
-  display: grid;
-  grid-template-columns: auto auto;
-  align-items: baseline;
-  gap: 8px;
-  text-align: right;
-}
-
-.growth-grand-total strong {
-  font-size: 1.45rem;
-  font-variant-numeric: tabular-nums;
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
 }
 
 .growth-selection-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 9px;
-  padding: 12px;
+  gap: 7px;
+  padding: 8px;
 }
 
 .growth-drop-zone {
-  min-height: 76px;
+  min-height: 60px;
   display: grid;
   align-content: center;
   gap: 4px;
-  padding: 11px 12px;
+  padding: 8px 10px;
   border: 1px dashed #aebdca;
   border-radius: 10px;
   color: #6b7a88;
@@ -831,7 +805,7 @@ dialog p {
   display: grid;
   justify-items: center;
   gap: 3px;
-  padding: 11px 5px 12px;
+  padding: 7px 5px 8px;
   border-right: 1px solid var(--line);
 }
 
@@ -846,7 +820,7 @@ dialog p {
 }
 
 .growth-stat strong {
-  font-size: 1.12rem;
+  font-size: 1.04rem;
   font-variant-numeric: tabular-nums;
 }
 
