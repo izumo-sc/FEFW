@@ -1,6 +1,6 @@
 (() => {
   const data = window.GROWTH_DATA;
-  const book1ClassOrder = new Map(window.BOOK1_CLASS_ORDER.map((name, index) => [name, index]));
+  const evolutionClassOrder = new Map(window.EVOLUTION_CLASS_ORDER.map((name, index) => [name, index]));
   const storageKey = "fefw-growth-comparison-v1";
   const categories = [
     { key: "character", dataKey: "characters", label: "キャラ" },
@@ -164,11 +164,11 @@
       .map(({ key, dataKey, label }) => {
         const query = queries[key].trim().toLocaleLowerCase("ja");
         const sourceItems =
-          key === "class" && classOrderMode === "book1"
+          key === "class" && classOrderMode === "evolution"
             ? [...data[dataKey]].sort(
                 (left, right) =>
-                  (book1ClassOrder.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
-                  (book1ClassOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER),
+                  (evolutionClassOrder.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+                  (evolutionClassOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER),
               )
             : data[dataKey];
         const filtered = sourceItems.filter((item) =>
@@ -198,7 +198,7 @@
                 <span>${data[dataKey].length}</span>
                 ${
                   key === "class"
-                    ? `<span class="class-order-state${classOrderMode === "book1" ? " is-active" : ""}">${classOrderMode === "book1" ? "Book1順" : "通常順"}</span><button class="class-order-button" type="button" data-toggle-class-order aria-label="${classOrderMode === "book1" ? "通常順に戻す" : "Book1順に変更"}">並び変更</button>`
+                    ? `<span class="class-order-state${classOrderMode === "evolution" ? " is-active" : ""}">${classOrderMode === "evolution" ? "進化順" : "通常順"}</span><button class="class-order-button" type="button" data-toggle-class-order aria-label="${classOrderMode === "evolution" ? "通常順に戻す" : "進化順に変更"}">並び変更</button>`
                     : ""
                 }
               </div>
@@ -294,9 +294,9 @@
   growthLists.addEventListener("click", (event) => {
     const orderButton = event.target.closest("[data-toggle-class-order]");
     if (orderButton) {
-      classOrderMode = classOrderMode === "book1" ? "default" : "book1";
+      classOrderMode = classOrderMode === "evolution" ? "default" : "evolution";
       renderLists();
-      announce(`兵種一覧を${classOrderMode === "book1" ? "Book1順" : "通常順"}に変更しました。`);
+      announce(`兵種一覧を${classOrderMode === "evolution" ? "進化順" : "通常順"}に変更しました。`);
       return;
     }
     const button = event.target.closest("[data-pull-id]");

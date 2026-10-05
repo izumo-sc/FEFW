@@ -1,4 +1,4 @@
-window.BOOK1_CLASS_ORDER = [
+window.EVOLUTION_CLASS_ORDER = [
   "飛駝兵",
   "騎甲駝兵",
   "カラドリオス",
