@@ -867,7 +867,13 @@ dialog p {
   font-size: 1.02rem;
 }
 
-.growth-list-title > span {
+.growth-list-title-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.growth-list-title-actions > span {
   min-width: 28px;
   padding: 3px 7px;
   border-radius: 999px;
@@ -876,6 +882,33 @@ dialog p {
   font-size: 0.7rem;
   font-weight: 800;
   text-align: center;
+}
+
+.class-order-button {
+  min-height: 26px;
+  padding: 0 8px;
+  border: 1px solid #aebdca;
+  border-radius: 7px;
+  color: #36566d;
+  background: white;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+.class-order-button:hover,
+.class-order-button:focus-visible {
+  border-color: #397e9f;
+  color: white;
+  background: #237ba6;
+}
+
+.growth-list-title-actions > .class-order-state {
+  min-width: 54px;
+}
+
+.growth-list-title-actions > .class-order-state.is-active {
+  color: #1c6489;
+  background: #dceff7;
 }
 
 .growth-search {

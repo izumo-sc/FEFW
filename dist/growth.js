@@ -1,5 +1,6 @@
 (() => {
   const data = window.GROWTH_DATA;
+  const book1ClassOrder = new Map(window.BOOK1_CLASS_ORDER.map((name, index) => [name, index]));
   const storageKey = "fefw-growth-comparison-v1";
   const categories = [
     { key: "character", dataKey: "characters", label: "キャラ" },
@@ -41,6 +42,7 @@
 
   let state = loadState();
   const queries = { character: "", class: "", animal: "" };
+  let classOrderMode = "default";
 
   state.forEach((slot) => {
     if (slot.animal && getClassMountType(slot.class) !== getAnimalMountType(slot.animal)) slot.animal = null;
@@ -161,7 +163,15 @@
     growthLists.innerHTML = categories
       .map(({ key, dataKey, label }) => {
         const query = queries[key].trim().toLocaleLowerCase("ja");
-        const filtered = data[dataKey].filter((item) =>
+        const sourceItems =
+          key === "class" && classOrderMode === "book1"
+            ? [...data[dataKey]].sort(
+                (left, right) =>
+                  (book1ClassOrder.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+                  (book1ClassOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER),
+              )
+            : data[dataKey];
+        const filtered = sourceItems.filter((item) =>
           `${item.name} ${item.group}`.toLocaleLowerCase("ja").includes(query),
         );
 
@@ -184,7 +194,14 @@
           <section class="growth-list-column" aria-labelledby="${key}-list-title">
             <div class="growth-list-title">
               <h3 id="${key}-list-title">${label}</h3>
-              <span>${data[dataKey].length}</span>
+              <div class="growth-list-title-actions">
+                <span>${data[dataKey].length}</span>
+                ${
+                  key === "class"
+                    ? `<span class="class-order-state${classOrderMode === "book1" ? " is-active" : ""}">${classOrderMode === "book1" ? "Book1順" : "通常順"}</span><button class="class-order-button" type="button" data-toggle-class-order aria-label="${classOrderMode === "book1" ? "通常順に戻す" : "Book1順に変更"}">並び変更</button>`
+                    : ""
+                }
+              </div>
             </div>
             <label class="growth-search">
               <span class="sr-only">${label}を検索</span>
@@ -275,6 +292,13 @@
   }
 
   growthLists.addEventListener("click", (event) => {
+    const orderButton = event.target.closest("[data-toggle-class-order]");
+    if (orderButton) {
+      classOrderMode = classOrderMode === "book1" ? "default" : "book1";
+      renderLists();
+      announce(`兵種一覧を${classOrderMode === "book1" ? "Book1順" : "通常順"}に変更しました。`);
+      return;
+    }
     const button = event.target.closest("[data-pull-id]");
     if (!button) return;
     addToFirstAvailable(button.dataset.pullCategory, button.dataset.pullId);
