@@ -1,8 +1,12 @@
 import fs from "node:fs/promises";
 import { FileBlob, SpreadsheetFile } from "@oai/artifact-tool";
 
-const sourcePath = String.raw`C:\Users\miyu1\Documents\Codex\2026-09-21\s\outputs\inventory_check_20260930_screenshots\復興素材_所持数確認_2026-09-30_スクショ反映.xlsx`;
+const sourcePath = process.argv[2];
 const outputPath = new URL("./dist/materials.js", import.meta.url);
+
+if (!sourcePath) {
+  throw new Error("使い方: node extract-materials.mjs <素材集計Excelのパス>");
+}
 
 const blob = await FileBlob.load(sourcePath);
 const workbook = await SpreadsheetFile.importXlsx(blob);

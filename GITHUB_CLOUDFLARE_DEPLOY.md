@@ -12,7 +12,7 @@
 次のコマンドを上から実行します。
 
 ```powershell
-Set-Location "C:\Users\miyu1\Documents\Codex\2026-09-21\s\material-tracker-site"
+Set-Location "<リポジトリの保存先>\material-tracker-site"
 
 $GitHubUser = "izumo-sc"
 $Repository = "FEFW"
@@ -37,7 +37,7 @@ GitHubの認証画面が出た場合は、自分のGitHubアカウントでロ�
 `detected dubious ownership` と表示された場合だけ、次を一度実行してからやり直します。
 
 ```powershell
-git config --global --add safe.directory "C:/Users/miyu1/Documents/Codex/2026-09-21/s/material-tracker-site"
+git config --global --add safe.directory (Get-Location).Path
 ```
 
 ## 3. Cloudflare PagesとGitHubを接続する
@@ -77,7 +77,7 @@ git config --global --add safe.directory "C:/Users/miyu1/Documents/Codex/2026-09
 ## 4. 次回以降の更新コマンド
 
 ```powershell
-Set-Location "C:\Users\miyu1\Documents\Codex\2026-09-21\s\material-tracker-site"
+Set-Location "<リポジトリの保存先>\material-tracker-site"
 git add .
 git commit -m "Update material data"
 git push
