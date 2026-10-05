@@ -87,10 +87,17 @@
     return item.group;
   }
 
-  function getTotals(slot) {
+  function selectedItemId(slotIndex, category) {
+    if (category === "character" && slotIndex === 1 && !state[1].character) {
+      return state[0].character;
+    }
+    return state[slotIndex][category];
+  }
+
+  function getTotals(slotIndex) {
     const totals = Object.fromEntries(data.stats.map((stat) => [stat, 0]));
     categories.forEach(({ key }) => {
-      const item = itemById.get(slot[key]);
+      const item = itemById.get(selectedItemId(slotIndex, key));
       if (!item) return;
       data.stats.forEach((stat) => {
         totals[stat] += item.stats[stat];
@@ -102,10 +109,11 @@
   function renderSlots() {
     comparisonSlots.innerHTML = state
       .map((slot, slotIndex) => {
-        const totals = getTotals(slot);
+        const totals = getTotals(slotIndex);
         const selectionHtml = categories
           .map(({ key, label }) => {
-            const item = itemById.get(slot[key]);
+            const isShadow = key === "character" && slotIndex === 1 && !slot.character && Boolean(state[0].character);
+            const item = itemById.get(selectedItemId(slotIndex, key));
             const classMountType = getClassMountType(slot.class);
             if (!item) {
               const emptyMessage =
@@ -126,12 +134,16 @@
 
             return `
               <div class="growth-drop-zone has-item" data-slot="${slotIndex}" data-category="${key}">
-                <div class="selected-growth-item" draggable="true" data-slot="${slotIndex}" data-category="${key}" data-id="${item.id}">
+                <div class="selected-growth-item${isShadow ? " is-shadow" : ""}" ${isShadow ? "" : `draggable="true" data-slot="${slotIndex}" data-category="${key}" data-id="${item.id}"`}>
                   <div>
-                    <span>${label} · ${itemMeta(key, item)}</span>
+                    <span>${label} · ${isShadow ? "シャドウ" : itemMeta(key, item)}</span>
                     <strong>${item.name}</strong>
                   </div>
-                  <button class="remove-growth-item" type="button" data-remove-slot="${slotIndex}" data-remove-category="${key}" aria-label="${item.name}を削除">削除</button>
+                  ${
+                    isShadow
+                      ? '<span class="shadow-label">自動</span>'
+                      : `<button class="remove-growth-item" type="button" data-remove-slot="${slotIndex}" data-remove-category="${key}" aria-label="${item.name}を削除">削除</button>`
+                  }
                 </div>
               </div>`;
           })
@@ -363,7 +375,12 @@
   });
 
   swapButton.addEventListener("click", () => {
-    [state[0], state[1]] = [state[1], state[0]];
+    if (state[0].character && !state[1].character) {
+      [state[0].class, state[1].class] = [state[1].class, state[0].class];
+      [state[0].animal, state[1].animal] = [state[1].animal, state[0].animal];
+    } else {
+      [state[0], state[1]] = [state[1], state[0]];
+    }
     saveState();
     renderSlots();
     announce("比較枠1と比較枠2を入れ替えました。");

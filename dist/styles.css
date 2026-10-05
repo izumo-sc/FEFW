@@ -770,6 +770,25 @@ dialog p {
   opacity: 0.45;
 }
 
+.selected-growth-item.is-shadow {
+  cursor: default;
+}
+
+.growth-drop-zone:has(.selected-growth-item.is-shadow) {
+  border-color: #b8a6ca;
+  background: #f4f0f8;
+}
+
+.shadow-label {
+  flex: none;
+  padding: 4px 7px;
+  border-radius: 999px;
+  color: #665079;
+  background: #e4daed;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
 .remove-growth-item {
   flex: none;
   padding: 6px 8px;
