@@ -954,6 +954,12 @@ dialog p {
   cursor: grab;
 }
 
+.growth-list-row.has-requirements {
+  grid-template-columns: minmax(82px, 1fr) minmax(0, auto) 48px;
+  display: grid;
+  gap: 8px;
+}
+
 .growth-list-row:last-child {
   border-bottom: 0;
 }
@@ -966,6 +972,30 @@ dialog p {
   min-width: 0;
   display: grid;
   gap: 3px;
+}
+
+.growth-list-row > .class-requirements {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+}
+
+.growth-list-row .class-requirement {
+  overflow: visible;
+  color: #52606d;
+  font-size: 0.65rem;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.growth-list-row .class-requirement.is-required {
+  color: #152535;
+  font-weight: 900;
 }
 
 .growth-list-row strong {

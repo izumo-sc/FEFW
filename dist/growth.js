@@ -1,5 +1,6 @@
 (() => {
   const data = window.GROWTH_DATA;
+  const classRequirements = window.CLASS_REQUIREMENTS || {};
   const evolutionClassOrder = new Map(window.EVOLUTION_CLASS_ORDER.map((name, index) => [name, index]));
   const storageKey = "fefw-growth-comparison-v1";
   const categories = [
@@ -186,16 +187,27 @@
 
         const rows = filtered.length
           ? filtered
-              .map(
-                (item) => `
-                  <div class="growth-list-row" draggable="true" data-category="${key}" data-id="${item.id}">
-                    <div>
+              .map((item) => {
+                const requirements = key === "class" ? classRequirements[item.name] || [] : [];
+                const requirementsHtml = requirements.length
+                  ? `<div class="class-requirements" aria-label="要求技能">${requirements
+                      .map(
+                        (requirement) =>
+                          `<span class="class-requirement${requirement.required ? " is-required" : ""}" title="${requirement.required ? "必修" : "選択"}">${requirement.skill}${requirement.rank}</span>`,
+                      )
+                      .join("")}</div>`
+                  : "";
+
+                return `
+                  <div class="growth-list-row${requirements.length ? " has-requirements" : ""}" draggable="true" data-category="${key}" data-id="${item.id}">
+                    <div class="growth-list-name">
                       <span>${itemMeta(key, item)}</span>
                       <strong>${item.name}</strong>
                     </div>
+                    ${requirementsHtml}
                     <button class="pull-button" type="button" data-pull-category="${key}" data-pull-id="${item.id}">PULL</button>
-                  </div>`,
-              )
+                  </div>`;
+              })
               .join("")
           : '<p class="growth-list-empty">該当する項目がありません。</p>';
 
