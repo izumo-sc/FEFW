@@ -448,8 +448,7 @@ dialog p {
   border-bottom: 1px solid rgb(255 255 255 / 0.14);
 }
 
-.home-brand,
-.nav-link {
+.home-brand {
   color: white;
   font-weight: 800;
   text-decoration: none;
@@ -458,18 +457,6 @@ dialog p {
 .home-brand {
   font-size: 1rem;
   letter-spacing: 0.04em;
-}
-
-.nav-link {
-  padding: 9px 13px;
-  border: 1px solid rgb(255 255 255 / 0.25);
-  border-radius: 9px;
-  font-size: 0.84rem;
-}
-
-.nav-link:hover,
-.nav-link:focus-visible {
-  background: rgb(255 255 255 / 0.1);
 }
 
 .hero-copy {
@@ -489,26 +476,6 @@ dialog p {
   color: #d8e7ef;
   font-size: clamp(0.96rem, 2vw, 1.08rem);
   line-height: 1.85;
-}
-
-.primary-action {
-  width: fit-content;
-  min-height: 48px;
-  display: inline-flex;
-  align-items: center;
-  gap: 18px;
-  padding: 0 20px;
-  border-radius: 10px;
-  color: var(--navy);
-  background: white;
-  font-weight: 800;
-  text-decoration: none;
-  box-shadow: 0 10px 30px rgb(0 0 0 / 0.18);
-}
-
-.primary-action:hover,
-.primary-action:focus-visible {
-  background: #edf7fb;
 }
 
 .home-main {
