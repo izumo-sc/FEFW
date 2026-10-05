@@ -51,4 +51,12 @@ window.WEAPONS = [
     name: "アーカイヴB",
     acquisition: "カメミリア州・滝の裏の洞窟",
   },
+  {
+    name: "至福なる舌",
+    acquisition: "ダナン海・バロールの墓",
+  },
+  {
+    name: "アーカイヴZ",
+    acquisition: "ニュシアデス州・南の通路",
+  },
 ];
