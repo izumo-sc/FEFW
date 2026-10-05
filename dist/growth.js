@@ -149,9 +149,6 @@
 
         return `
           <article class="comparison-card" aria-label="比較枠${slotIndex + 1}">
-            <div class="comparison-card-title">
-              <strong>比較枠 ${slotIndex + 1}</strong>
-            </div>
             <div class="growth-selection-grid">${selectionHtml}</div>
             <div class="growth-stats-grid">${statsHtml}</div>
           </article>`;

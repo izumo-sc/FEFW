@@ -677,7 +677,7 @@ dialog p {
 
 .comparison-stack {
   display: grid;
-  gap: 10px;
+  gap: 6px;
 }
 
 .comparison-card {
@@ -687,25 +687,11 @@ dialog p {
   background: #fbfcfd;
 }
 
-.comparison-card-title {
-  min-height: 32px;
-  display: flex;
-  align-items: center;
-  padding: 6px 12px;
-  color: white;
-  background: var(--navy-soft);
-}
-
-.comparison-card-title strong {
-  font-size: 0.78rem;
-  letter-spacing: 0.05em;
-}
-
 .growth-selection-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 7px;
-  padding: 8px;
+  padding: 6px 8px;
 }
 
 .growth-drop-zone {
