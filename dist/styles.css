@@ -470,6 +470,12 @@ dialog p {
   line-height: 1.18;
 }
 
+.hero-author {
+  margin: 14px 0 0;
+  color: #d8e7ef;
+  font-size: 0.9rem;
+}
+
 .hero-description {
   max-width: 680px;
   margin: 20px 0 28px;
