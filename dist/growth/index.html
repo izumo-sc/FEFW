@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#102438" />
+    <meta name="description" content="万紫千紅のキャラ・兵種・動物の成長率を組み合わせて比較できるページ。" />
+    <title>万紫千紅 成長率比較</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css?v=4" />
+  </head>
+  <body class="growth-page">
+    <header class="site-header growth-header">
+      <div>
+        <p class="eyebrow">FIRE EMBLEM FORTUNE'S WEAVE</p>
+        <h1>成長率比較</h1>
+      </div>
+      <p>キャラ＋兵種＋動物</p>
+    </header>
+
+    <main class="growth-main">
+      <section class="comparison-panel" aria-labelledby="comparison-title">
+        <div class="growth-section-heading">
+          <div>
+            <p class="section-kicker">COMPARE</p>
+            <h2 id="comparison-title">組み合わせ</h2>
+          </div>
+          <button id="swap-button" class="swap-button" type="button">上下を入れ替え</button>
+        </div>
+        <p class="growth-guide">下の名称をドラッグするか、PULLを押すと上から順に入ります。</p>
+        <div id="comparison-slots" class="comparison-stack"></div>
+        <p id="growth-status" class="growth-status" aria-live="polite"></p>
+      </section>
+
+      <section class="growth-library" aria-labelledby="library-title">
+        <div class="growth-section-heading">
+          <div>
+            <p class="section-kicker">LIST</p>
+            <h2 id="library-title">成長率一覧</h2>
+          </div>
+        </div>
+        <div id="growth-lists" class="growth-lists"></div>
+      </section>
+    </main>
+
+    <script src="../growth-data.js?v=1"></script>
+    <script src="../growth.js?v=1"></script>
+  </body>
+</html>
