@@ -205,7 +205,7 @@
                       <strong>${item.name}</strong>
                     </div>
                     ${requirementsHtml}
-                    <button class="pull-button" type="button" data-pull-category="${key}" data-pull-id="${item.id}">PULL</button>
+                    <button class="push-button" type="button" data-push-category="${key}" data-push-id="${item.id}">PUSH</button>
                   </div>`;
               })
               .join("")
@@ -320,9 +320,9 @@
       announce(`兵種一覧を${classOrderMode === "evolution" ? "進化順" : "通常順"}に変更しました。`);
       return;
     }
-    const button = event.target.closest("[data-pull-id]");
+    const button = event.target.closest("[data-push-id]");
     if (!button) return;
-    addToFirstAvailable(button.dataset.pullCategory, button.dataset.pullId);
+    addToFirstAvailable(button.dataset.pushCategory, button.dataset.pushId);
   });
 
   growthLists.addEventListener("input", (event) => {

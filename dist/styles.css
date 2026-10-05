@@ -822,7 +822,7 @@ dialog p {
 }
 
 .swap-button,
-.pull-button,
+.push-button,
 .remove-growth-item {
   border-radius: 8px;
   font-weight: 800;
@@ -1169,7 +1169,7 @@ dialog p {
   font-size: 0.86rem;
 }
 
-.pull-button {
+.push-button {
   flex: none;
   min-width: 48px;
   min-height: 30px;
@@ -1181,8 +1181,8 @@ dialog p {
   letter-spacing: 0.04em;
 }
 
-.pull-button:hover,
-.pull-button:focus-visible {
+.push-button:hover,
+.push-button:focus-visible {
   color: white;
   background: #237ba6;
 }
