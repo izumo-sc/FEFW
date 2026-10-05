@@ -59,4 +59,16 @@ window.WEAPONS = [
     name: "アーカイヴZ",
     acquisition: "ニュシアデス州・南の通路",
   },
+  {
+    name: "アウロラの聖槍・改",
+    acquisition: "",
+  },
+  {
+    name: "アンスウェラー・改",
+    acquisition: "",
+  },
+  {
+    name: "カーラの弓・改",
+    acquisition: "",
+  },
 ];
