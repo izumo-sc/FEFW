@@ -4,79 +4,90 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#102438" />
-    <meta
-      name="description"
-      content="ファイアーエムブレム 万紫千紅の復興素材を確認し、所持数と不足数を管理できる素材表。"
-    />
-    <title>万紫千紅 復興素材管理</title>
+    <meta name="description" content="ファイアーエムブレム 万紫千紅の攻略情報と便利な管理ツールをまとめたサイト。" />
+    <title>万紫千紅 攻略情報</title>
     <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./styles.css?v=2" />
   </head>
-  <body>
-    <header class="site-header">
-      <div>
+  <body class="home-page">
+    <header class="home-hero">
+      <nav class="home-nav" aria-label="メインナビゲーション">
+        <a class="home-brand" href="./" aria-current="page">万紫千紅 攻略情報</a>
+        <a class="nav-link" href="./materials/">復興素材管理</a>
+      </nav>
+
+      <div class="hero-copy">
         <p class="eyebrow">FIRE EMBLEM FORTUNE'S WEAVE</p>
-        <h1>復興素材管理</h1>
+        <h1>攻略情報を、必要なときに。</h1>
+        <p class="hero-description">
+          復興素材の管理を中心に、周回準備、成長率、技能、収集要素を順次まとめます。
+        </p>
+        <a class="primary-action" href="./materials/">
+          復興素材管理を開く
+          <span aria-hidden="true">→</span>
+        </a>
       </div>
-      <button id="reset-button" class="quiet-button" type="button">入力をリセット</button>
     </header>
 
-    <main>
-      <section class="summary" aria-label="集計">
-        <div class="summary-card">
-          <span>素材</span>
-          <strong id="material-count">0</strong>
+    <main class="home-main">
+      <section aria-labelledby="tools-title">
+        <div class="section-heading">
+          <div>
+            <p class="section-kicker">TOOLS &amp; GUIDES</p>
+            <h2 id="tools-title">攻略メニュー</h2>
+          </div>
+          <p>公開済みの項目から利用できます。</p>
         </div>
-        <div class="summary-card">
-          <span>必要数</span>
-          <strong id="required-total">0</strong>
-        </div>
-        <div class="summary-card accent">
-          <span>不足数</span>
-          <strong id="shortage-total">0</strong>
-        </div>
-      </section>
 
-      <section class="controls" aria-label="絞り込み">
-        <label class="search-box">
-          <span class="sr-only">素材名または採集ポイントを検索</span>
-          <input id="search-input" type="search" placeholder="素材名・採集ポイントを検索" autocomplete="off" />
-        </label>
-        <div class="filter-group" role="group" aria-label="区分">
-          <button class="filter-button is-active" data-filter="all" type="button">すべて</button>
-          <button class="filter-button" data-filter="魚" type="button">魚</button>
-          <button class="filter-button" data-filter="野菜" type="button">野菜</button>
-        </div>
-      </section>
+        <div class="feature-grid">
+          <a class="feature-card featured-card" href="./materials/">
+            <span class="status-badge is-live">公開中</span>
+            <span class="card-icon" aria-hidden="true">資</span>
+            <h3>復興素材管理</h3>
+            <p>必要数、所持数、不足数、採集ポイントを一覧で確認できます。</p>
+            <span class="card-link">開く <span aria-hidden="true">→</span></span>
+          </a>
 
-      <p id="save-status" class="save-status" aria-live="polite">入力内容はこのブラウザに自動保存されます</p>
+          <article class="feature-card is-coming">
+            <span class="status-badge">準備中</span>
+            <span class="card-icon" aria-hidden="true">順</span>
+            <h3>攻略順・周回準備</h3>
+            <p>各ルートの役割と、次の周回へ引き継ぐ準備をまとめます。</p>
+          </article>
 
-      <section class="materials-panel" aria-label="復興素材一覧">
-        <div class="table-header" aria-hidden="true">
-          <span>区分</span>
-          <span>素材名</span>
-          <span>必要数</span>
-          <span>所持数</span>
-          <span>不足</span>
-          <span>採集ポイント</span>
+          <article class="feature-card is-coming">
+            <span class="status-badge">準備中</span>
+            <span class="card-icon" aria-hidden="true">成</span>
+            <h3>キャラ・兵種成長率</h3>
+            <p>キャラクターと兵種の成長傾向を比較できる一覧です。</p>
+          </article>
+
+          <article class="feature-card is-coming">
+            <span class="status-badge">準備中</span>
+            <span class="card-icon" aria-hidden="true">技</span>
+            <h3>必要技能・習得スキル</h3>
+            <p>兵種ごとの必要技能と、技能レベルで習得するスキルを整理します。</p>
+          </article>
+
+          <article class="feature-card is-coming">
+            <span class="status-badge">準備中</span>
+            <span class="card-icon" aria-hidden="true">依</span>
+            <h3>クエスト素材</h3>
+            <p>クエストで要求される素材数と、主な入手場所を確認できます。</p>
+          </article>
+
+          <article class="feature-card is-coming">
+            <span class="status-badge">準備中</span>
+            <span class="card-icon" aria-hidden="true">呪</span>
+            <h3>呪宝、アーク、アーカイヴ</h3>
+            <p>各項目の効果と入手方法を、確認できた情報から掲載します。</p>
+          </article>
         </div>
-        <div id="materials-list"></div>
-        <p id="empty-state" class="empty-state" hidden>該当する素材がありません。</p>
       </section>
     </main>
 
-    <dialog id="reset-dialog">
-      <form method="dialog">
-        <h2>所持数をリセットしますか？</h2>
-        <p>入力した所持数をすべて0に戻します。</p>
-        <div class="dialog-actions">
-          <button value="cancel" class="quiet-button">キャンセル</button>
-          <button value="confirm" class="danger-button">リセット</button>
-        </div>
-      </form>
-    </dialog>
-
-    <script src="./materials.js"></script>
-    <script src="./app.js"></script>
+    <footer class="site-footer">
+      <p>万紫千紅 攻略情報</p>
+    </footer>
   </body>
 </html>

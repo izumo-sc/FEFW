@@ -45,7 +45,8 @@ git config --global --add safe.directory "C:/Users/miyu1/Documents/Codex/2026-09
 1. [Cloudflare Dashboard](https://dash.cloudflare.com/)を開く
 2. **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
 3. GitHubを選び、`FEFW` を指定する
-4. 次のビルド設定を入力する
+4. Project name は `fefw` にする
+5. 次のビルド設定を入力する
 
 | 設定 | 値 |
 |---|---|
@@ -56,6 +57,9 @@ git config --global --add safe.directory "C:/Users/miyu1/Documents/Codex/2026-09
 | Root directory | 空欄 |
 
 **Save and Deploy**を押すと公開されます。以後、`main`へpushするたびにCloudflare Pagesが自動更新します。
+
+公開URLは `https://fefw.pages.dev/`、復興素材管理は `https://fefw.pages.dev/materials/` になります。
+`fefw.pages.dev` が既に使われている場合は、短い任意名に変更します。
 
 ## 4. 次回以降の更新コマンド
 

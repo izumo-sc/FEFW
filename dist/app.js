@@ -2,7 +2,15 @@
   "use strict";
 
   const materials = Array.isArray(window.MATERIALS) ? window.MATERIALS : [];
-  const storageKey = "fortune-weave-material-inventory-v1";
+  const materialScreenshots = window.MATERIAL_SCREENSHOTS || {};
+  const routes = [
+    { key: "leda", label: "レダ" },
+    { key: "dietrich", label: "ディートリヒ" },
+    { key: "theodora", label: "セオドラ" },
+    { key: "kai", label: "カイ" },
+  ];
+  const storageKey = "fortune-weave-material-inventory-v2";
+  const legacyStorageKey = "fortune-weave-material-inventory-v1";
   const state = {
     inventory: loadInventory(),
     filter: "all",
@@ -19,8 +27,20 @@
 
   function loadInventory() {
     try {
-      const parsed = JSON.parse(localStorage.getItem(storageKey) || "{}");
-      return parsed && typeof parsed === "object" ? parsed : {};
+      const saved = localStorage.getItem(storageKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return parsed && typeof parsed === "object" ? parsed : {};
+      }
+
+      const legacy = JSON.parse(localStorage.getItem(legacyStorageKey) || "{}");
+      if (!legacy || typeof legacy !== "object") return {};
+      return Object.fromEntries(
+        Object.entries(legacy).map(([name, quantity]) => [
+          name,
+          { leda: normalizeQuantity(quantity), dietrich: 0, theodora: 0, kai: 0 },
+        ]),
+      );
     } catch {
       return {};
     }
@@ -40,6 +60,18 @@
     }, 1200);
   }
 
+  function quantitiesFor(name) {
+    const stored = state.inventory[name];
+    if (stored && typeof stored === "object") {
+      return Object.fromEntries(routes.map((route) => [route.key, normalizeQuantity(stored[route.key])]));
+    }
+    return { leda: normalizeQuantity(stored), dietrich: 0, theodora: 0, kai: 0 };
+  }
+
+  function totalQuantity(quantities) {
+    return routes.reduce((sum, route) => sum + normalizeQuantity(quantities[route.key]), 0);
+  }
+
   function filteredMaterials() {
     const query = state.query.trim().toLocaleLowerCase("ja");
     return materials.filter((material) => {
@@ -55,7 +87,8 @@
     emptyState.hidden = visible.length > 0;
 
     for (const material of visible) {
-      const held = normalizeQuantity(state.inventory[material.name]);
+      const quantities = quantitiesFor(material.name);
+      const held = totalQuantity(quantities);
       const shortage = Math.max(0, material.required - held);
       const row = document.createElement("article");
       row.className = `material-row${material.routeLimited ? " route-limited" : ""}${material.sectionStart ? " section-gap" : ""}`;
@@ -73,37 +106,84 @@
       required.className = "number-cell required";
       required.textContent = String(material.required);
 
-      const inputCell = document.createElement("span");
-      inputCell.className = "input-cell";
-      const input = document.createElement("input");
-      input.className = "material-input";
-      input.type = "number";
-      input.min = "0";
-      input.step = "1";
-      input.inputMode = "numeric";
-      input.value = String(held);
-      input.setAttribute("aria-label", `${material.name}の所持数`);
-      input.addEventListener("input", () => {
-        const quantity = normalizeQuantity(input.value);
-        input.value = String(quantity);
-        state.inventory[material.name] = quantity;
-        const nextShortage = Math.max(0, material.required - quantity);
-        shortageCell.textContent = String(nextShortage);
-        shortageCell.classList.toggle("is-complete", nextShortage === 0);
-        saveInventory();
-        updateSummary();
-      });
-      inputCell.append(input);
+      const routeInputs = document.createElement("span");
+      routeInputs.className = "route-inputs";
+
+      const totalCell = document.createElement("span");
+      totalCell.className = "owned-total";
+      totalCell.textContent = String(held);
+
+      for (const route of routes) {
+        const inputGroup = document.createElement("label");
+        inputGroup.className = `route-input-group route-${route.key}`;
+
+        const routeName = document.createElement("span");
+        routeName.className = "route-name";
+        routeName.textContent = route.label;
+
+        const input = document.createElement("input");
+        input.className = "material-input";
+        input.type = "number";
+        input.min = "0";
+        input.step = "1";
+        input.inputMode = "numeric";
+        input.value = String(quantities[route.key]);
+        input.setAttribute("aria-label", `${material.name}の${route.label}所持数`);
+        input.addEventListener("input", () => {
+          quantities[route.key] = normalizeQuantity(input.value);
+          input.value = String(quantities[route.key]);
+          state.inventory[material.name] = quantities;
+          const nextTotal = totalQuantity(quantities);
+          const nextShortage = Math.max(0, material.required - nextTotal);
+          totalCell.textContent = String(nextTotal);
+          shortageCell.textContent = String(nextShortage);
+          shortageCell.classList.toggle("is-complete", nextShortage === 0);
+          saveInventory();
+          updateSummary();
+        });
+
+        inputGroup.append(routeName, input);
+        routeInputs.append(inputGroup);
+      }
 
       const shortageCell = document.createElement("span");
       shortageCell.className = `shortage${shortage === 0 ? " is-complete" : ""}`;
       shortageCell.textContent = String(shortage);
 
-      const locations = document.createElement("span");
+      const locations = document.createElement("div");
       locations.className = "locations";
-      locations.textContent = material.locations.length ? material.locations.join(" / ") : "未確認";
+      if (material.locations.length) {
+        const locationList = document.createElement("ul");
+        for (const location of material.locations.slice(0, 4)) {
+          const item = document.createElement("li");
+          item.textContent = location;
+          locationList.append(item);
+        }
+        locations.append(locationList);
+        if (material.locations.length > 4) {
+          const remainder = document.createElement("span");
+          remainder.className = "location-remainder";
+          remainder.textContent = `ほか${material.locations.length - 4}件`;
+          locations.append(remainder);
+        }
+      } else {
+        locations.textContent = "未確認";
+      }
 
-      row.append(category, name, required, inputCell, shortageCell, locations);
+      const screenshot = document.createElement("div");
+      screenshot.className = "screenshot-cell";
+      const screenshotPath = materialScreenshots[material.name];
+      if (screenshotPath) {
+        const image = document.createElement("img");
+        image.src = screenshotPath;
+        image.alt = `${material.name}の採集場所`;
+        image.loading = "lazy";
+        screenshot.append(image);
+      } else {
+        screenshot.classList.add("is-empty");
+      }
+
+      row.append(category, name, required, routeInputs, totalCell, shortageCell, locations, screenshot);
       list.append(row);
     }
   }
@@ -111,7 +191,7 @@
   function updateSummary() {
     const requiredTotal = materials.reduce((sum, material) => sum + material.required, 0);
     const shortageTotal = materials.reduce((sum, material) => {
-      const held = normalizeQuantity(state.inventory[material.name]);
+      const held = totalQuantity(quantitiesFor(material.name));
       return sum + Math.max(0, material.required - held);
     }, 0);
     document.querySelector("#material-count").textContent = String(materials.length);
@@ -137,6 +217,7 @@
     if (resetDialog.returnValue !== "confirm") return;
     state.inventory = {};
     localStorage.removeItem(storageKey);
+    localStorage.removeItem(legacyStorageKey);
     render();
     updateSummary();
     saveStatus.textContent = "所持数をリセットしました";
