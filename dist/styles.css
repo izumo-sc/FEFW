@@ -605,6 +605,163 @@ dialog p {
   margin: 0;
 }
 
+/* Weapons */
+.weapons-page {
+  min-height: 100vh;
+}
+
+.weapons-header > div {
+  display: grid;
+  gap: 3px;
+}
+
+.weapons-header > p {
+  margin: 0;
+  color: #d7e6ee;
+  font-size: 0.86rem;
+}
+
+.weapons-main {
+  width: min(1120px, calc(100% - 32px));
+}
+
+.weapon-panel {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+  box-shadow: 0 12px 34px rgb(18 39 57 / 0.07);
+}
+
+.weapon-panel-heading {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 18px 22px;
+}
+
+.weapon-panel-heading h2 {
+  margin: 3px 0 0;
+  font-size: 1.35rem;
+}
+
+.weapon-count {
+  padding: 5px 10px;
+  border-radius: 999px;
+  color: #526577;
+  background: #edf2f5;
+  font-size: 0.76rem;
+  font-weight: 800;
+}
+
+.weapon-table-header,
+.weapon-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.75fr) minmax(260px, 1.55fr) minmax(340px, 1fr);
+  align-items: center;
+}
+
+.weapon-table-header {
+  min-height: 48px;
+  color: white;
+  background: var(--navy-soft);
+  font-size: 0.8rem;
+  font-weight: 800;
+}
+
+.weapon-table-header > span,
+.weapon-row > * {
+  padding: 11px 16px;
+}
+
+.weapon-route-labels,
+.weapon-route-checks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  align-items: center;
+  text-align: center;
+}
+
+.weapon-row {
+  min-height: 68px;
+  border-bottom: 1px solid #e1e7ec;
+}
+
+.weapon-row:last-child {
+  border-bottom: 0;
+}
+
+.weapon-name {
+  font-size: 0.94rem;
+}
+
+.weapon-acquisition {
+  margin: 0;
+  color: #536475;
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.weapon-check {
+  min-height: 44px;
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.weapon-check input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: #237ba6;
+}
+
+.weapon-check span {
+  display: none;
+  color: var(--muted);
+  font-size: 0.67rem;
+  font-weight: 700;
+}
+
+@media (max-width: 760px) {
+  .weapons-header {
+    align-items: start;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .weapon-table-header {
+    display: none;
+  }
+
+  .weapon-row {
+    grid-template-columns: 1fr;
+    padding: 14px;
+  }
+
+  .weapon-row > * {
+    padding: 0;
+  }
+
+  .weapon-acquisition {
+    margin-top: 7px;
+  }
+
+  .weapon-route-checks {
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #e1e7ec;
+  }
+
+  .weapon-check span {
+    display: block;
+  }
+}
+
 /* Growth comparison */
 .growth-page {
   min-height: 100vh;

@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#102438" />
+    <meta name="description" content="ファイアーエムブレム 万紫千紅の武器入手方法と、主人公ごとの入手状況を確認する一覧。" />
+    <title>万紫千紅 武器一覧</title>
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../styles.css?v=9" />
+  </head>
+  <body class="weapons-page">
+    <header class="site-header weapons-header">
+      <div>
+        <p class="eyebrow">FIRE EMBLEM FORTUNE'S WEAVE</p>
+        <h1>武器一覧</h1>
+      </div>
+      <p>入手状況はこのブラウザに保存されます</p>
+    </header>
+
+    <main class="weapons-main">
+      <section class="weapon-panel" aria-labelledby="weapon-list-title">
+        <div class="weapon-panel-heading">
+          <div>
+            <p class="section-kicker">WEAPONS</p>
+            <h2 id="weapon-list-title">入手チェック</h2>
+          </div>
+          <span id="weapon-count" class="weapon-count">0件</span>
+        </div>
+
+        <div class="weapon-table-header" aria-hidden="true">
+          <span>名前</span>
+          <span>入手方法</span>
+          <div class="weapon-route-labels">
+            <span>レダ</span>
+            <span>ディートリヒ</span>
+            <span>セオドラ</span>
+            <span>カイ</span>
+          </div>
+        </div>
+        <div id="weapon-list" class="weapon-list"></div>
+      </section>
+    </main>
+
+    <script src="../weapons-data.js?v=1"></script>
+    <script src="../weapons.js?v=1"></script>
+  </body>
+</html>
