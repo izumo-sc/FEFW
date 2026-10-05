@@ -521,6 +521,10 @@ dialog p {
   gap: 15px;
 }
 
+.other-card {
+  grid-column: -2 / -1;
+}
+
 .feature-card {
   position: relative;
   min-height: 242px;
