@@ -47,4 +47,8 @@ window.WEAPONS = [
     name: "苦悶の盾",
     acquisition: "リル海・地図にない島",
   },
+  {
+    name: "アーカイヴB",
+    acquisition: "カメミリア州・滝の裏の洞窟",
+  },
 ];
