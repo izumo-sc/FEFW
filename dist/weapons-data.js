@@ -61,14 +61,14 @@ window.WEAPONS = [
   },
   {
     name: "アウロラの聖槍・改",
-    acquisition: "",
+    acquisition: "調査中",
   },
   {
     name: "アンスウェラー・改",
-    acquisition: "",
+    acquisition: "12章イベント",
   },
   {
     name: "カーラの弓・改",
-    acquisition: "",
+    acquisition: "調査中",
   },
 ];
