@@ -48,6 +48,19 @@ git config --global --add safe.directory "C:/Users/miyu1/Documents/Codex/2026-09
 4. Project name は `fefw` にする
 5. 次のビルド設定を入力する
 
+> **「Wranglerの設定が検出されませんでした」と表示された場合**
+>
+> Workersの **Import a repository** を開いています。その画面では自動設定を続行せず、
+> **Workers & Pages** に戻って **Pages → Connect to Git** を選び直します。
+> このサイトは静的なPagesプロジェクトなので、Wrangler設定は不要です。
+
+> **「Cloudflare could not create the Git repository」と表示された場合**
+>
+> 新規リポジトリを作る経路を開いています。再試行せず、作成画面を閉じて
+> **Connect to Git → Existing Git repository** から既存の `izumo-sc/FEFW` を選びます。
+> `FEFW` が一覧に出ない場合は、GitHub側のCloudflare Pagesアプリ設定で
+> Repository accessに `FEFW` を追加してから一覧を更新します。
+
 | 設定 | 値 |
 |---|---|
 | Production branch | `main` |
