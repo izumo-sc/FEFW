@@ -61,7 +61,7 @@ window.WEAPONS = [
   },
   {
     name: "アウロラの聖槍・改",
-    acquisition: "調査中",
+    acquisition: "強化忘れず",
   },
   {
     name: "アンスウェラー・改",
@@ -69,6 +69,6 @@ window.WEAPONS = [
   },
   {
     name: "カーラの弓・改",
-    acquisition: "調査中",
+    acquisition: "強化忘れず",
   },
 ];
