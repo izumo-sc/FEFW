@@ -1,7 +1,69 @@
 (() => {
   "use strict";
 
-  const materials = Array.isArray(window.MATERIALS) ? window.MATERIALS : [];
+  const materialOrder = [
+    "タルトゴビー",
+    "グラディゴビー",
+    "バアルパイク",
+    "シールドパイク",
+    "ガラマーリン",
+    "カーネポニート",
+    "ハートポニート",
+    "リルフィッシュ",
+    "ハードフィッシュ",
+    "コーシャルーガー",
+    "スカライ",
+    "バザリーシャーク",
+    "テフノミ",
+    "ギンジ",
+    "デーツ",
+    "カダム",
+    "アオギンジ",
+    "ヒカリボシ",
+    "サンノミ",
+    "レッドフリッカ",
+    "シャクトウ",
+    "イチノミ",
+    "ジョッパ",
+    "キンバショウ",
+    "アルマメット",
+    "シャルミール",
+    "リガネット",
+    "ヒシバナ",
+    "グルマオサ",
+    "アカキンバイ",
+    "リナリア",
+    "ザンゲ",
+    "キンバイ",
+    "ダッカモンジュ",
+    "シナモス",
+    "サバクキビ",
+    "バク",
+    "セムイモ",
+    "ソルギ",
+    "ロカ",
+    "ソロム",
+    "オリバ",
+    "ポンゴ",
+    "パイヤ",
+    "オドモンジュ",
+    "アガヴェ",
+    "クレストル",
+    "ラザニバータ",
+    "ミラニラ",
+    "ソルダネラ",
+    "ユナメイ",
+    "メララ",
+    "チャノキ",
+    "テネバトウ",
+    "ミザンガ",
+  ];
+  const materialOrderIndex = new Map(materialOrder.map((name, index) => [name, index]));
+  const materials = (Array.isArray(window.MATERIALS) ? [...window.MATERIALS] : []).sort(
+    (left, right) =>
+      (materialOrderIndex.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+      (materialOrderIndex.get(right.name) ?? Number.MAX_SAFE_INTEGER),
+  );
   const materialScreenshots = window.MATERIAL_SCREENSHOTS || {};
   const routes = [
     { key: "leda", label: "レダ" },
@@ -91,7 +153,7 @@
       const held = totalQuantity(quantities);
       const shortage = Math.max(0, material.required - held);
       const row = document.createElement("article");
-      row.className = `material-row${material.routeLimited ? " route-limited" : ""}${material.sectionStart ? " section-gap" : ""}`;
+      row.className = `material-row${material.routeLimited ? " route-limited" : ""}`;
       row.dataset.name = material.name;
 
       const category = document.createElement("span");
