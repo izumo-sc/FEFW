@@ -665,11 +665,63 @@ dialog p {
   box-shadow: 0 8px 24px rgb(18 39 57 / 0.06);
 }
 
-.guide-lead {
-  margin: 0;
+.guide-section + .guide-section {
+  padding-top: 26px;
+  margin-top: 26px;
+  border-top: 1px solid var(--line);
+}
+
+.guide-section h2 {
+  margin: 0 0 14px;
+  font-size: 1.22rem;
+}
+
+.guide-section h3 {
+  margin: 24px 0 10px;
+  font-size: 1.02rem;
+}
+
+.guide-section p {
+  margin: 0 0 10px;
   color: #415267;
-  font-size: 0.95rem;
-  line-height: 1.75;
+  font-size: 0.91rem;
+  line-height: 1.8;
+}
+
+.guide-warning {
+  padding: 9px 12px;
+  border-left: 3px solid #b65045;
+  color: #71362f !important;
+  background: #fff5f2;
+  font-weight: 700;
+}
+
+.guide-numbered-list {
+  display: grid;
+  gap: 12px;
+  margin: 14px 0 0;
+  padding-left: 1.6rem;
+}
+
+.guide-numbered-list li {
+  padding-left: 4px;
+}
+
+.guide-numbered-list p {
+  margin: 5px 0 0;
+}
+
+.guide-data-note {
+  padding: 10px 13px;
+  margin: 13px 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #f7fafc;
+}
+
+.guide-data-note p:last-child,
+.guide-section > p:last-child {
+  margin-bottom: 0;
 }
 
 /* Weapons */
