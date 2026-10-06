@@ -44,6 +44,9 @@
   let state = loadState();
   const queries = { character: "", class: "", animal: "" };
   let classOrderMode = "default";
+  const mobileListOpen = { character: true, class: false, animal: false };
+  let touchDrag = null;
+  let touchAutoScrollFrame = null;
 
   state.forEach((slot) => {
     if (slot.animal && getClassMountType(slot.class) !== getAnimalMountType(slot.animal)) slot.animal = null;
@@ -114,7 +117,7 @@
   }
 
   function renderSlots() {
-    comparisonSlots.innerHTML = state
+    const slotCards = state
       .map((slot, slotIndex) => {
         const totals = getTotals(slotIndex);
         const selectionHtml = categories
@@ -143,6 +146,11 @@
             return `
               <div class="growth-drop-zone has-item" data-slot="${slotIndex}" data-category="${key}">
                 <div class="selected-growth-item${isShadow ? " is-shadow" : ""}" ${isShadow ? "" : `draggable="true" data-slot="${slotIndex}" data-category="${key}" data-id="${item.id}"`}>
+                  ${
+                    isShadow
+                      ? ""
+                      : `<button class="touch-drag-handle" type="button" data-touch-drag-category="${key}" data-touch-drag-id="${item.id}" data-touch-source-slot="${slotIndex}" aria-label="${item.name}をドラッグ">↕</button>`
+                  }
                   <div>
                     <span>${label} · ${isShadow ? "シャドウ" : itemMeta(key, item)}${multiplierLabel}</span>
                     <strong>${item.name}</strong>
@@ -169,15 +177,29 @@
 
         return `
           <article class="comparison-card" aria-label="比較枠${slotIndex + 1}">
-            <div class="growth-selection-grid">${selectionHtml}</div>
-            <div class="growth-stats-grid">${statsHtml}</div>
+            <h3 class="mobile-slot-label">比較枠${slotIndex + 1}</h3>
+            <div id="comparison-card-body-${slotIndex}" class="comparison-card-body">
+              <div class="growth-selection-grid">${selectionHtml}</div>
+              <div class="growth-stats-grid">${statsHtml}</div>
+            </div>
           </article>`;
       })
       .join("");
+
+    comparisonSlots.innerHTML = slotCards;
   }
 
   function renderLists() {
-    growthLists.innerHTML = categories
+    const listTabs = categories
+      .map(
+        ({ key, label }) => `
+          <button class="mobile-list-toggle${mobileListOpen[key] ? " is-active" : ""}" type="button" data-mobile-list-toggle="${key}" aria-expanded="${mobileListOpen[key]}" aria-controls="${key}-list-body">
+            <span>${label}</span>
+          </button>`,
+      )
+      .join("");
+
+    const listColumns = categories
       .map(({ key, dataKey, label }) => {
         const query = queries[key].trim().toLocaleLowerCase("ja");
         const sourceItems =
@@ -207,6 +229,7 @@
 
                 return `
                   <div class="growth-list-row${requirements.length ? " has-requirements" : ""}" draggable="true" data-category="${key}" data-id="${item.id}">
+                    <button class="touch-drag-handle" type="button" data-touch-drag-category="${key}" data-touch-drag-id="${item.id}" aria-label="${item.name}をドラッグ">↕</button>
                     <div class="growth-list-name">
                       <span>${itemMeta(key, item)}</span>
                       <strong>${item.name}</strong>
@@ -219,26 +242,30 @@
           : '<p class="growth-list-empty">該当する項目がありません。</p>';
 
         return `
-          <section class="growth-list-column" aria-labelledby="${key}-list-title">
-            <div class="growth-list-title">
-              <h3 id="${key}-list-title">${label}</h3>
-              <div class="growth-list-title-actions">
-                <span>${data[dataKey].length}</span>
-                ${
-                  key === "class"
-                    ? `<span class="class-order-state${classOrderMode === "evolution" ? " is-active" : ""}">${classOrderMode === "evolution" ? "進化順" : "通常順"}</span><button class="class-order-button" type="button" data-toggle-class-order aria-label="${classOrderMode === "evolution" ? "通常順に戻す" : "進化順に変更"}">並び変更</button>`
-                    : ""
-                }
+          <section class="growth-list-column${mobileListOpen[key] ? " is-mobile-open" : ""}" data-list-category="${key}" aria-labelledby="${key}-list-title">
+            <div id="${key}-list-body" class="growth-list-content">
+              <div class="growth-list-title">
+                <h3 id="${key}-list-title">${label}</h3>
+                <div class="growth-list-title-actions">
+                  <span>${data[dataKey].length}</span>
+                  ${
+                    key === "class"
+                      ? `<span class="class-order-state${classOrderMode === "evolution" ? " is-active" : ""}">${classOrderMode === "evolution" ? "進化順" : "通常順"}</span><button class="class-order-button" type="button" data-toggle-class-order aria-label="${classOrderMode === "evolution" ? "通常順に戻す" : "進化順に変更"}">並び変更</button>`
+                      : ""
+                  }
+                </div>
               </div>
+              <label class="growth-search">
+                <span class="sr-only">${label}を検索</span>
+                <input type="search" data-search-category="${key}" value="${queries[key]}" placeholder="${label}を検索" autocomplete="off" />
+              </label>
+              <div class="growth-list-scroll">${rows}</div>
             </div>
-            <label class="growth-search">
-              <span class="sr-only">${label}を検索</span>
-              <input type="search" data-search-category="${key}" value="${queries[key]}" placeholder="${label}を検索" autocomplete="off" />
-            </label>
-            <div class="growth-list-scroll">${rows}</div>
           </section>`;
       })
       .join("");
+
+    growthLists.innerHTML = `<div class="mobile-list-tabs">${listTabs}</div>${listColumns}`;
   }
 
   function addToFirstAvailable(category, itemId) {
@@ -320,6 +347,16 @@
   }
 
   growthLists.addEventListener("click", (event) => {
+    const listToggle = event.target.closest("[data-mobile-list-toggle]");
+    if (listToggle) {
+      const category = listToggle.dataset.mobileListToggle;
+      categories.forEach(({ key }) => {
+        mobileListOpen[key] = false;
+      });
+      mobileListOpen[category] = true;
+      renderLists();
+      return;
+    }
     const orderButton = event.target.closest("[data-toggle-class-order]");
     if (orderButton) {
       classOrderMode = classOrderMode === "evolution" ? "default" : "evolution";
@@ -403,6 +440,107 @@
     saveState();
     renderSlots();
     announce("比較枠1と比較枠2を入れ替えました。");
+  });
+
+  function touchDropTargetAt(clientX, clientY) {
+    const element = document.elementFromPoint(clientX, clientY);
+    return element?.closest(".growth-drop-zone") || null;
+  }
+
+  function updateTouchDropTarget() {
+    if (!touchDrag) return;
+    const nextTarget = touchDropTargetAt(touchDrag.clientX, touchDrag.clientY);
+    if (nextTarget === touchDrag.dropTarget) return;
+    touchDrag.dropTarget?.classList.remove("is-over");
+    touchDrag.dropTarget = nextTarget;
+    touchDrag.dropTarget?.classList.add("is-over");
+  }
+
+  function positionTouchPreview(clientX, clientY) {
+    if (!touchDrag) return;
+    touchDrag.clientX = clientX;
+    touchDrag.clientY = clientY;
+    touchDrag.preview.style.transform = `translate3d(${clientX + 12}px, ${clientY + 12}px, 0)`;
+    updateTouchDropTarget();
+  }
+
+  function runTouchAutoScroll() {
+    if (!touchDrag) return;
+    const edge = 64;
+    let distance = 0;
+    if (touchDrag.clientY < edge) distance = -12;
+    if (touchDrag.clientY > window.innerHeight - edge) distance = 12;
+    if (distance) {
+      window.scrollBy(0, distance);
+      updateTouchDropTarget();
+    }
+    touchAutoScrollFrame = window.requestAnimationFrame(runTouchAutoScroll);
+  }
+
+  function finishTouchDrag(cancelled = false) {
+    if (!touchDrag) return;
+    const { payload, preview, source, dropTarget } = touchDrag;
+    touchDrag = null;
+    if (touchAutoScrollFrame) window.cancelAnimationFrame(touchAutoScrollFrame);
+    touchAutoScrollFrame = null;
+    dropTarget?.classList.remove("is-over");
+    source?.classList.remove("is-dragging");
+    preview.remove();
+    document.body.classList.remove("growth-touch-dragging");
+    if (cancelled || !dropTarget) return;
+
+    const targetSlot = Number(dropTarget.dataset.slot);
+    const targetCategory = dropTarget.dataset.category;
+    applyDrop(targetSlot, targetCategory, payload);
+  }
+
+  document.addEventListener("pointerdown", (event) => {
+    const handle = event.target.closest("[data-touch-drag-id]");
+    if (!handle || event.pointerType === "mouse" || !event.isPrimary) return;
+    event.preventDefault();
+    const payload = {
+      category: handle.dataset.touchDragCategory,
+      id: handle.dataset.touchDragId,
+    };
+    if (handle.dataset.touchSourceSlot !== undefined) {
+      payload.sourceSlot = Number(handle.dataset.touchSourceSlot);
+    }
+    const preview = document.createElement("div");
+    preview.className = "touch-drag-preview";
+    preview.textContent = itemById.get(payload.id)?.name || "移動中";
+    document.body.append(preview);
+    const source = handle.closest("[draggable='true']");
+    source?.classList.add("is-dragging");
+    document.body.classList.add("growth-touch-dragging");
+    touchDrag = {
+      pointerId: event.pointerId,
+      payload,
+      preview,
+      source,
+      dropTarget: null,
+      clientX: event.clientX,
+      clientY: event.clientY,
+    };
+    handle.setPointerCapture?.(event.pointerId);
+    positionTouchPreview(event.clientX, event.clientY);
+    touchAutoScrollFrame = window.requestAnimationFrame(runTouchAutoScroll);
+  });
+
+  document.addEventListener("pointermove", (event) => {
+    if (!touchDrag || event.pointerId !== touchDrag.pointerId) return;
+    event.preventDefault();
+    positionTouchPreview(event.clientX, event.clientY);
+  });
+
+  document.addEventListener("pointerup", (event) => {
+    if (!touchDrag || event.pointerId !== touchDrag.pointerId) return;
+    event.preventDefault();
+    finishTouchDrag();
+  });
+
+  document.addEventListener("pointercancel", (event) => {
+    if (!touchDrag || event.pointerId !== touchDrag.pointerId) return;
+    finishTouchDrag(true);
   });
 
   renderSlots();
