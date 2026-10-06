@@ -42,7 +42,6 @@
   const swapButton = document.querySelector("#swap-button");
 
   let state = loadState();
-  const queries = { character: "", class: "", animal: "" };
   let classOrderMode = "default";
   const mobileListOpen = { character: true, class: false, animal: false };
   let touchDrag = null;
@@ -198,7 +197,6 @@
 
     const listColumns = categories
       .map(({ key, dataKey, label }) => {
-        const query = queries[key].trim().toLocaleLowerCase("ja");
         const sourceItems =
           key === "class" && classOrderMode === "evolution"
             ? [...data[dataKey]].sort(
@@ -207,12 +205,8 @@
                   (evolutionClassOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER),
               )
             : data[dataKey];
-        const filtered = sourceItems.filter((item) =>
-          `${item.name} ${item.group}`.toLocaleLowerCase("ja").includes(query),
-        );
-
-        const rows = filtered.length
-          ? filtered
+        const rows = sourceItems.length
+          ? sourceItems
               .map((item) => {
                 const requirements = key === "class" ? classRequirements[item.name] || [] : [];
                 const requirementsHtml = requirements.length
@@ -251,10 +245,6 @@
                   }
                 </div>
               </div>
-              <label class="growth-search">
-                <span class="sr-only">${label}を検索</span>
-                <input type="search" data-search-category="${key}" value="${queries[key]}" placeholder="${label}を検索" autocomplete="off" />
-              </label>
               <div class="growth-list-scroll">${rows}</div>
             </div>
           </section>`;
@@ -368,17 +358,6 @@
     const button = event.target.closest("[data-push-id]");
     if (!button) return;
     addToFirstAvailable(button.dataset.pushCategory, button.dataset.pushId);
-  });
-
-  growthLists.addEventListener("input", (event) => {
-    const input = event.target.closest("[data-search-category]");
-    if (!input) return;
-    queries[input.dataset.searchCategory] = input.value;
-    const cursorPosition = input.selectionStart;
-    renderLists();
-    const nextInput = growthLists.querySelector(`[data-search-category="${input.dataset.searchCategory}"]`);
-    nextInput.focus();
-    nextInput.setSelectionRange(cursorPosition, cursorPosition);
   });
 
   document.addEventListener("dragstart", (event) => {

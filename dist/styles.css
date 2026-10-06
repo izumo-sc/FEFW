@@ -1345,26 +1345,6 @@ dialog p {
   background: #dceff7;
 }
 
-.growth-search {
-  display: block;
-  padding: 0 10px 10px;
-}
-
-.growth-search input {
-  width: 100%;
-  min-height: 38px;
-  padding: 0 11px;
-  border: 1px solid #bdc9d4;
-  border-radius: 8px;
-  color: var(--ink);
-  background: white;
-}
-
-.growth-search input:focus {
-  outline: 3px solid rgb(35 123 166 / 0.2);
-  border-color: #237ba6;
-}
-
 .growth-list-scroll {
   max-height: 560px;
   overflow-y: auto;
@@ -1898,7 +1878,7 @@ dialog p {
   .growth-list-content {
     height: 100%;
     display: grid;
-    grid-template-rows: 30px auto minmax(0, 1fr);
+    grid-template-rows: 30px minmax(0, 1fr);
   }
 
   .growth-list-title,
@@ -1915,16 +1895,6 @@ dialog p {
 
   .growth-list-column:not([data-list-category="class"]) .growth-list-title-actions {
     visibility: hidden;
-  }
-
-  .growth-search {
-    padding: 5px 4px;
-  }
-
-  .growth-search input {
-    min-height: 29px;
-    padding: 0 5px;
-    font-size: 0.68rem;
   }
 
   .growth-list-scroll {
