@@ -1900,7 +1900,13 @@ dialog p {
 
   .growth-list-row > .class-requirements {
     grid-column: 1 / -1;
+    grid-row: 2;
     justify-content: flex-start;
+  }
+
+  .growth-list-row.has-requirements .push-button {
+    grid-column: 2;
+    grid-row: 1;
   }
 
   .growth-list-row .class-requirement {
