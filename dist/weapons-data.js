@@ -41,15 +41,15 @@ window.WEAPONS = [
   },
   {
     name: "アウロラの聖槍・改",
-    acquisition: "強化忘れず",
+    acquisition: "強化忘れず（任意）",
   },
   {
     name: "アンスウェラー・改",
-    acquisition: "12章イベント",
+    acquisition: "12章イベント（任意）",
   },
   {
     name: "カーラの弓・改",
-    acquisition: "強化忘れず",
+    acquisition: "強化忘れず（任意）",
   },
   {
     name: "アーカイヴΘ",
