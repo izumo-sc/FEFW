@@ -49,7 +49,9 @@
   let touchAutoScrollFrame = null;
 
   state.forEach((slot) => {
-    if (slot.animal && getClassMountType(slot.class) !== getAnimalMountType(slot.animal)) slot.animal = null;
+    if (slot.class && slot.animal && getClassMountType(slot.class) !== getAnimalMountType(slot.animal)) {
+      slot.animal = null;
+    }
   });
   saveState();
 
@@ -129,13 +131,13 @@
             if (!item) {
               const emptyMessage =
                 key === "animal"
-                  ? classMountType
-                    ? `${classMountType}をここへ`
-                    : slot.class
-                      ? "この兵種は動物なし"
-                      : "兵種を先に選択"
+                  ? !slot.class
+                    ? "動物をここへ"
+                    : classMountType
+                      ? `${classMountType}をここへ`
+                      : "この兵種は動物なし"
                   : `${label}をここへ`;
-              const disabledClass = key === "animal" && !classMountType ? " is-disabled" : "";
+              const disabledClass = key === "animal" && slot.class && !classMountType ? " is-disabled" : "";
               return `
                 <div class="growth-drop-zone${disabledClass}" data-slot="${slotIndex}" data-category="${key}">
                   <span>${label}</span>
@@ -267,7 +269,7 @@
     const slotIndex = state.findIndex((slot) => {
       if (slot[category]) return false;
       if (category !== "animal") return true;
-      return getClassMountType(slot.class) === animalMountType;
+      return !slot.class || getClassMountType(slot.class) === animalMountType;
     });
     if (slotIndex === -1) {
       if (category === "animal") {
@@ -294,7 +296,11 @@
   function applyDrop(targetSlot, targetCategory, payload) {
     if (!payload || payload.category !== targetCategory || !itemById.has(payload.id)) return;
 
-    if (targetCategory === "animal" && getClassMountType(state[targetSlot].class) !== getAnimalMountType(payload.id)) {
+    if (
+      targetCategory === "animal" &&
+      state[targetSlot].class &&
+      getClassMountType(state[targetSlot].class) !== getAnimalMountType(payload.id)
+    ) {
       announce(`${getAnimalMountType(payload.id)}に対応する兵種には配置できません。`);
       return;
     }
@@ -305,6 +311,7 @@
       if (
         targetCategory === "animal" &&
         replacedId &&
+        state[payload.sourceSlot].class &&
         getClassMountType(state[payload.sourceSlot].class) !== getAnimalMountType(replacedId)
       ) {
         announce("入れ替え先の兵種と動物の区分が一致しません。");
@@ -315,7 +322,7 @@
         const sourceAnimal = state[payload.sourceSlot].animal;
         if (
           (targetAnimal && getClassMountType(payload.id) !== getAnimalMountType(targetAnimal)) ||
-          (sourceAnimal && getClassMountType(replacedId) !== getAnimalMountType(sourceAnimal))
+          (sourceAnimal && replacedId && getClassMountType(replacedId) !== getAnimalMountType(sourceAnimal))
         ) {
           announce("動物との区分が合わないため、兵種を入れ替えられません。");
           return;
@@ -418,7 +425,6 @@
     const slotIndex = Number(button.dataset.removeSlot);
     const category = button.dataset.removeCategory;
     state[slotIndex][category] = null;
-    if (category === "class") state[slotIndex].animal = null;
     saveState();
     renderSlots();
     announce(`比較枠${slotIndex + 1}から削除しました。`);

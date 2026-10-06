@@ -1720,9 +1720,11 @@ dialog p {
 
   .growth-main {
     --growth-mobile-row-height: 46px;
+    --growth-mobile-panel-height: 360px;
     width: calc(100% - 8px);
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 0.92fr) minmax(0, 1.16fr);
     align-items: start;
+    align-content: start;
     gap: 4px;
     overflow: hidden;
     padding-bottom: 0;
@@ -1734,6 +1736,8 @@ dialog p {
 
   .growth-library {
     min-width: 0;
+    height: var(--growth-mobile-panel-height);
+    overflow: hidden;
     padding: 0;
     border-radius: 9px;
     box-shadow: none;
@@ -1793,6 +1797,7 @@ dialog p {
 
   .comparison-card {
     min-width: 0;
+    height: var(--growth-mobile-panel-height);
     display: block;
     border-radius: 9px;
   }
@@ -1815,6 +1820,7 @@ dialog p {
   }
 
   .growth-list-column.is-mobile-open {
+    min-height: 0;
     display: block;
     border: 0;
     border-radius: 0 0 8px 8px;
@@ -1883,19 +1889,32 @@ dialog p {
   }
 
   .growth-lists {
+    height: 100%;
     grid-template-columns: 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
     gap: 0;
   }
 
-  .growth-list-column[data-list-category="class"] .growth-list-title {
-    justify-content: flex-end;
-    padding: 5px 4px;
+  .growth-list-content {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 30px auto minmax(0, 1fr);
   }
 
-  .growth-list-column[data-list-category="class"] .growth-list-title h3,
-  .growth-list-column[data-list-category="class"] .growth-list-title-actions > span:first-child,
-  .growth-list-column:not([data-list-category="class"]) .growth-list-title {
+  .growth-list-title,
+  .growth-list-column[data-list-category="class"] .growth-list-title {
+    min-height: 30px;
+    justify-content: flex-end;
+    padding: 2px 4px;
+  }
+
+  .growth-list-title h3,
+  .growth-list-title-actions > span:first-child {
     display: none;
+  }
+
+  .growth-list-column:not([data-list-category="class"]) .growth-list-title-actions {
+    visibility: hidden;
   }
 
   .growth-search {
@@ -1909,7 +1928,8 @@ dialog p {
   }
 
   .growth-list-scroll {
-    max-height: calc(100dvh - 198px);
+    min-height: 0;
+    max-height: none;
     scrollbar-width: auto;
     scrollbar-color: #6f9cb3 #e2ebf0;
     scrollbar-gutter: stable;
