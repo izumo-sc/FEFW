@@ -20,16 +20,8 @@ window.WEAPONS = [
     acquisition: "オーマ州・巨人の足跡砦",
   },
   {
-    name: "アーカイヴΘ",
-    acquisition: "ソリダス州・イアペトス大洞窟",
-  },
-  {
     name: "魔毒の骨鎖",
     acquisition: "タレイア州・コロイオス砦",
-  },
-  {
-    name: "アーカイヴΓ",
-    acquisition: "ニュシアデス州・アディティの洞窟",
   },
   {
     name: "邪斧ガンドギャ",
@@ -48,16 +40,8 @@ window.WEAPONS = [
     acquisition: "リル海・地図にない島",
   },
   {
-    name: "アーカイヴB",
-    acquisition: "カメミリア州・滝の裏の洞窟",
-  },
-  {
     name: "至福なる舌",
     acquisition: "ダナン海・バロールの墓",
-  },
-  {
-    name: "アーカイヴZ",
-    acquisition: "ニュシアデス州・南の通路",
   },
   {
     name: "アウロラの聖槍・改",
@@ -70,5 +54,21 @@ window.WEAPONS = [
   {
     name: "カーラの弓・改",
     acquisition: "強化忘れず",
+  },
+  {
+    name: "アーカイヴΘ",
+    acquisition: "ソリダス州・イアペトス大洞窟",
+  },
+  {
+    name: "アーカイヴΓ",
+    acquisition: "ニュシアデス州・アディティの洞窟",
+  },
+  {
+    name: "アーカイヴB",
+    acquisition: "カメミリア州・滝の裏の洞窟",
+  },
+  {
+    name: "アーカイヴZ",
+    acquisition: "ニュシアデス州・南の通路",
   },
 ];
