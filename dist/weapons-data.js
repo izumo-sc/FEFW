@@ -85,7 +85,11 @@ window.WEAPONS = [
   },
   {
     name: "清めの剣",
-    acquisition: "調査中",
+    acquisition: "ストーリー",
+  },
+  {
+    name: "清めの剣",
+    acquisition: "商会",
   },
   {
     name: "ショートボウ",
