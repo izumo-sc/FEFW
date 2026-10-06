@@ -90,7 +90,13 @@ HOMEを開いた回数はCloudflare D1に保存します。初回だけ次の設
 | D1 database | `fefw-stats` |
 
 ProductionとPreviewの両方に同じバインディングを設定し、Pagesを再デプロイします。
-閲覧数にはIPアドレスやブラウザ情報を保存せず、HOMEが読み込まれるたびに1回加算します。
+閲覧数にはIPアドレスやブラウザ情報を保存せず、HOMEが読み込まれるたびに裏側で1回加算します。閲覧者の画面には件数を表示しません。
+
+管理者が現在の件数を確認する場合は、プロジェクトのフォルダーで次を実行します。
+
+```powershell
+npx wrangler d1 execute fefw-stats --remote --command="SELECT page, count, updated_at FROM page_views;"
+```
 
 ## 5. 次回以降の更新コマンド
 

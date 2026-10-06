@@ -7,6 +7,13 @@ function json(data, status = 200) {
   return new Response(JSON.stringify(data), { status, headers: responseHeaders });
 }
 
+function emptyResponse(status = 204) {
+  return new Response(null, {
+    status,
+    headers: { "Cache-Control": "no-store" },
+  });
+}
+
 function isSameOriginRequest(request) {
   const requestUrl = new URL(request.url);
   const origin = request.headers.get("Origin");
@@ -37,26 +44,9 @@ export async function onRequestPost(context) {
 
     const count = Number(row?.count);
     if (!Number.isSafeInteger(count) || count < 0) throw new Error("Invalid counter value");
-    return json({ count });
+    return emptyResponse();
   } catch (error) {
     console.error("Failed to update HOME view count", error);
     return json({ error: "Unable to update the view count." }, 500);
-  }
-}
-
-export async function onRequestGet(context) {
-  if (!context.env.COUNTER_DB) {
-    return json({ error: "COUNTER_DB is not configured." }, 503);
-  }
-
-  try {
-    const row = await context.env.COUNTER_DB.prepare(
-      "SELECT count FROM page_views WHERE page = 'home'",
-    ).first();
-    const count = Number(row?.count || 0);
-    return json({ count });
-  } catch (error) {
-    console.error("Failed to read HOME view count", error);
-    return json({ error: "Unable to read the view count." }, 500);
   }
 }

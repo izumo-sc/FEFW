@@ -484,35 +484,6 @@ dialog p {
   line-height: 1.85;
 }
 
-.home-view-counter {
-  width: fit-content;
-  display: inline-flex;
-  align-items: baseline;
-  gap: 7px;
-  margin: 0;
-  padding: 10px 14px;
-  border: 1px solid rgb(255 255 255 / 0.22);
-  border-radius: 999px;
-  color: #d8e7ef;
-  background: rgb(255 255 255 / 0.08);
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.home-view-counter[hidden] {
-  display: none;
-}
-
-.home-view-counter strong {
-  color: white;
-  font-size: 1.2rem;
-  font-variant-numeric: tabular-nums;
-}
-
-.home-view-counter small {
-  font-size: 0.72rem;
-}
-
 .home-main {
   padding-block: 58px 72px;
 }
