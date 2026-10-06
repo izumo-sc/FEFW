@@ -24,6 +24,10 @@
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
     ["斬馬刀｜宝箱（カイ編のみ）", new Set(["leda", "dietrich", "theodora"])],
+    ["見躱しの籠手｜デモニクの村", new Set(["kai"])],
+    ["疾風の剣｜ウィリー村", new Set(["kai"])],
+    ["清めの剣｜オシリスの村", new Set(["kai"])],
+    ["グレートソード｜王都グランアラゴン", new Set(["kai"])],
   ]);
   let checks = migrateLegacyChecks(loadChecks());
 

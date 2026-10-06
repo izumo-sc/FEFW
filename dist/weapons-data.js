@@ -127,4 +127,32 @@ window.WEAPONS = [
     name: "斬馬刀",
     acquisition: "商会",
   },
+  {
+    name: "斬馬刀",
+    acquisition: "フィーナの漁村",
+  },
+  {
+    name: "馬殺しの弓",
+    acquisition: "商会",
+  },
+  {
+    name: "馬殺しの弓",
+    acquisition: "ヤーマン村",
+  },
+  {
+    name: "見躱しの籠手",
+    acquisition: "デモニクの村",
+  },
+  {
+    name: "疾風の剣",
+    acquisition: "ウィリー村",
+  },
+  {
+    name: "清めの剣",
+    acquisition: "オシリスの村",
+  },
+  {
+    name: "グレートソード",
+    acquisition: "王都グランアラゴン",
+  },
 ];
