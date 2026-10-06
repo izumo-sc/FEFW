@@ -23,7 +23,7 @@
     ["偃月刀｜ジーマの港", new Set(["leda", "dietrich", "kai"])],
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
-    ["斬馬刀｜宝箱（カイ編のみ）", new Set(["leda", "dietrich", "theodora"])],
+    ["斬馬刀｜宝箱", new Set(["leda", "dietrich", "theodora"])],
     ["見躱しの籠手｜デモニクの村", new Set(["kai"])],
     ["疾風の剣｜ウィリー村", new Set(["kai"])],
     ["清めの剣｜オシリスの村", new Set(["kai"])],
@@ -46,6 +46,15 @@
 
   function migrateLegacyChecks(saved) {
     let changed = false;
+    const previousZanbatoKey = "斬馬刀｜宝箱（カイ編のみ）";
+    const currentZanbatoKey = "斬馬刀｜宝箱";
+    if (Object.prototype.hasOwnProperty.call(saved, previousZanbatoKey)) {
+      if (!Object.prototype.hasOwnProperty.call(saved, currentZanbatoKey)) {
+        saved[currentZanbatoKey] = saved[previousZanbatoKey];
+      }
+      delete saved[previousZanbatoKey];
+      changed = true;
+    }
     for (const name of duplicateNames) {
       if (!Object.prototype.hasOwnProperty.call(saved, name)) continue;
       const firstWeapon = weapons.find((weapon) => weapon.name === name);

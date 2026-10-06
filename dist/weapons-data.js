@@ -133,7 +133,7 @@ window.WEAPONS = [
   },
   {
     name: "斬馬刀",
-    acquisition: "宝箱（カイ編のみ）",
+    acquisition: "宝箱",
   },
   {
     name: "斬馬刀",
