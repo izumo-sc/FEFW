@@ -1063,6 +1063,10 @@ dialog p {
   font-size: 0.86rem;
 }
 
+.growth-page-guide {
+  margin: 0 2px -13px;
+}
+
 .swap-button,
 .push-button,
 .remove-growth-item {
@@ -1707,10 +1711,20 @@ dialog p {
   }
 
   .comparison-panel > .growth-section-heading,
-  .comparison-panel > .growth-guide,
   .comparison-panel > .growth-status,
   .growth-library > .growth-section-heading {
     display: none;
+  }
+
+  .growth-page-guide {
+    grid-column: 1 / -1;
+    margin: 0 4px 5px;
+    padding: 7px 8px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--surface);
+    font-size: 0.7rem;
+    line-height: 1.55;
   }
 
   .comparison-stack {
