@@ -17,11 +17,15 @@
       .filter((name, index, names) => names.indexOf(name) !== index),
   );
   const unavailableRoutes = new Map([
+    ["アウロラの聖槍・改｜強化忘れず（任意）", new Set(["leda", "dietrich", "theodora"])],
+    ["アンスウェラー・改｜12章イベント（任意）", new Set(["leda", "theodora", "kai"])],
+    ["カーラの弓・改｜強化忘れず（任意）", new Set(["dietrich", "theodora", "kai"])],
     ["偃月刀｜ジーマの港", new Set(["leda", "dietrich", "kai"])],
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
+    ["斬馬刀｜宝箱（カイ編のみ）", new Set(["leda", "dietrich", "theodora"])],
   ]);
-  let checks = loadChecks();
+  let checks = migrateLegacyChecks(loadChecks());
 
   function loadChecks() {
     try {
@@ -34,6 +38,23 @@
 
   function weaponKey(weapon) {
     return duplicateNames.has(weapon.name) ? `${weapon.name}｜${weapon.acquisition}` : weapon.name;
+  }
+
+  function migrateLegacyChecks(saved) {
+    let changed = false;
+    for (const name of duplicateNames) {
+      if (!Object.prototype.hasOwnProperty.call(saved, name)) continue;
+      const firstWeapon = weapons.find((weapon) => weapon.name === name);
+      if (!firstWeapon) continue;
+      const destinationKey = weaponKey(firstWeapon);
+      if (!Object.prototype.hasOwnProperty.call(saved, destinationKey)) {
+        saved[destinationKey] = saved[name];
+      }
+      delete saved[name];
+      changed = true;
+    }
+    if (changed) localStorage.setItem(storageKey, JSON.stringify(saved));
+    return saved;
   }
 
   function isChecked(weapon, routeKey) {

@@ -111,4 +111,20 @@ window.WEAPONS = [
     name: "偃月刀",
     acquisition: "ジーマの港",
   },
+  {
+    name: "アーカイヴΓ",
+    acquisition: "商会",
+  },
+  {
+    name: "アーカイヴB",
+    acquisition: "商会",
+  },
+  {
+    name: "斬馬刀",
+    acquisition: "宝箱（カイ編のみ）",
+  },
+  {
+    name: "斬馬刀",
+    acquisition: "商会",
+  },
 ];
