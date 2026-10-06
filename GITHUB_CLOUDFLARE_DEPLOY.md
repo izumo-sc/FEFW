@@ -74,7 +74,25 @@ git config --global --add safe.directory (Get-Location).Path
 公開URLは `https://fefw.pages.dev/`、復興素材管理は `https://fefw.pages.dev/materials/` になります。
 `fefw.pages.dev` が既に使われている場合は、短い任意名に変更します。
 
-## 4. 次回以降の更新コマンド
+## 4. HOME閲覧数用のD1を設定する
+
+HOMEを開いた回数はCloudflare D1に保存します。初回だけ次の設定が必要です。
+
+1. Cloudflare Dashboardの **Storage & Databases** → **D1 SQL database** を開く
+2. `fefw-stats` というデータベースを作成する
+3. 作成したデータベースの **Console** を開き、`schema.sql` の内容を実行する
+4. **Workers & Pages** → 対象のPagesプロジェクト → **Settings** → **Bindings** を開く
+5. **D1 database binding** を追加する
+
+| 設定 | 値 |
+|---|---|
+| Variable name | `COUNTER_DB` |
+| D1 database | `fefw-stats` |
+
+ProductionとPreviewの両方に同じバインディングを設定し、Pagesを再デプロイします。
+閲覧数にはIPアドレスやブラウザ情報を保存せず、HOMEが読み込まれるたびに1回加算します。
+
+## 5. 次回以降の更新コマンド
 
 ```powershell
 Set-Location "<リポジトリの保存先>\material-tracker-site"

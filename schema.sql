@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS page_views (
+  page TEXT PRIMARY KEY,
+  count INTEGER NOT NULL DEFAULT 0 CHECK (count >= 0),
+  updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT OR IGNORE INTO page_views (page, count) VALUES ('home', 0);
