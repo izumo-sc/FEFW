@@ -1687,6 +1687,7 @@ dialog p {
   }
 
   .growth-main {
+    --growth-mobile-row-height: 52px;
     width: calc(100% - 8px);
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 0.92fr) minmax(0, 1.16fr);
     align-items: start;
@@ -1783,7 +1784,8 @@ dialog p {
   }
 
   .growth-drop-zone {
-    min-height: 52px;
+    height: var(--growth-mobile-row-height);
+    min-height: var(--growth-mobile-row-height);
     gap: 2px;
     padding: 4px;
     border-radius: 7px;
@@ -1885,7 +1887,7 @@ dialog p {
   }
 
   .growth-list-row {
-    min-height: 50px;
+    min-height: var(--growth-mobile-row-height);
     display: grid;
     grid-template-columns: minmax(0, 1fr) 36px;
     gap: 4px;
@@ -1896,6 +1898,10 @@ dialog p {
   .growth-list-row.has-requirements {
     grid-template-columns: minmax(0, 1fr) 36px;
     gap: 4px;
+  }
+
+  .growth-list-row:not(.has-requirements) {
+    height: var(--growth-mobile-row-height);
   }
 
   .growth-list-row > .class-requirements {
