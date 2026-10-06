@@ -101,7 +101,7 @@ window.WEAPONS = [
   },
   {
     name: "サラマンダー",
-    acquisition: "調査中",
+    acquisition: "スカウト",
   },
   {
     name: "乾坤圏",
