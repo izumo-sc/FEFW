@@ -60,8 +60,16 @@ window.WEAPONS = [
     acquisition: "ニュシアデス州・アディティの洞窟",
   },
   {
+    name: "アーカイヴΓ",
+    acquisition: "商会",
+  },
+  {
     name: "アーカイヴB",
     acquisition: "カメミリア州・滝の裏の洞窟",
+  },
+  {
+    name: "アーカイヴB",
+    acquisition: "商会",
   },
   {
     name: "アーカイヴZ",
@@ -88,12 +96,24 @@ window.WEAPONS = [
     acquisition: "商会",
   },
   {
+    name: "清めの剣",
+    acquisition: "オシリスの村",
+  },
+  {
     name: "ショートボウ",
     acquisition: "宝箱",
   },
   {
     name: "馬殺しの弓",
     acquisition: "調査中",
+  },
+  {
+    name: "馬殺しの弓",
+    acquisition: "商会",
+  },
+  {
+    name: "馬殺しの弓",
+    acquisition: "ヤーマン村",
   },
   {
     name: "サラマンダー",
@@ -112,14 +132,6 @@ window.WEAPONS = [
     acquisition: "ジーマの港",
   },
   {
-    name: "アーカイヴΓ",
-    acquisition: "商会",
-  },
-  {
-    name: "アーカイヴB",
-    acquisition: "商会",
-  },
-  {
     name: "斬馬刀",
     acquisition: "宝箱（カイ編のみ）",
   },
@@ -132,24 +144,12 @@ window.WEAPONS = [
     acquisition: "フィーナの漁村",
   },
   {
-    name: "馬殺しの弓",
-    acquisition: "商会",
-  },
-  {
-    name: "馬殺しの弓",
-    acquisition: "ヤーマン村",
-  },
-  {
     name: "見躱しの籠手",
     acquisition: "デモニクの村",
   },
   {
     name: "疾風の剣",
     acquisition: "ウィリー村",
-  },
-  {
-    name: "清めの剣",
-    acquisition: "オシリスの村",
   },
   {
     name: "グレートソード",
