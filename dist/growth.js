@@ -95,13 +95,19 @@
     return state[slotIndex][category];
   }
 
+  function getGrowthMultiplier(slotIndex, category) {
+    if (category !== "animal") return 1;
+    return itemById.get(state[slotIndex].class)?.name === "戦車兵" ? 2 : 1;
+  }
+
   function getTotals(slotIndex) {
     const totals = Object.fromEntries(data.stats.map((stat) => [stat, 0]));
     categories.forEach(({ key }) => {
       const item = itemById.get(selectedItemId(slotIndex, key));
       if (!item) return;
+      const multiplier = getGrowthMultiplier(slotIndex, key);
       data.stats.forEach((stat) => {
-        totals[stat] += item.stats[stat];
+        totals[stat] += item.stats[stat] * multiplier;
       });
     });
     return totals;
@@ -116,6 +122,7 @@
             const isShadow = key === "character" && slotIndex === 1 && !slot.character && Boolean(state[0].character);
             const item = itemById.get(selectedItemId(slotIndex, key));
             const classMountType = getClassMountType(slot.class);
+            const multiplierLabel = getGrowthMultiplier(slotIndex, key) > 1 ? " · 成長率×2" : "";
             if (!item) {
               const emptyMessage =
                 key === "animal"
@@ -137,7 +144,7 @@
               <div class="growth-drop-zone has-item" data-slot="${slotIndex}" data-category="${key}">
                 <div class="selected-growth-item${isShadow ? " is-shadow" : ""}" ${isShadow ? "" : `draggable="true" data-slot="${slotIndex}" data-category="${key}" data-id="${item.id}"`}>
                   <div>
-                    <span>${label} · ${isShadow ? "シャドウ" : itemMeta(key, item)}</span>
+                    <span>${label} · ${isShadow ? "シャドウ" : itemMeta(key, item)}${multiplierLabel}</span>
                     <strong>${item.name}</strong>
                   </div>
                   ${
