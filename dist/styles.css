@@ -752,16 +752,21 @@ dialog p {
 }
 
 .weapon-check.is-unavailable input {
-  opacity: 0.35;
+  appearance: none;
+  -webkit-appearance: none;
+  border: 2px solid #7d8993;
+  border-radius: 3px;
+  background: #f7f9fa;
+  opacity: 1;
 }
 
 .weapon-check.is-unavailable .weapon-check-box::after {
   content: "";
   position: absolute;
-  width: 27px;
+  width: 18px;
   height: 2px;
   border-radius: 999px;
-  background: #a93830;
+  background: #7d8993;
   transform: rotate(-45deg);
   pointer-events: none;
 }
