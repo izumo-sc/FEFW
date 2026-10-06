@@ -625,6 +625,14 @@ dialog p {
   gap: 3px;
 }
 
+.inheritance-header {
+  min-height: 112px;
+}
+
+.inheritance-header h1 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
 .site-home-link {
   min-height: 40px;
   display: inline-flex;
@@ -650,39 +658,18 @@ dialog p {
 }
 
 .guide-article {
-  padding: clamp(24px, 5vw, 52px);
+  padding: 22px 24px;
   border: 1px solid var(--line);
-  border-radius: 16px;
+  border-radius: 12px;
   background: var(--surface);
-  box-shadow: 0 12px 34px rgb(18 39 57 / 0.07);
+  box-shadow: 0 8px 24px rgb(18 39 57 / 0.06);
 }
 
 .guide-lead {
   margin: 0;
   color: #415267;
-  font-size: clamp(1rem, 2vw, 1.08rem);
-  line-height: 1.9;
-}
-
-.guide-section {
-  padding-top: 34px;
-  margin-top: 34px;
-  border-top: 1px solid var(--line);
-}
-
-.guide-section h2 {
-  margin: 5px 0 14px;
-  font-size: clamp(1.25rem, 3vw, 1.6rem);
-}
-
-.guide-section p:last-child {
-  margin-bottom: 0;
-}
-
-.guide-placeholder {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.9;
+  font-size: 0.95rem;
+  line-height: 1.75;
 }
 
 /* Weapons */
