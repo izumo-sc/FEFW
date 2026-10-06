@@ -11,6 +11,11 @@
   const storageKey = "fortune-weave-weapon-checks-v1";
   const list = document.querySelector("#weapon-list");
   const count = document.querySelector("#weapon-count");
+  const duplicateNames = new Set(
+    weapons
+      .map((weapon) => weapon.name)
+      .filter((name, index, names) => names.indexOf(name) !== index),
+  );
   let checks = loadChecks();
 
   function loadChecks() {
@@ -22,12 +27,17 @@
     }
   }
 
-  function isChecked(name, routeKey) {
-    return Boolean(checks[name]?.[routeKey]);
+  function weaponKey(weapon) {
+    return duplicateNames.has(weapon.name) ? `${weapon.name}｜${weapon.acquisition}` : weapon.name;
   }
 
-  function saveCheck(name, routeKey, checked) {
-    checks[name] = { ...(checks[name] || {}), [routeKey]: checked };
+  function isChecked(weapon, routeKey) {
+    return Boolean(checks[weaponKey(weapon)]?.[routeKey]);
+  }
+
+  function saveCheck(weapon, routeKey, checked) {
+    const key = weaponKey(weapon);
+    checks[key] = { ...(checks[key] || {}), [routeKey]: checked };
     localStorage.setItem(storageKey, JSON.stringify(checks));
   }
 
@@ -56,9 +66,12 @@
 
         const input = document.createElement("input");
         input.type = "checkbox";
-        input.checked = isChecked(weapon.name, route.key);
-        input.setAttribute("aria-label", `${weapon.name}を${route.label}で入手済みにする`);
-        input.addEventListener("change", () => saveCheck(weapon.name, route.key, input.checked));
+        input.checked = isChecked(weapon, route.key);
+        input.setAttribute(
+          "aria-label",
+          `${weapon.name}（${weapon.acquisition}）を${route.label}で入手済みにする`,
+        );
+        input.addEventListener("change", () => saveCheck(weapon, route.key, input.checked));
 
         const routeName = document.createElement("span");
         routeName.textContent = route.label;

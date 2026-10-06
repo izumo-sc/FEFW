@@ -73,7 +73,15 @@ window.WEAPONS = [
   },
   {
     name: "サンダーソード",
-    acquisition: "調査中",
+    acquisition: "ストーリー",
+  },
+  {
+    name: "サンダーソード",
+    acquisition: "商会",
+  },
+  {
+    name: "サンダーソード",
+    acquisition: "スカウト",
   },
   {
     name: "清めの剣",
