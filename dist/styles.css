@@ -711,6 +711,10 @@ dialog p {
   margin: 5px 0 0;
 }
 
+.guide-numbered-list + p {
+  margin-top: 16px;
+}
+
 .guide-data-note {
   padding: 10px 13px;
   margin: 13px 0;
