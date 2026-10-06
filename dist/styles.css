@@ -1684,19 +1684,48 @@ dialog p {
   }
 
   .growth-header {
+    min-height: 80px;
     align-items: start;
     justify-content: center;
     flex-direction: column;
-    gap: 8px;
+    gap: 3px;
+  }
+
+  .growth-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .growth-header > p {
+    font-size: 0.72rem;
+  }
+
+  body.growth-page {
+    height: 100vh;
+    height: 100dvh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  .growth-page input {
+    user-select: text;
+    -webkit-user-select: text;
+  }
+
+  .growth-page .site-footer {
+    display: none;
   }
 
   .growth-main {
-    --growth-mobile-row-height: 52px;
+    --growth-mobile-row-height: 46px;
     width: calc(100% - 8px);
     grid-template-columns: minmax(0, 0.92fr) minmax(0, 0.92fr) minmax(0, 1.16fr);
     align-items: start;
     gap: 4px;
-    padding-bottom: 24px;
+    overflow: hidden;
+    padding-bottom: 0;
   }
 
   .comparison-panel {
@@ -1718,13 +1747,13 @@ dialog p {
 
   .growth-page-guide {
     grid-column: 1 / -1;
-    margin: 0 4px 5px;
-    padding: 7px 8px;
+    margin: 0 4px 2px;
+    padding: 4px 7px;
     border: 1px solid var(--line);
     border-radius: 8px;
     background: var(--surface);
-    font-size: 0.7rem;
-    line-height: 1.55;
+    font-size: 0.62rem;
+    line-height: 1.4;
   }
 
   .comparison-stack {
@@ -1742,7 +1771,7 @@ dialog p {
   .mobile-list-toggle {
     width: 100%;
     min-width: 0;
-    min-height: 34px;
+    min-height: 30px;
     display: grid;
     place-items: center;
     padding: 3px 1px;
@@ -1750,7 +1779,7 @@ dialog p {
     border-radius: 7px;
     color: var(--ink);
     background: #edf3f7;
-    font-size: 0.68rem;
+    font-size: 0.64rem;
     font-weight: 800;
     line-height: 1.2;
     text-align: center;
@@ -1769,15 +1798,15 @@ dialog p {
   }
 
   .mobile-slot-label {
-    min-height: 40px;
+    min-height: 34px;
     display: grid;
     place-items: center;
     margin: 0;
-    padding: 5px 2px;
+    padding: 3px 2px;
     border-bottom: 1px solid var(--line);
     color: #274b60;
     background: #edf3f7;
-    font-size: 0.78rem;
+    font-size: 0.72rem;
     text-align: center;
   }
 
@@ -1833,24 +1862,24 @@ dialog p {
   }
 
   .growth-stat {
-    min-height: 23px;
+    min-height: 19px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 4px;
-    padding: 2px 6px;
+    padding: 1px 5px;
   }
 
   .growth-stat span {
-    font-size: 0.58rem;
+    font-size: 0.54rem;
   }
 
   .growth-stat strong {
-    font-size: 0.77rem;
+    font-size: 0.7rem;
   }
 
   .growth-stat small {
-    font-size: 0.52rem;
+    font-size: 0.48rem;
   }
 
   .growth-lists {
@@ -1874,13 +1903,13 @@ dialog p {
   }
 
   .growth-search input {
-    min-height: 32px;
+    min-height: 29px;
     padding: 0 5px;
     font-size: 0.68rem;
   }
 
   .growth-list-scroll {
-    max-height: min(62vh, 520px);
+    max-height: calc(100dvh - 198px);
     scrollbar-width: auto;
     scrollbar-color: #6f9cb3 #e2ebf0;
     scrollbar-gutter: stable;
