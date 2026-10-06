@@ -127,11 +127,11 @@
         input.min = "0";
         input.step = "1";
         input.inputMode = "numeric";
-        input.value = String(quantities[route.key]);
+        input.value = quantities[route.key] > 0 ? String(quantities[route.key]) : "";
         input.setAttribute("aria-label", `${material.name}の${route.label}所持数`);
         input.addEventListener("input", () => {
           quantities[route.key] = normalizeQuantity(input.value);
-          input.value = String(quantities[route.key]);
+          input.value = quantities[route.key] > 0 ? String(quantities[route.key]) : "";
           state.inventory[material.name] = quantities;
           const nextTotal = totalQuantity(quantities);
           const nextShortage = Math.max(0, material.required - nextTotal);
