@@ -615,6 +615,89 @@ dialog p {
   margin: 0;
 }
 
+@media (min-width: 901px) {
+  .home-hero {
+    min-height: 0;
+  }
+
+  .home-nav {
+    min-height: 52px;
+  }
+
+  .hero-copy {
+    padding-block: 18px 22px;
+  }
+
+  .hero-copy h1 {
+    font-size: clamp(2.25rem, 4vw, 2.85rem);
+    line-height: 1.1;
+  }
+
+  .hero-author {
+    margin-top: 6px;
+    font-size: 0.82rem;
+  }
+
+  .hero-description {
+    max-width: 900px;
+    margin: 8px 0 0;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+
+  .home-main {
+    padding-block: 20px 22px;
+  }
+
+  .home-main .section-heading {
+    margin-bottom: 10px;
+  }
+
+  .home-main .section-heading h2 {
+    font-size: 1.55rem;
+  }
+
+  .home-main .feature-grid {
+    gap: 12px;
+  }
+
+  .home-main .feature-card {
+    min-height: 170px;
+    padding: 16px;
+  }
+
+  .home-main .feature-card h3 {
+    margin: 10px 0 5px;
+    font-size: 1rem;
+  }
+
+  .home-main .feature-card p {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .home-main .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+  }
+
+  .home-main .status-badge {
+    top: 13px;
+    right: 13px;
+    padding: 4px 7px;
+  }
+
+  .home-main .card-link {
+    padding-top: 8px;
+    font-size: 0.8rem;
+  }
+
+  .home-page .site-footer {
+    padding-block: 14px 18px;
+  }
+}
+
 /* Inheritance guide */
 .inheritance-page {
   min-height: 100vh;
