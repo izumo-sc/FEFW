@@ -32,10 +32,6 @@ window.WEAPONS = [
     acquisition: "ブラクシテア州・クーガー大森林帯",
   },
   {
-    name: "サラマンダー",
-    acquisition: "ニュシアデス州・南の通路",
-  },
-  {
     name: "苦悶の盾",
     acquisition: "リル海・地図にない島",
   },
@@ -93,14 +89,18 @@ window.WEAPONS = [
   },
   {
     name: "ショートボウ",
-    acquisition: "調査中",
+    acquisition: "宝箱",
   },
   {
     name: "馬殺しの弓",
     acquisition: "調査中",
   },
   {
-    name: "サラマンダー（移動）",
+    name: "サラマンダー",
+    acquisition: "ニュシアデス州・南の通路",
+  },
+  {
+    name: "サラマンダー",
     acquisition: "調査中",
   },
   {
