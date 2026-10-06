@@ -146,11 +146,6 @@
             return `
               <div class="growth-drop-zone has-item" data-slot="${slotIndex}" data-category="${key}">
                 <div class="selected-growth-item${isShadow ? " is-shadow" : ""}" ${isShadow ? "" : `draggable="true" data-slot="${slotIndex}" data-category="${key}" data-id="${item.id}"`}>
-                  ${
-                    isShadow
-                      ? ""
-                      : `<button class="touch-drag-handle" type="button" data-touch-drag-category="${key}" data-touch-drag-id="${item.id}" data-touch-source-slot="${slotIndex}" aria-label="${item.name}をドラッグ">↕</button>`
-                  }
                   <div>
                     <span>${label} · ${isShadow ? "シャドウ" : itemMeta(key, item)}${multiplierLabel}</span>
                     <strong>${item.name}</strong>
@@ -229,7 +224,6 @@
 
                 return `
                   <div class="growth-list-row${requirements.length ? " has-requirements" : ""}" draggable="true" data-category="${key}" data-id="${item.id}">
-                    <button class="touch-drag-handle" type="button" data-touch-drag-category="${key}" data-touch-drag-id="${item.id}" aria-label="${item.name}をドラッグ">↕</button>
                     <div class="growth-list-name">
                       <span>${itemMeta(key, item)}</span>
                       <strong>${item.name}</strong>
@@ -457,7 +451,7 @@
   }
 
   function positionTouchPreview(clientX, clientY) {
-    if (!touchDrag) return;
+    if (!touchDrag?.isActive) return;
     touchDrag.clientX = clientX;
     touchDrag.clientY = clientY;
     touchDrag.preview.style.transform = `translate3d(${clientX + 12}px, ${clientY + 12}px, 0)`;
@@ -465,7 +459,7 @@
   }
 
   function runTouchAutoScroll() {
-    if (!touchDrag) return;
+    if (!touchDrag?.isActive) return;
     const edge = 64;
     let distance = 0;
     if (touchDrag.clientY < edge) distance = -12;
@@ -479,13 +473,14 @@
 
   function finishTouchDrag(cancelled = false) {
     if (!touchDrag) return;
-    const { payload, preview, source, dropTarget } = touchDrag;
+    const { isActive, payload, preview, source, dropTarget } = touchDrag;
     touchDrag = null;
+    if (!isActive) return;
     if (touchAutoScrollFrame) window.cancelAnimationFrame(touchAutoScrollFrame);
     touchAutoScrollFrame = null;
     dropTarget?.classList.remove("is-over");
     source?.classList.remove("is-dragging");
-    preview.remove();
+    preview?.remove();
     document.body.classList.remove("growth-touch-dragging");
     if (cancelled || !dropTarget) return;
 
@@ -495,39 +490,52 @@
   }
 
   document.addEventListener("pointerdown", (event) => {
-    const handle = event.target.closest("[data-touch-drag-id]");
-    if (!handle || event.pointerType === "mouse" || !event.isPrimary) return;
-    event.preventDefault();
+    if (event.pointerType === "mouse" || !event.isPrimary || event.target.closest("button, input")) return;
+    const source = event.target.closest("[draggable='true'][data-id]");
+    if (!source) return;
     const payload = {
-      category: handle.dataset.touchDragCategory,
-      id: handle.dataset.touchDragId,
+      category: source.dataset.category,
+      id: source.dataset.id,
     };
-    if (handle.dataset.touchSourceSlot !== undefined) {
-      payload.sourceSlot = Number(handle.dataset.touchSourceSlot);
+    if (source.dataset.slot !== undefined) {
+      payload.sourceSlot = Number(source.dataset.slot);
     }
-    const preview = document.createElement("div");
-    preview.className = "touch-drag-preview";
-    preview.textContent = itemById.get(payload.id)?.name || "移動中";
-    document.body.append(preview);
-    const source = handle.closest("[draggable='true']");
-    source?.classList.add("is-dragging");
-    document.body.classList.add("growth-touch-dragging");
     touchDrag = {
       pointerId: event.pointerId,
       payload,
-      preview,
+      preview: null,
       source,
       dropTarget: null,
+      isActive: false,
+      startX: event.clientX,
+      startY: event.clientY,
       clientX: event.clientX,
       clientY: event.clientY,
     };
-    handle.setPointerCapture?.(event.pointerId);
-    positionTouchPreview(event.clientX, event.clientY);
-    touchAutoScrollFrame = window.requestAnimationFrame(runTouchAutoScroll);
+    source.setPointerCapture?.(event.pointerId);
   });
 
   document.addEventListener("pointermove", (event) => {
     if (!touchDrag || event.pointerId !== touchDrag.pointerId) return;
+    if (!touchDrag.isActive) {
+      const deltaX = event.clientX - touchDrag.startX;
+      const deltaY = event.clientY - touchDrag.startY;
+      if (Math.abs(deltaY) > 10 && Math.abs(deltaY) > Math.abs(deltaX)) {
+        touchDrag.source.releasePointerCapture?.(touchDrag.pointerId);
+        touchDrag = null;
+        return;
+      }
+      if (Math.abs(deltaX) < 10) return;
+      const preview = document.createElement("div");
+      preview.className = "touch-drag-preview";
+      preview.textContent = itemById.get(touchDrag.payload.id)?.name || "移動中";
+      document.body.append(preview);
+      touchDrag.preview = preview;
+      touchDrag.isActive = true;
+      touchDrag.source.classList.add("is-dragging");
+      document.body.classList.add("growth-touch-dragging");
+      touchAutoScrollFrame = window.requestAnimationFrame(runTouchAutoScroll);
+    }
     event.preventDefault();
     positionTouchPreview(event.clientX, event.clientY);
   });
