@@ -105,10 +105,10 @@ window.WEAPONS = [
   },
   {
     name: "乾坤圏",
-    acquisition: "調査中",
+    acquisition: "海都アレクトー",
   },
   {
     name: "偃月刀",
-    acquisition: "調査中",
+    acquisition: "ジーマの港",
   },
 ];
