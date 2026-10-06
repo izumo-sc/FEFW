@@ -666,6 +666,16 @@ dialog p {
   font-weight: 800;
 }
 
+.weapon-policy-note {
+  margin: 0;
+  padding: 11px 22px;
+  border-top: 1px solid var(--line);
+  color: #6d4d24;
+  background: #fff7e8;
+  font-size: 0.84rem;
+  font-weight: 800;
+}
+
 .weapon-table-header,
 .weapon-row {
   display: grid;
@@ -729,7 +739,34 @@ dialog p {
   accent-color: #237ba6;
 }
 
-.weapon-check span {
+.weapon-check-box {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+}
+
+.weapon-check.is-unavailable {
+  cursor: not-allowed;
+}
+
+.weapon-check.is-unavailable input {
+  opacity: 0.35;
+}
+
+.weapon-check.is-unavailable .weapon-check-box::after {
+  content: "";
+  position: absolute;
+  width: 27px;
+  height: 2px;
+  border-radius: 999px;
+  background: #a93830;
+  transform: rotate(-45deg);
+  pointer-events: none;
+}
+
+.weapon-route-name {
   display: none;
   color: var(--muted);
   font-size: 0.67rem;
@@ -767,7 +804,7 @@ dialog p {
     border-top: 1px solid #e1e7ec;
   }
 
-  .weapon-check span {
+  .weapon-route-name {
     display: block;
   }
 }
