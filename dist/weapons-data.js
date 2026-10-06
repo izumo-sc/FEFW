@@ -71,4 +71,32 @@ window.WEAPONS = [
     name: "アーカイヴZ",
     acquisition: "ニュシアデス州・南の通路",
   },
+  {
+    name: "サンダーソード",
+    acquisition: "調査中",
+  },
+  {
+    name: "清めの剣",
+    acquisition: "調査中",
+  },
+  {
+    name: "ショートボウ",
+    acquisition: "調査中",
+  },
+  {
+    name: "馬殺しの弓",
+    acquisition: "調査中",
+  },
+  {
+    name: "サラマンダー（移動）",
+    acquisition: "調査中",
+  },
+  {
+    name: "乾坤圏",
+    acquisition: "調査中",
+  },
+  {
+    name: "偃月刀",
+    acquisition: "調査中",
+  },
 ];
