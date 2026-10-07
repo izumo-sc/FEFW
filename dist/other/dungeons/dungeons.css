@@ -48,7 +48,11 @@
 }
 
 .dungeon-table thead th:first-child {
-  width: 58%;
+  width: 44%;
+}
+
+.dungeon-table thead th:nth-child(2) {
+  width: 29%;
 }
 
 .dungeon-table tbody th {
@@ -79,7 +83,7 @@
 
   .dungeon-table th,
   .dungeon-table td {
-    padding: 10px;
+    padding: 10px 6px;
   }
 
   .dungeon-table tbody th {
