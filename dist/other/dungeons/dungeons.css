@@ -68,15 +68,6 @@
   font-weight: 700;
 }
 
-.dungeon-note {
-  margin: 0;
-  padding: 16px 18px;
-  border-top: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 0.8rem;
-  line-height: 1.7;
-}
-
 @media (max-width: 560px) {
   .dungeons-header {
     gap: 12px;
