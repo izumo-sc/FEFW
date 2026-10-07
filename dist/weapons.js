@@ -23,6 +23,8 @@
     ["偃月刀｜ジーマの港", new Set(["leda", "dietrich", "kai"])],
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
+    ["清めの剣｜ストーリー", new Set(["dietrich"])],
+    ["ショートボウ｜宝箱", new Set(["dietrich", "theodora", "kai"])],
     ["斬馬刀｜宝箱", new Set(["leda", "dietrich", "theodora"])],
     ["見躱しの籠手｜デモニクの村", new Set(["kai"])],
     ["疾風の剣｜ウィリー村", new Set(["kai"])],
