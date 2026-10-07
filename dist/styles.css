@@ -855,6 +855,117 @@ dialog p {
   margin-bottom: 0;
 }
 
+/* Route order guide */
+.order-page {
+  min-height: 100vh;
+}
+
+.order-header > div {
+  display: grid;
+  gap: 3px;
+}
+
+.order-header h1 {
+  font-size: clamp(1.45rem, 3vw, 2rem);
+}
+
+.order-main {
+  width: min(860px, calc(100% - 32px));
+}
+
+.order-panel {
+  display: grid;
+  gap: 10px;
+}
+
+.order-route-toggles {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.order-route-toggle {
+  position: relative;
+  min-width: 0;
+  min-height: 58px;
+  padding: 10px 58px 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(18 39 57 / 0.06);
+  font-size: 0.92rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: left;
+  cursor: pointer;
+}
+
+.order-route-toggle:hover,
+.order-route-toggle:focus-visible {
+  border-color: #7fa6bb;
+}
+
+.order-route-toggle::after {
+  content: "開く";
+  position: absolute;
+  top: 50%;
+  right: 9px;
+  min-width: 42px;
+  height: 24px;
+  display: grid;
+  place-items: center;
+  padding-inline: 7px;
+  border-radius: 999px;
+  color: white;
+  background: var(--navy-soft);
+  font-size: 0.7rem;
+  line-height: 1;
+  transform: translateY(-50%);
+}
+
+.order-route-toggle[aria-expanded="true"] {
+  border-color: #5f91aa;
+  background: #f5fafc;
+}
+
+.order-route-toggle[aria-expanded="true"]::after {
+  content: "閉じる";
+}
+
+.route-guide-content {
+  min-height: 82px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  box-shadow: 0 8px 24px rgb(18 39 57 / 0.06);
+}
+
+@media (max-width: 560px) {
+  .order-route-toggles {
+    gap: 5px;
+  }
+
+  .order-route-toggle {
+    min-height: 56px;
+    padding: 8px 6px 27px;
+    font-size: 0.72rem;
+    text-align: center;
+  }
+
+  .order-route-toggle::after {
+    top: auto;
+    right: 50%;
+    bottom: 5px;
+    min-width: 34px;
+    height: 18px;
+    padding-inline: 4px;
+    font-size: 0.62rem;
+    transform: translateX(50%);
+  }
+}
+
 /* Weapons */
 .weapons-page {
   min-height: 100vh;
