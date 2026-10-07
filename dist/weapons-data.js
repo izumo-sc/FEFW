@@ -40,6 +40,10 @@ window.WEAPONS = [
     acquisition: "ダナン海・バロールの墓",
   },
   {
+    name: "大熊の右鉤爪",
+    acquisition: "スカウト",
+  },
+  {
     name: "アウロラの聖槍・改",
     acquisition: "強化忘れず（任意）",
   },
