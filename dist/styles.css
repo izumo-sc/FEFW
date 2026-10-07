@@ -908,6 +908,7 @@ dialog p {
 
 .order-route-toggle::after {
   content: "開く";
+  box-sizing: border-box;
   position: absolute;
   top: 50%;
   right: 9px;
