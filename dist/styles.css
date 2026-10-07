@@ -464,6 +464,45 @@ dialog p {
   letter-spacing: 0.04em;
 }
 
+.home-nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-x-profile,
+.home-x-share {
+  display: inline-flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: center;
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: 800;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.home-x-profile {
+  border: 1px solid rgb(255 255 255 / 0.34);
+  background: rgb(255 255 255 / 0.06);
+}
+
+.home-x-share {
+  border: 1px solid white;
+  color: var(--navy);
+  background: white;
+}
+
+.home-x-profile:hover,
+.home-x-profile:focus-visible,
+.home-x-share:hover,
+.home-x-share:focus-visible {
+  transform: translateY(-1px);
+}
+
 .hero-copy {
   padding-block: 68px 76px;
 }
@@ -1648,6 +1687,17 @@ dialog p {
 
   .home-brand {
     font-size: 0.9rem;
+  }
+
+  .home-nav-actions {
+    gap: 5px;
+  }
+
+  .home-x-profile,
+  .home-x-share {
+    min-height: 32px;
+    padding-inline: 9px;
+    font-size: 0.72rem;
   }
 
   .hero-copy {
