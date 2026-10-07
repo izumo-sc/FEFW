@@ -14,9 +14,13 @@
       closeAll();
       if (!shouldOpen) return;
 
-      toggle.setAttribute("aria-expanded", "true");
+      const matchingToggles = toggles.filter((item) => item.dataset.orderToggle === key);
+      for (const item of matchingToggles) item.setAttribute("aria-expanded", "true");
       const content = contents.find((item) => item.dataset.orderContent === key);
       if (content) content.hidden = false;
+      const topToggle = matchingToggles.find((item) => item.closest('[data-order-nav="top"]'));
+      if (topToggle) topToggle.focus({ preventScroll: true });
+      window.scrollTo({ top: 0, behavior: "instant" });
     });
   }
 })();
