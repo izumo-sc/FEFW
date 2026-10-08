@@ -17,9 +17,9 @@
       .filter((name, index, names) => names.indexOf(name) !== index),
   );
   const unavailableRoutes = new Map([
-    ["アウロラの聖槍・改｜強化忘れず（任意）", new Set(["leda", "dietrich", "theodora"])],
+    ["アウロラの聖槍＋1｜強化忘れず（任意）", new Set(["leda", "dietrich", "theodora"])],
     ["アンスウェラー・改｜12章イベント（任意）", new Set(["leda", "theodora", "kai"])],
-    ["カーラの弓・改｜強化忘れず（任意）", new Set(["dietrich", "theodora", "kai"])],
+    ["カーラの弓＋1｜強化忘れず（任意）", new Set(["dietrich", "theodora", "kai"])],
     ["偃月刀｜ジーマの港", new Set(["leda", "dietrich", "kai"])],
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
@@ -53,6 +53,16 @@
 
   function migrateLegacyChecks(saved) {
     let changed = false;
+    const renamedWeapons = [
+      ["アウロラの聖槍・改", "アウロラの聖槍＋1"],
+      ["カーラの弓・改", "カーラの弓＋1"],
+    ];
+    for (const [previousName, currentName] of renamedWeapons) {
+      if (!Object.prototype.hasOwnProperty.call(saved, previousName)) continue;
+      saved[currentName] = { ...saved[previousName], ...saved[currentName] };
+      delete saved[previousName];
+      changed = true;
+    }
     const previousZanbatoKey = "斬馬刀｜宝箱（カイ編のみ）";
     const currentZanbatoKey = "斬馬刀｜宝箱";
     if (Object.prototype.hasOwnProperty.call(saved, previousZanbatoKey)) {

@@ -44,7 +44,7 @@ window.WEAPONS = [
     acquisition: "スカウト",
   },
   {
-    name: "アウロラの聖槍・改",
+    name: "アウロラの聖槍＋1",
     acquisition: "強化忘れず（任意）",
   },
   {
@@ -52,7 +52,7 @@ window.WEAPONS = [
     acquisition: "12章イベント（任意）",
   },
   {
-    name: "カーラの弓・改",
+    name: "カーラの弓＋1",
     acquisition: "強化忘れず（任意）",
   },
   {
