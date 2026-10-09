@@ -165,11 +165,12 @@
       const perRoute = exchangeRequirements.get(material.name) || 0;
       const exchangeHeld = routes.reduce((sum, route) => sum + Math.min(perRoute, normalizeQuantity(quantities[route.key])), 0);
       const exchangeShortage = perRoute * routes.length - exchangeHeld;
-      const reconstructionShortage = Math.max(0, material.required - held);
+      const reconstructionHeld = held - exchangeHeld;
+      const reconstructionShortage = Math.max(0, material.required - reconstructionHeld);
       return {
         held: config.exchange ? exchangeHeld : held,
         shortage: config.exchange ? exchangeShortage : reconstructionShortage,
-        combinedShortage: exchangeShortage + Math.max(0, material.required - (held - exchangeHeld)),
+        combinedShortage: exchangeShortage + reconstructionShortage,
         perRoute,
       };
     }
