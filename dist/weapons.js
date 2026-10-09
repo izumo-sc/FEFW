@@ -22,6 +22,7 @@
     ["カーラの弓＋1｜強化忘れず（任意）", new Set(["dietrich", "theodora", "kai"])],
     ["偃月刀｜ジーマの港", new Set(["leda", "dietrich", "kai"])],
     ["サラマンダー｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
+    ["サラマンダー｜スカウト", new Set(["leda"])],
     ["サンダーソード｜ストーリー", new Set(["leda", "theodora"])],
     ["清めの剣｜ストーリー", new Set(["dietrich"])],
     ["ショートボウ｜宝箱", new Set(["dietrich", "theodora", "kai"])],
