@@ -4,43 +4,34 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#102438" />
-    <meta
-      name="description"
-      content="ファイアーエムブレム 万紫千紅の復興素材を確認し、所持数と不足数を管理できる素材表。"
-    />
-    <title>万紫千紅 復興素材管理</title>
+    <meta name="description" content="ファイアーエムブレム 万紫千紅の武器交換に必要な素材と、主人公ごとの所持数・不足数を管理できます。" />
+    <title>万紫千紅 武器交換</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="../styles.css?v=3" />
+    <link rel="stylesheet" href="../styles.css?v=11" />
+    <link rel="stylesheet" href="./exchange.css?v=1" />
   </head>
-  <body>
+  <body class="exchange-page">
     <header class="site-header material-header">
       <div>
         <p class="eyebrow">FIRE EMBLEM FORTUNE'S WEAVE</p>
-        <h1>復興素材管理</h1>
+        <h1>武器交換</h1>
       </div>
-      <button id="reset-button" class="quiet-button" type="button">入力をリセット</button>
+      <div class="exchange-actions">
+        <a class="site-home-link" href="../">HOMEへ戻る</a>
+        <button id="reset-button" class="quiet-button" type="button">入力をリセット</button>
+      </div>
     </header>
-
     <main>
       <section class="summary" aria-label="集計">
-        <div class="summary-card">
-          <span>素材</span>
-          <strong id="material-count">0</strong>
-        </div>
-        <div class="summary-card">
-          <span>必要数</span>
-          <strong id="required-total">0</strong>
-        </div>
-        <div class="summary-card accent">
-          <span>不足数</span>
-          <strong id="shortage-total">0</strong>
-        </div>
+        <div class="summary-card"><span>素材</span><strong id="material-count">0</strong></div>
+        <div class="summary-card"><span>必要数</span><strong id="required-total">0</strong></div>
+        <div class="summary-card accent"><span>不足数</span><strong id="shortage-total">0</strong></div>
       </section>
-
+      <p class="exchange-description">必要数は、各武器・アーカイヴを1つずつ交換する場合の数量です。所持数は復興素材管理とは別に保存されます。</p>
       <section class="controls" aria-label="絞り込み">
         <label class="search-box">
-          <span class="sr-only">素材名または採集ポイントを検索</span>
-          <input id="search-input" type="search" placeholder="素材名・採集ポイントを検索" autocomplete="off" />
+          <span class="sr-only">武器名・素材名・採集ポイントを検索</span>
+          <input id="search-input" type="search" placeholder="武器名・素材名・採集ポイントを検索" autocomplete="off" />
         </label>
         <div class="filter-group" role="group" aria-label="区分">
           <button class="filter-button is-active" data-filter="all" type="button">すべて</button>
@@ -48,45 +39,32 @@
           <button class="filter-button" data-filter="野菜" type="button">野菜</button>
         </div>
       </section>
-
       <p id="save-status" class="save-status" aria-live="polite">入力内容はこのブラウザに自動保存されます</p>
-
-      <section class="materials-panel" aria-label="復興素材一覧">
+      <section class="materials-panel" aria-label="武器交換素材一覧">
         <div class="table-header" aria-hidden="true">
-          <span>区分</span>
-          <span>素材名</span>
-          <span>必要数</span>
-          <span>レダ</span>
-          <span>ディートリヒ</span>
-          <span>セオドラ</span>
-          <span>カイ</span>
-          <span>合計</span>
-          <span>不足</span>
-          <span>採集ポイント</span>
-          <span>画像</span>
+          <span>交換先</span><span>素材名</span><span>必要数</span>
+          <span>レダ</span><span>ディートリヒ</span><span>セオドラ</span><span>カイ</span>
+          <span>合計</span><span>不足</span><span>採集ポイント</span>
         </div>
         <div id="materials-list"></div>
         <p id="empty-state" class="empty-state" hidden>該当する素材がありません。</p>
       </section>
     </main>
-
     <footer class="site-footer">
       <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
     </footer>
-
     <dialog id="reset-dialog">
       <form method="dialog">
         <h2>所持数をリセットしますか？</h2>
-        <p>入力した所持数をすべて空欄に戻します。</p>
+        <p>武器交換で入力した所持数をすべて空欄に戻します。</p>
         <div class="dialog-actions">
           <button value="cancel" class="quiet-button">キャンセル</button>
           <button value="confirm" class="danger-button">リセット</button>
         </div>
       </form>
     </dialog>
-
     <script src="../materials.js?v=1"></script>
-    <script src="../material-screenshots.js?v=1"></script>
+    <script src="../exchange-data.js?v=1"></script>
     <script src="../app.js?v=6"></script>
   </body>
 </html>

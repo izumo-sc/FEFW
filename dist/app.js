@@ -1,6 +1,8 @@
 (() => {
   "use strict";
 
+  const config = window.MATERIAL_TRACKER_CONFIG || {};
+
   const materialOrder = [
     "タルトゴビー",
     "グラディゴビー",
@@ -59,11 +61,14 @@
     "ミザンガ",
   ];
   const materialOrderIndex = new Map(materialOrder.map((name, index) => [name, index]));
-  const materials = (Array.isArray(window.MATERIALS) ? [...window.MATERIALS] : []).sort(
-    (left, right) =>
-      (materialOrderIndex.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
-      (materialOrderIndex.get(right.name) ?? Number.MAX_SAFE_INTEGER),
-  );
+  const materials = Array.isArray(window.MATERIALS) ? [...window.MATERIALS] : [];
+  if (!config.preserveOrder) {
+    materials.sort(
+      (left, right) =>
+        (materialOrderIndex.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
+        (materialOrderIndex.get(right.name) ?? Number.MAX_SAFE_INTEGER),
+    );
+  }
   const materialScreenshots = window.MATERIAL_SCREENSHOTS || {};
   const routes = [
     { key: "leda", label: "レダ" },
@@ -71,8 +76,8 @@
     { key: "theodora", label: "セオドラ" },
     { key: "kai", label: "カイ" },
   ];
-  const storageKey = "fortune-weave-material-inventory-v2";
-  const legacyStorageKey = "fortune-weave-material-inventory-v1";
+  const storageKey = config.storageKey || "fortune-weave-material-inventory-v2";
+  const legacyStorageKey = config.storageKey ? null : "fortune-weave-material-inventory-v1";
   const state = {
     inventory: loadInventory(),
     filter: "all",
@@ -95,6 +100,7 @@
         return parsed && typeof parsed === "object" ? parsed : {};
       }
 
+      if (!legacyStorageKey) return {};
       const legacy = JSON.parse(localStorage.getItem(legacyStorageKey) || "{}");
       if (!legacy || typeof legacy !== "object") return {};
       return Object.fromEntries(
@@ -138,7 +144,7 @@
     const query = state.query.trim().toLocaleLowerCase("ja");
     return materials.filter((material) => {
       const categoryMatches = state.filter === "all" || material.category === state.filter;
-      const textMatches = !query || `${material.name} ${material.locations.join(" ")}`.toLocaleLowerCase("ja").includes(query);
+      const textMatches = !query || `${material.exchangeFor || ""} ${material.name} ${material.locations.join(" ")}`.toLocaleLowerCase("ja").includes(query);
       return categoryMatches && textMatches;
     });
   }
@@ -157,8 +163,10 @@
       row.dataset.name = material.name;
 
       const category = document.createElement("span");
-      category.className = `category ${material.category === "魚" ? "fish" : "vegetable"}`;
-      category.textContent = material.category;
+      category.className = material.exchangeFor
+        ? "category exchange-weapon"
+        : `category ${material.category === "魚" ? "fish" : "vegetable"}`;
+      category.textContent = material.exchangeFor || material.category;
 
       const name = document.createElement("span");
       name.className = "material-name";
@@ -279,7 +287,7 @@
     if (resetDialog.returnValue !== "confirm") return;
     state.inventory = {};
     localStorage.removeItem(storageKey);
-    localStorage.removeItem(legacyStorageKey);
+    if (legacyStorageKey) localStorage.removeItem(legacyStorageKey);
     render();
     updateSummary();
     saveStatus.textContent = "所持数をリセットしました";
