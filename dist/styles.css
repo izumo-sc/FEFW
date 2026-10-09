@@ -13,7 +13,6 @@
   --veg-ink: #2f7042;
   --danger: #a93830;
   --danger-soft: #fff0ed;
-  --route-soft: #fbf0e7;
   font-family: "BIZ UDPGothic", "Yu Gothic UI", "Meiryo", sans-serif;
 }
 
@@ -235,10 +234,6 @@ main {
 
 .material-row:nth-child(even) {
   background: #f8fafb;
-}
-
-.material-row.route-limited {
-  background: var(--route-soft);
 }
 
 .material-row.section-gap {
