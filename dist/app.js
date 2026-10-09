@@ -345,9 +345,14 @@
 
     function updateSummary() {
       const included = includedMaterials();
-      const requiredTotal = included.reduce((sum, material) => sum + material.required * (config.exchange ? routes.length : 1), 0);
+      const requiredTotal = included.reduce((sum, material) => {
+        if (config.exchange) return sum + material.required * routes.length;
+        const exchangeRequired = state.showExchange ? (exchangeRequirements.get(material.name) || 0) * routes.length : 0;
+        return sum + material.required + exchangeRequired;
+      }, 0);
       const shortageTotal = included.reduce((sum, material) => {
-        return sum + totalsFor(material, quantitiesFor(material.name)).shortage;
+        const totals = totalsFor(material, quantitiesFor(material.name));
+        return sum + (config.exchange ? totals.shortage : totals.combinedShortage);
       }, 0);
       find("material-count").textContent = String(included.length);
       find("required-total").textContent = requiredTotal.toLocaleString("ja-JP");
