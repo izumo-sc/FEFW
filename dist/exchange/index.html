@@ -27,7 +27,7 @@
         <div class="summary-card"><span>必要数</span><strong id="exchange-required-total">0</strong></div>
         <div class="summary-card accent"><span>不足数</span><strong id="exchange-shortage-total">0</strong></div>
       </section>
-      <p class="exchange-description">必要数は、各武器・アーカイヴを1つずつ交換する場合の数量です。所持数は復興素材管理とは別に保存されます。</p>
+      <p class="exchange-description">必要数は各ルートで1つずつ交換するための数量です。所持数は復興素材管理と共通です。合計と不足は各ルートの必要数を上限に計算します。</p>
       <section id="exchange-controls" class="controls" aria-label="絞り込み">
         <label class="search-box">
           <span class="sr-only">武器名・素材名・採集ポイントを検索</span>
@@ -56,7 +56,7 @@
     <dialog id="exchange-reset-dialog">
       <form method="dialog">
         <h2>所持数をリセットしますか？</h2>
-        <p>武器交換で入力した所持数をすべて空欄に戻します。</p>
+        <p>武器交換の素材の所持数をすべて空欄に戻します。復興素材管理の同じ素材にも反映されます。</p>
         <div class="dialog-actions">
           <button value="cancel" class="quiet-button">キャンセル</button>
           <button value="confirm" class="danger-button">リセット</button>
@@ -65,6 +65,6 @@
     </dialog>
     <script src="../materials.js?v=1"></script>
     <script src="../exchange-data.js?v=2"></script>
-    <script src="../app.js?v=8"></script>
+    <script src="../app.js?v=9"></script>
   </body>
 </html>

@@ -78,8 +78,11 @@
       { key: "theodora", label: "セオドラ" },
       { key: "kai", label: "カイ" },
     ];
-    const storageKey = config.storageKey || "fortune-weave-material-inventory-v2";
-    const legacyStorageKey = config.storageKey ? null : "fortune-weave-material-inventory-v1";
+    const storageKey = "fortune-weave-material-inventory-v3";
+    const exchangeRequirements = new Map();
+    for (const material of window.EXCHANGE_MATERIALS || []) {
+      exchangeRequirements.set(material.name, (exchangeRequirements.get(material.name) || 0) + material.required);
+    }
     const state = {
       inventory: loadInventory(),
       filter: "all",
@@ -102,15 +105,22 @@
           return parsed && typeof parsed === "object" ? parsed : {};
         }
 
-        if (!legacyStorageKey) return {};
-        const legacy = JSON.parse(localStorage.getItem(legacyStorageKey) || "{}");
-        if (!legacy || typeof legacy !== "object") return {};
-        return Object.fromEntries(
-          Object.entries(legacy).map(([name, quantity]) => [
-            name,
-            { leda: normalizeQuantity(quantity), dietrich: 0, theodora: 0, kai: 0 },
-          ]),
-        );
+        const reconstruction = JSON.parse(localStorage.getItem("fortune-weave-material-inventory-v2") ||
+          localStorage.getItem("fortune-weave-material-inventory-v1") || "{}");
+        const exchange = JSON.parse(localStorage.getItem("fortune-weave-weapon-exchange-inventory-v1") || "{}");
+        const merged = {};
+        for (const inventory of [reconstruction, exchange]) {
+          if (!inventory || typeof inventory !== "object") continue;
+          for (const [name, stored] of Object.entries(inventory)) {
+            merged[name] ||= {};
+            for (const route of routes) {
+              const quantity = stored && typeof stored === "object" ? stored[route.key] : route.key === "leda" ? stored : 0;
+              merged[name][route.key] = Math.max(merged[name][route.key] || 0, normalizeQuantity(quantity));
+            }
+          }
+        }
+        localStorage.setItem(storageKey, JSON.stringify(merged));
+        return merged;
       } catch {
         return {};
       }
@@ -142,6 +152,20 @@
       return routes.reduce((sum, route) => sum + normalizeQuantity(quantities[route.key]), 0);
     }
 
+    function totalsFor(material, quantities) {
+      const held = totalQuantity(quantities);
+      const perRoute = exchangeRequirements.get(material.name) || 0;
+      const exchangeHeld = routes.reduce((sum, route) => sum + Math.min(perRoute, normalizeQuantity(quantities[route.key])), 0);
+      const exchangeShortage = perRoute * routes.length - exchangeHeld;
+      const reconstructionShortage = Math.max(0, material.required - held);
+      return {
+        held: config.exchange ? exchangeHeld : held,
+        shortage: config.exchange ? exchangeShortage : reconstructionShortage,
+        combinedShortage: exchangeShortage + Math.max(0, material.required - (held - exchangeHeld)),
+        perRoute,
+      };
+    }
+
     function filteredMaterials() {
       const query = state.query.trim().toLocaleLowerCase("ja");
       return materials.filter((material) => {
@@ -158,8 +182,8 @@
 
       for (const material of visible) {
         const quantities = quantitiesFor(material.name);
-        const held = totalQuantity(quantities);
-        const shortage = Math.max(0, material.required - held);
+        const totals = totalsFor(material, quantities);
+        const { held, shortage } = totals;
         const row = document.createElement("article");
         row.className = `material-row${material.routeLimited ? " route-limited" : ""}`;
         row.dataset.name = material.name;
@@ -177,6 +201,15 @@
         const required = document.createElement("span");
         required.className = "number-cell required";
         required.textContent = String(material.required);
+        if (config.exchange) {
+          required.textContent = `${material.required}×4`;
+        } else if (totals.perRoute) {
+          const note = document.createElement("small");
+          note.className = "exchange-note";
+          note.textContent = `（${totals.perRoute}×4）`;
+          note.title = "武器交換に各ルートで必要な数";
+          required.append(note);
+        }
 
         const routeInputs = document.createElement("span");
         routeInputs.className = "route-inputs";
@@ -208,11 +241,9 @@
             quantities[route.key] = normalizeQuantity(input.value);
             input.value = quantities[route.key] > 0 ? String(quantities[route.key]) : "";
             state.inventory[material.name] = quantities;
-            const nextTotal = totalQuantity(quantities);
-            const nextShortage = Math.max(0, material.required - nextTotal);
-            totalCell.textContent = String(nextTotal);
-            shortageCell.textContent = String(nextShortage);
-            shortageCell.classList.toggle("is-complete", nextShortage === 0);
+            const nextTotals = totalsFor(material, quantities);
+            totalCell.textContent = String(nextTotals.held);
+            updateShortage(nextTotals);
             saveInventory();
             updateSummary();
           });
@@ -223,7 +254,19 @@
 
         const shortageCell = document.createElement("span");
         shortageCell.className = `shortage${shortage === 0 ? " is-complete" : ""}`;
-        shortageCell.textContent = String(shortage);
+        function updateShortage(current) {
+          shortageCell.replaceChildren(document.createTextNode(String(current.shortage)));
+          shortageCell.classList.toggle("is-complete", current.shortage === 0);
+          if (!config.exchange && current.perRoute) {
+            const note = document.createElement("small");
+            note.className = "exchange-note";
+            note.textContent = `（${current.combinedShortage}）`;
+            note.title = "復興分と武器交換4ルート分の不足合計";
+            note.style.color = current.combinedShortage === 0 ? "#35714a" : "var(--danger)";
+            shortageCell.append(note);
+          }
+        }
+        updateShortage(totals);
 
         const locations = document.createElement("div");
         locations.className = "locations";
@@ -264,10 +307,9 @@
     }
 
     function updateSummary() {
-      const requiredTotal = materials.reduce((sum, material) => sum + material.required, 0);
+      const requiredTotal = materials.reduce((sum, material) => sum + material.required * (config.exchange ? routes.length : 1), 0);
       const shortageTotal = materials.reduce((sum, material) => {
-        const held = totalQuantity(quantitiesFor(material.name));
-        return sum + Math.max(0, material.required - held);
+        return sum + totalsFor(material, quantitiesFor(material.name)).shortage;
       }, 0);
       find("material-count").textContent = String(materials.length);
       find("required-total").textContent = requiredTotal.toLocaleString("ja-JP");
@@ -290,9 +332,9 @@
     resetButton.addEventListener("click", () => resetDialog.showModal());
     resetDialog.addEventListener("close", () => {
       if (resetDialog.returnValue !== "confirm") return;
-      state.inventory = {};
-      localStorage.removeItem(storageKey);
-      if (legacyStorageKey) localStorage.removeItem(legacyStorageKey);
+      state.inventory = loadInventory();
+      for (const material of materials) delete state.inventory[material.name];
+      saveInventory();
       render();
       updateSummary();
       saveStatus.textContent = "所持数をリセットしました";
@@ -312,7 +354,7 @@
   createMaterialTracker(window.MATERIALS);
   createMaterialTracker(window.EXCHANGE_MATERIALS, {
     prefix: "exchange-",
-    storageKey: "fortune-weave-weapon-exchange-inventory-v1",
+    exchange: true,
     preserveOrder: true,
   });
 })();
