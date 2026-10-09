@@ -91,10 +91,12 @@
     for (const material of window.EXCHANGE_MATERIALS || []) {
       exchangeRequirements.set(material.name, (exchangeRequirements.get(material.name) || 0) + material.required);
     }
+    const displayStorageKey = "fortune-weave-exchange-materials-visible";
     const state = {
       inventory: loadInventory(),
       filter: "all",
       query: "",
+      showExchange: loadExchangeDisplay(),
     };
 
     const list = find("materials-list");
@@ -104,6 +106,32 @@
     const resetButton = find("reset-button");
     const resetDialog = find("reset-dialog");
     const saveStatus = find("save-status");
+
+    const displayToggle = find("exchange-display-toggle");
+
+    function loadExchangeDisplay() {
+      if (config.exchange) return true;
+      try { return localStorage.getItem(displayStorageKey) !== "false"; }
+      catch { return true; }
+    }
+
+    function includedMaterials() {
+      return materials.filter((material) => state.showExchange || !material.exchangeOnly);
+    }
+
+    function updateDisplayToggle() {
+      if (!displayToggle) return;
+      displayToggle.setAttribute("aria-pressed", String(state.showExchange));
+      find("exchange-display-state").textContent = state.showExchange ? "ON" : "OFF";
+    }
+
+    displayToggle?.addEventListener("click", () => {
+      state.showExchange = !state.showExchange;
+      try { localStorage.setItem(displayStorageKey, String(state.showExchange)); } catch {}
+      updateDisplayToggle();
+      render();
+      updateSummary();
+    });
 
     function loadInventory() {
       try {
@@ -162,7 +190,7 @@
 
     function totalsFor(material, quantities) {
       const held = totalQuantity(quantities);
-      const perRoute = exchangeRequirements.get(material.name) || 0;
+      const perRoute = state.showExchange ? exchangeRequirements.get(material.name) || 0 : 0;
       const exchangeHeld = routes.reduce((sum, route) => sum + Math.min(perRoute, normalizeQuantity(quantities[route.key])), 0);
       const exchangeShortage = perRoute * routes.length - exchangeHeld;
       const reconstructionHeld = held - exchangeHeld;
@@ -177,7 +205,7 @@
 
     function filteredMaterials() {
       const query = state.query.trim().toLocaleLowerCase("ja");
-      return materials.filter((material) => {
+      return includedMaterials().filter((material) => {
         const categoryMatches = state.filter === "all" || material.category === state.filter;
         const textMatches = !query || `${material.exchangeFor || ""} ${material.name} ${material.locations.join(" ")}`.toLocaleLowerCase("ja").includes(query);
         return categoryMatches && textMatches;
@@ -316,11 +344,12 @@
     }
 
     function updateSummary() {
-      const requiredTotal = materials.reduce((sum, material) => sum + material.required * (config.exchange ? routes.length : 1), 0);
-      const shortageTotal = materials.reduce((sum, material) => {
+      const included = includedMaterials();
+      const requiredTotal = included.reduce((sum, material) => sum + material.required * (config.exchange ? routes.length : 1), 0);
+      const shortageTotal = included.reduce((sum, material) => {
         return sum + totalsFor(material, quantitiesFor(material.name)).shortage;
       }, 0);
-      find("material-count").textContent = String(materials.length);
+      find("material-count").textContent = String(included.length);
       find("required-total").textContent = requiredTotal.toLocaleString("ja-JP");
       find("shortage-total").textContent = shortageTotal.toLocaleString("ja-JP");
     }
@@ -342,7 +371,7 @@
     resetDialog.addEventListener("close", () => {
       if (resetDialog.returnValue !== "confirm") return;
       state.inventory = loadInventory();
-      for (const material of materials) delete state.inventory[material.name];
+      for (const material of includedMaterials()) delete state.inventory[material.name];
       saveInventory();
       render();
       updateSummary();
@@ -350,12 +379,15 @@
     });
 
     window.addEventListener("storage", (event) => {
-      if (event.key !== storageKey && event.key !== null) return;
+      if (event.key !== storageKey && event.key !== displayStorageKey && event.key !== null) return;
       state.inventory = loadInventory();
+      state.showExchange = loadExchangeDisplay();
+      updateDisplayToggle();
       render();
       updateSummary();
     });
 
+    updateDisplayToggle();
     render();
     updateSummary();
   }

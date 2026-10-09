@@ -12,3 +12,25 @@
   line-height: 1.4;
   white-space: nowrap;
 }
+
+.exchange-display-controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin-bottom: 16px;
+}
+
+.exchange-display-controls p { margin: 0; }
+
+#exchange-display-toggle[aria-pressed="true"] {
+  color: white;
+  border-color: var(--navy-soft);
+  background: var(--navy-soft);
+}
+
+#exchange-display-state {
+  display: inline-block;
+  min-width: 2.3em;
+  margin-left: 8px;
+}

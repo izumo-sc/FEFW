@@ -11,7 +11,7 @@
     <title>万紫千紅 復興素材管理</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css?v=3" />
-    <link rel="stylesheet" href="./exchange.css?v=3" />
+    <link rel="stylesheet" href="./exchange.css?v=4" />
   </head>
   <body>
     <header class="site-header material-header">
@@ -41,7 +41,12 @@
         </div>
       </section>
 
-      <p>（）内は商会で武器交換に必要な素材</p>
+      <div class="exchange-display-controls">
+        <button id="exchange-display-toggle" class="quiet-button" type="button" aria-pressed="true" aria-describedby="exchange-description">
+          武器交換用素材の表示 <span id="exchange-display-state" aria-hidden="true">ON</span>
+        </button>
+        <p id="exchange-description">（）内は商会で武器交換に必要な素材</p>
+      </div>
 
       <section id="controls" class="controls" aria-label="復興素材の絞り込み">
         <label class="search-box">
@@ -95,6 +100,6 @@
     <script src="../materials.js?v=1"></script>
     <script src="../material-screenshots.js?v=1"></script>
     <script src="../exchange-data.js?v=2"></script>
-    <script src="../app.js?v=11"></script>
+    <script src="../app.js?v=12"></script>
   </body>
 </html>
