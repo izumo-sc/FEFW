@@ -1,0 +1,78 @@
+.material-actions,
+.exchange-heading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.exchange-section {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+  scroll-margin-top: 16px;
+}
+
+.exchange-heading { justify-content: space-between; }
+.exchange-heading h2 { margin: 0; }
+.exchange-heading .quiet-button {
+  color: var(--ink);
+  background: var(--surface);
+  border-color: var(--line);
+}
+
+.exchange-description {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.exchange-section .screenshot-cell {
+  display: none;
+}
+
+.exchange-weapon {
+  justify-content: start;
+  color: var(--navy-soft);
+  background: #edf4f8;
+}
+
+@media (min-width: 1101px) {
+  .exchange-section .table-header,
+  .exchange-section .material-row {
+    grid-template-columns: minmax(148px, 1fr) minmax(128px, 0.9fr) 68px 72px 92px 76px 72px 66px 66px minmax(190px, 1.5fr);
+  }
+}
+
+@media (max-width: 1100px) {
+  .exchange-section .table-header { display: none; }
+  .exchange-section .material-row {
+    grid-template-columns: minmax(0, 1fr) 100px;
+    grid-template-areas:
+      "category category"
+      "name shortage"
+      "required total"
+      "routes routes"
+      "locations locations";
+  }
+  .exchange-section .category { grid-area: category; padding: 8px 12px; }
+  .exchange-section .material-name { grid-area: name; }
+  .exchange-section .required { grid-area: required; text-align: left; color: var(--muted); }
+  .exchange-section .required::before { content: "必要 "; }
+  .exchange-section .shortage { grid-area: shortage; text-align: right; }
+  .exchange-section .shortage::before { content: "不足 "; font-size: 0.75rem; }
+  .exchange-section .owned-total { grid-area: total; text-align: right; }
+  .exchange-section .owned-total::before { content: "合計 "; font-size: 0.75rem; }
+  .exchange-section .route-inputs {
+    grid-area: routes;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 6px;
+    padding: 10px 8px 12px;
+    border-top: 1px dashed #d4dde5;
+  }
+  .exchange-section .route-input-group { gap: 4px; padding: 0; }
+  .exchange-section .route-name { display: block; min-height: 2.4em; font-size: 0.7rem; color: var(--muted); text-align: center; }
+  .exchange-section .material-input { width: min(72px, 100%); }
+  .exchange-section .locations { grid-area: locations; border-top: 1px dashed #d4dde5; font-size: 0.84rem; }
+}
