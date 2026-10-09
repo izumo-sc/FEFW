@@ -64,6 +64,14 @@
     ];
     const materialOrderIndex = new Map(materialOrder.map((name, index) => [name, index]));
     const materials = Array.isArray(source) ? [...source] : [];
+    if (!config.exchange) {
+      const existingNames = new Set(materials.map((material) => material.name));
+      for (const { exchangeFor, ...material } of window.EXCHANGE_MATERIALS || []) {
+        if (existingNames.has(material.name)) continue;
+        materials.push({ ...material, required: 0, exchangeOnly: true });
+        existingNames.add(material.name);
+      }
+    }
     if (!config.preserveOrder) {
       materials.sort(
         (left, right) =>
@@ -200,7 +208,7 @@
 
         const required = document.createElement("span");
         required.className = "number-cell required";
-        required.textContent = String(material.required);
+        required.textContent = material.exchangeOnly ? "" : String(material.required);
         if (config.exchange) {
           required.textContent = `${material.required}×4`;
         } else if (totals.perRoute) {
@@ -255,7 +263,7 @@
         const shortageCell = document.createElement("span");
         shortageCell.className = `shortage${shortage === 0 ? " is-complete" : ""}`;
         function updateShortage(current) {
-          shortageCell.replaceChildren(document.createTextNode(String(current.shortage)));
+          shortageCell.replaceChildren(document.createTextNode(material.exchangeOnly ? "" : String(current.shortage)));
           shortageCell.classList.toggle("is-complete", current.shortage === 0);
           if (!config.exchange && current.perRoute) {
             const note = document.createElement("small");
