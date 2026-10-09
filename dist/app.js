@@ -198,6 +198,7 @@
       return {
         held: config.exchange ? exchangeHeld : held,
         shortage: config.exchange ? exchangeShortage : reconstructionShortage,
+        exchangeShortage,
         combinedShortage: exchangeShortage + reconstructionShortage,
         perRoute,
       };
@@ -297,9 +298,9 @@
           if (!config.exchange && current.perRoute) {
             const note = document.createElement("small");
             note.className = "exchange-note";
-            note.textContent = `（${current.combinedShortage}）`;
-            note.title = "復興分と武器交換4ルート分の不足合計";
-            note.style.color = current.combinedShortage === 0 ? "#35714a" : "var(--danger)";
+            note.textContent = `（${current.exchangeShortage}）`;
+            note.title = "武器交換4ルート分の不足数";
+            note.style.color = current.exchangeShortage === 0 ? "#35714a" : "var(--danger)";
             shortageCell.append(note);
           }
         }

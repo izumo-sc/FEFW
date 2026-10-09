@@ -63,10 +63,10 @@ test("上部の必要数・不足数に4ルートの交換分も含める", () =
   assert.equal(t.get("required-total"), "836");
   assert.equal(t.get("shortage-total"), "836");
   t.input("サンノミ", 0, 5);
-  assert.equal(t.shortage("サンノミ"), "25（60）");
+  assert.equal(t.shortage("サンノミ"), "25（35）");
   assert.equal(t.get("shortage-total"), "831");
   t.input("サンノミ", 0, 20);
-  assert.equal(t.shortage("サンノミ"), "15（45）");
+  assert.equal(t.shortage("サンノミ"), "15（30）");
   assert.equal(t.get("shortage-total"), "816");
 });
 
@@ -101,7 +101,7 @@ test("ページ間同期後の追加入力も最新の数値で再計算する",
   const t = tracker();
   t.sync({サンノミ:{leda:20}});
   t.input("サンノミ", 1, 10);
-  assert.equal(t.shortage("サンノミ"), "15（35）");
+  assert.equal(t.shortage("サンノミ"), "15（20）");
   assert.equal(t.get("shortage-total"), "806");
 });
 
@@ -111,4 +111,12 @@ test("武器交換ページは交換分のみをルート別上限で集計す�
   t.input("サンノミ", 0, 100);
   assert.equal(t.shortage("サンノミ"), "30");
   assert.equal(t.get("shortage-total"), "158");
+});
+
+test("括弧内は交換分のみで、復興分と独立して不足を表示する", () => {
+  const t = tracker();
+  assert.equal(t.shortage("サンノミ"), "25（40）");
+  for (const route of [0, 1, 2, 3]) t.input("サンノミ", route, 10);
+  assert.equal(t.shortage("サンノミ"), "25（0）");
+  assert.equal(t.get("shortage-total"), "796");
 });
