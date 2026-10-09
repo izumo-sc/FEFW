@@ -79,7 +79,6 @@
           (materialOrderIndex.get(right.name) ?? Number.MAX_SAFE_INTEGER),
       );
     }
-    const materialScreenshots = window.MATERIAL_SCREENSHOTS || {};
     const routes = [
       { key: "leda", label: "レダ" },
       { key: "dietrich", label: "ディートリヒ" },
@@ -88,8 +87,12 @@
     ];
     const storageKey = "fortune-weave-material-inventory-v3";
     const exchangeRequirements = new Map();
+    const exchangeWeapons = new Map();
     for (const material of window.EXCHANGE_MATERIALS || []) {
       exchangeRequirements.set(material.name, (exchangeRequirements.get(material.name) || 0) + material.required);
+      const weapons = exchangeWeapons.get(material.name) || new Set();
+      weapons.add(material.exchangeFor);
+      exchangeWeapons.set(material.name, weapons);
     }
     const displayStorageKey = "fortune-weave-exchange-materials-visible";
     const state = {
@@ -326,20 +329,15 @@
           locations.textContent = "未確認";
         }
 
-        const screenshot = document.createElement("div");
-        screenshot.className = "screenshot-cell";
-        const screenshotPath = materialScreenshots[material.name];
-        if (screenshotPath) {
-          const image = document.createElement("img");
-          image.src = screenshotPath;
-          image.alt = `${material.name}の採集場所`;
-          image.loading = "lazy";
-          screenshot.append(image);
-        } else {
-          screenshot.classList.add("is-empty");
+        row.append(category, name, required, routeInputs, totalCell, shortageCell, locations);
+        if (!config.exchange) {
+          const remarks = document.createElement("div");
+          remarks.className = "remarks-cell";
+          if (state.showExchange && exchangeWeapons.has(material.name)) {
+            remarks.textContent = [...exchangeWeapons.get(material.name)].join("、");
+          }
+          row.append(remarks);
         }
-
-        row.append(category, name, required, routeInputs, totalCell, shortageCell, locations, screenshot);
         list.append(row);
       }
     }

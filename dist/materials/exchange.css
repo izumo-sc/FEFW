@@ -34,3 +34,29 @@
   min-width: 2.3em;
   margin-left: 8px;
 }
+
+.remarks-cell {
+  color: #47576a;
+  font-size: 0.84rem;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 900px) {
+  .material-row {
+    grid-template-areas:
+      "category name shortage"
+      "category required total"
+      "routes routes routes"
+      "locations locations locations"
+      "remarks remarks remarks";
+  }
+
+  .remarks-cell {
+    grid-area: remarks;
+    border-top: 1px dashed #d4dde5;
+  }
+
+  .remarks-cell:not(:empty)::before { content: "備考："; }
+  .remarks-cell:empty { display: none; }
+}
