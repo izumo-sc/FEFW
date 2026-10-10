@@ -41,4 +41,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2101958566076981537",
+        text: "1週目のクリアデータ重要すぎるの罠だろ\n素材集め救世編の度にするの嫌なんだが？",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月21日",
+      },
+    ],
+  },
 ];
