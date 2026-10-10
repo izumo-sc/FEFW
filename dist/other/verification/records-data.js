@@ -111,4 +111,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2104086524451299534",
+        text: "#FE万紫千紅\n3部までやって、いくらか試して感じていることをまとめた\nあくまでも探索パートについてではなく、SRPGとして見た時の感想\n\n前もって言っておくけど、万紫千紅自体は賛否だと賛寄り\n育成に関しては考察のしがいがあって楽しい\nSRPGに関しては、こう思ってますよという話\n\n微ネタバレあり https://t.co/97EIUPEZYU",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月27日",
+      },
+    ],
+  },
 ];
