@@ -21,4 +21,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2101688691819454492",
+        text: "いや1部で手抜きしたら3部でめちゃくちゃ咎められる作りしてんな？！\nだからといって今更じっくりやりに行ってもデータ作った時点でもう遅いという",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月20日",
+      },
+    ],
+  },
 ];
