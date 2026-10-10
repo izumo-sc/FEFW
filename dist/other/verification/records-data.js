@@ -51,4 +51,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2102001122873688420",
+        text: "っすー………\n\n流石に早計\n流石に早計\n流石に早計\n\nサブ垢という手もある\nサブ垢という手もある\nサブ垢という手もある https://t.co/JsUdFx8aeX",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月21日",
+      },
+    ],
+  },
 ];
