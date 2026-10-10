@@ -1,0 +1,108 @@
+.other-header,
+.other-main {
+  width: min(900px, calc(100% - 32px));
+}
+
+.other-header h1 {
+  font-size: clamp(1.4rem, 4vw, 2rem);
+}
+
+.other-header nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.other-menu {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.other-menu-link,
+.verification-record,
+.verification-empty {
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  background: var(--surface);
+}
+
+.other-menu-link {
+  text-decoration: none;
+}
+
+.other-menu-link:hover,
+.other-menu-link:focus-visible {
+  border-color: var(--navy-soft);
+  box-shadow: 0 6px 20px rgb(18 39 57 / 0.08);
+}
+
+.other-menu-link h2,
+.verification-record h2 {
+  margin: 0 0 12px;
+  font-size: 1.15rem;
+}
+
+.other-menu-link p {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.other-menu-link > span {
+  font-weight: 700;
+}
+
+.verification-list {
+  display: grid;
+  gap: 20px;
+}
+
+.verification-record {
+  min-width: 0;
+}
+
+.verification-body {
+  white-space: pre-line;
+  line-height: 1.8;
+}
+
+.verification-media + .verification-media {
+  margin-top: 24px;
+}
+
+.verification-media a {
+  color: #176183;
+  overflow-wrap: anywhere;
+}
+
+.verification-media > .twitter-tweet {
+  max-width: 550px;
+  margin: 0 auto 12px;
+  line-height: 1.8;
+  white-space: pre-line;
+}
+
+.verification-source {
+  display: block;
+  margin-top: 12px;
+  font-size: 0.9rem;
+}
+
+.verification-video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  min-height: 200px;
+  border: 0;
+  border-radius: 8px;
+  background: #102438;
+}
+
+@media (max-width: 560px) {
+  .other-menu { grid-template-columns: 1fr; }
+  .other-header { gap: 12px; }
+  .other-header nav { justify-content: flex-end; }
+  .verification-record { padding: 12px; }
+}
