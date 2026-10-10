@@ -121,4 +121,104 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2104192952583258354",
+        text: "てかせめて因果の欠片を無限資源にしろよと、ふと思った\n因果の欠片が無限なら1週目やり直しがどうとか考えなくてもよかったねん",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月27日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2104847243287343418",
+        text: "ちなみに今万紫千紅で1番クソだと思ってるのはUIでもセーブデータでもなく、3部の薄さだと思ってるのん\n攻略マップ少ない上に差別点が瘴気しかない件",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月29日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2105153850634334288",
+        text: "因果統合いいシステムだけど、スカウトした周回でしか機能しないのに因果の欠片帰ってこないのどうにからなんの\n\nせめてストーリーやり直ししたら因果の欠片返還されるとかさ\nあちきの因果の欠片もう1万切ってるんだけど、無くなったらやり込んだセーブデータまた削除しないといけないんすか",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月30日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2105599960268038320",
+        text: "ぶっちゃけあんな資料作成してあれだけど\nまだ自分の素材箱道具箱納得してないからまたリセットしたい欲ある\nもうちょいダンジョン巡って強化素材集めたいな",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月1日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108277548727849347",
+        text: "寝てる間にサイトの1万PVとポストの1000いいね＆200RT超えてた\nあざます https://t.co/wuDq9i0LfJ",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月8日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108614799940821166",
+        text: "#FE万紫千紅\n復興素材管理のページに武器交換用素材を（）内に追加しました\n上部のボタンでON/OFFできるようにしてあります\nルート別で武器分を超過したら復興素材に反映されます\n\n一応、リロードしても既存入力数値は反映されるはずです……（手元の端末だと問題なかった）\n消えたらごめんなさい…… https://t.co/cX7QZBydqw",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月9日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108683830672716071",
+        text: "ナジャのスカウト時サラマンダー所持報告なんでこんなに中途半端なのかの原因わかったかも",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月9日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108700504536789368",
+        text: "あの……\n7章だと名声足りないんすけどサラマンダー手に入れた皆さんはどんだけ遭遇戦していらっしゃるので？ https://t.co/nHH40fJ52R",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月9日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108704045712155055",
+        text: "#FE万紫千紅\nナジャのサラマンダーやっと確認取れた\nまあカイ編なら現実的ではあるのかぁ\nセオドラ編も理論上可能なのかな？ https://t.co/PU41SQLD1L",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月9日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2108755168913461451",
+        text: "やっぱり謁見か遭遇戦稼ぎでもしないと名声280足りないなぁ…… https://t.co/rfws68Padr",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年10月10日",
+      },
+    ],
+  },
 ];
