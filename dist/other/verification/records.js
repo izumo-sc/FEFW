@@ -24,6 +24,7 @@ function parseRecordUrl(value) {
   const list = document.getElementById("verification-list");
   if (!list) return;
   let hasX = false;
+  const cards = [];
   const element = (tag, text, className) => {
     const node = document.createElement(tag);
     if (text) node.textContent = text;
@@ -38,22 +39,30 @@ function parseRecordUrl(value) {
     return node;
   };
   for (const record of window.VERIFICATION_RECORDS || []) {
+    const sources = (record.links || []).map(source => ({ source, media: parseRecordUrl(source.url) })).filter(item => item.media);
+    if (!sources.length && !record.title && !record.body) continue;
     const card = element("article", "", "verification-record");
+    const types = new Set(sources.map(item => item.media.type));
+    const labels = [...types].map(type => type === "x" ? "X" : "YouTube");
+    if (labels.length) card.append(element("p", labels.join(" / "), "verification-record-label"));
     if (record.title) card.append(element("h2", record.title));
     if (record.body) card.append(element("p", record.body, "verification-body"));
-    for (const source of record.links || []) {
-      const media = parseRecordUrl(source.url);
-      if (!media) continue;
+    for (const { source, media } of sources) {
       const container = element("div", "", "verification-media");
       if (media.type === "x") {
         hasX = true;
+        const preview = element("div", "", "verification-preview");
+        preview.tabIndex = 0;
+        preview.setAttribute("role", "region");
+        preview.setAttribute("aria-label", record.title ? `${record.title}のX投稿` : "X投稿（枠内をスクロールできます）");
         const quote = element("blockquote", "", "twitter-tweet");
         quote.setAttribute("data-dnt", "true");
         quote.setAttribute("data-lang", "ja");
         if (source.text) quote.append(element("p", source.text));
         if (source.author) quote.append(element("p", `— ${source.author}`));
         quote.append(link(source.date || "Xで投稿を見る", media.url.replace("https://x.com/", "https://twitter.com/")));
-        container.append(quote);
+        preview.append(quote);
+        container.append(preview);
       } else {
         const frame = element("iframe", "", "verification-video");
         frame.src = media.embed;
@@ -69,9 +78,25 @@ function parseRecordUrl(value) {
       container.append(original);
       card.append(container);
     }
-    if (card.childElementCount) list.append(card);
+    list.append(card);
+    cards.push({ card, types });
   }
-  document.getElementById("verification-empty").hidden = list.childElementCount > 0;
+  const empty = document.getElementById("verification-empty");
+  const count = document.getElementById("verification-count");
+  const filters = [...document.querySelectorAll("[data-record-filter]")];
+  const filterRecords = type => {
+    let visible = 0;
+    for (const item of cards) {
+      item.card.hidden = type !== "all" && !item.types.has(type);
+      if (!item.card.hidden) visible++;
+    }
+    for (const button of filters) button.setAttribute("aria-pressed", String(button.dataset.recordFilter === type));
+    if (count) count.textContent = `${visible}件 / 全${cards.length}件`;
+    empty.hidden = visible > 0;
+    empty.textContent = cards.length ? "該当する検証記録はありません。" : "検証記録は準備中です。";
+  };
+  for (const button of filters) button.addEventListener("click", () => filterRecords(button.dataset.recordFilter));
+  filterRecords("all");
   if (hasX) {
     const script = document.createElement("script");
     script.src = "https://platform.twitter.com/widgets.js";

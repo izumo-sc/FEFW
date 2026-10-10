@@ -56,11 +56,80 @@
 
 .verification-list {
   display: grid;
-  gap: 20px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 16px;
+}
+
+.verification-page .other-header,
+.verification-page .other-main {
+  width: min(1280px, calc(100% - 32px));
+}
+
+.verification-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+}
+
+.verification-filters {
+  display: flex;
+  gap: 6px;
+}
+
+.verification-filters button {
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--navy);
+  background: var(--surface);
+}
+
+.verification-filters button[aria-pressed="true"] {
+  border-color: var(--navy);
+  color: white;
+  background: var(--navy);
+}
+
+#verification-count {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .verification-record {
   min-width: 0;
+  padding: 14px;
+}
+
+.verification-record[hidden] {
+  display: none;
+}
+
+.verification-record-label {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.verification-preview {
+  max-height: 440px;
+  overflow: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
+}
+
+.verification-preview:focus-visible {
+  outline: 2px solid #176183;
+  outline-offset: 2px;
 }
 
 .verification-body {
@@ -77,16 +146,20 @@
   overflow-wrap: anywhere;
 }
 
-.verification-media > .twitter-tweet {
+.verification-preview > .twitter-tweet {
   max-width: 550px;
   margin: 0 auto 12px;
   line-height: 1.8;
   white-space: pre-line;
+  overflow-wrap: anywhere;
+  font-size: 0.9rem;
 }
 
 .verification-source {
   display: block;
   margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
   font-size: 0.9rem;
 }
 
@@ -100,9 +173,19 @@
   background: #102438;
 }
 
+@media (max-width: 1100px) {
+  .verification-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 740px) {
+  .verification-list { grid-template-columns: 1fr; }
+}
+
 @media (max-width: 560px) {
   .other-menu { grid-template-columns: 1fr; }
   .other-header { gap: 12px; }
   .other-header nav { justify-content: flex-end; }
   .verification-record { padding: 12px; }
+  .verification-toolbar { gap: 8px; padding: 10px; }
+  .verification-filters button { padding: 8px 10px; }
 }

@@ -5,9 +5,10 @@ const path = require("node:path");
 const vm = require("node:vm");
 
 class Element {
-  constructor(tag) { this.tag = tag; this.children = []; this.attributes = {}; }
+  constructor(tag) { this.tag = tag; this.children = []; this.attributes = {}; this.dataset = {}; this.listeners = {}; }
   append(...nodes) { this.children.push(...nodes); }
   setAttribute(name, value) { this.attributes[name] = value; }
+  addEventListener(name, callback) { this.listeners[name] = callback; }
   get childElementCount() { return this.children.length; }
 }
 
@@ -15,17 +16,24 @@ function render(records) {
   const list = new Element("div");
   const empty = new Element("p");
   const head = new Element("head");
+  const count = new Element("p");
+  const filters = ["all", "x", "youtube"].map(type => {
+    const button = new Element("button");
+    button.dataset.recordFilter = type;
+    return button;
+  });
   const context = vm.createContext({
     URL,
     window: { VERIFICATION_RECORDS: records },
     document: {
       head,
       createElement: tag => new Element(tag),
-      getElementById: id => id === "verification-list" ? list : empty,
+      getElementById: id => ({ "verification-list": list, "verification-empty": empty, "verification-count": count })[id],
+      querySelectorAll: () => filters,
     },
   });
   vm.runInContext(fs.readFileSync(path.join(__dirname, "../dist/other/verification/records.js"), "utf8"), context);
-  return { list, empty, head, parse: context.parseRecordUrl };
+  return { list, empty, head, count, filters, parse: context.parseRecordUrl };
 }
 
 test("XとYouTubeの共有URLを判定し、時刻指定を保持する", () => {
@@ -55,9 +63,26 @@ test("投稿を複数並べても公式スクリプトは1回だけ読み込み�
   assert.equal(head.children.length, 1);
   assert.equal(head.children[0].src, "https://platform.twitter.com/widgets.js");
   assert.equal(empty.hidden, true);
-  const media = list.children[0].children;
-  assert.equal(media[0].children[0].children[0].textContent, "<script>text</script>");
+  const media = list.children[0].children.filter(node => node.className === "verification-media");
+  assert.equal(media[0].children[0].children[0].children[0].textContent, "<script>text</script>");
   assert.equal(media[0].children[1].href, "https://x.com/test/status/123");
   assert.equal(media[2].children[0].referrerPolicy, "strict-origin-when-cross-origin");
   assert.equal(media[2].children[0].loading, "lazy");
+});
+
+test("複数記録を種類で絞り込み、件数と空の状態を更新する", () => {
+  const x = { url: "https://x.com/test/status/123" };
+  const youtube = { url: "https://youtu.be/M7lc1UVf-VE" };
+  const { list, count, filters } = render([{ links: [x] }, { links: [youtube] }, { links: [x, youtube] }]);
+  assert.equal(count.textContent, "3件 / 全3件");
+  filters[2].listeners.click();
+  assert.deepEqual(list.children.map(card => card.hidden), [true, false, false]);
+  assert.equal(count.textContent, "2件 / 全3件");
+  assert.equal(filters[2].attributes["aria-pressed"], "true");
+  filters[0].listeners.click();
+  assert.equal(list.children.filter(card => !card.hidden).length, 3);
+  const onlyX = render([{ links: [x] }]);
+  onlyX.filters[2].listeners.click();
+  assert.equal(onlyX.empty.hidden, false);
+  assert.equal(onlyX.count.textContent, "0件 / 全1件");
 });

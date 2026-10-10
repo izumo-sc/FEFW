@@ -8,9 +8,9 @@
     <title>万紫千紅 検証記録</title>
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../styles.css?v=15" />
-    <link rel="stylesheet" href="../other.css?v=1" />
+    <link rel="stylesheet" href="../other.css?v=2" />
   </head>
-  <body>
+  <body class="verification-page">
     <header class="site-header other-header">
       <div><p class="eyebrow">その他</p><h1>検証記録</h1></div>
       <nav aria-label="ページ移動">
@@ -19,6 +19,14 @@
       </nav>
     </header>
     <main class="other-main">
+      <div class="verification-toolbar">
+        <div class="verification-filters" role="group" aria-label="記録の種類">
+          <button type="button" data-record-filter="all" aria-pressed="true">すべて</button>
+          <button type="button" data-record-filter="x" aria-pressed="false">X</button>
+          <button type="button" data-record-filter="youtube" aria-pressed="false">YouTube</button>
+        </div>
+        <p id="verification-count" role="status" aria-live="polite"></p>
+      </div>
       <div id="verification-list" class="verification-list"></div>
       <p id="verification-empty" class="verification-empty" hidden>検証記録は準備中です。</p>
       <noscript><p class="verification-empty">投稿・動画の表示にはJavaScriptを有効にしてください。</p></noscript>
@@ -27,6 +35,6 @@
       <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
     </footer>
     <script src="./records-data.js?v=1"></script>
-    <script src="./records.js?v=1"></script>
+    <script src="./records.js?v=2"></script>
   </body>
 </html>
