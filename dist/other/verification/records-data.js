@@ -11,4 +11,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2101678687284576301",
+        text: "もう手遅れの人多いかもだけど、カイ編終わる時は動物の配備外しとかないと泣くことになります\n回避盾用に用意してたダークペガサス2体持ってかれました\n泣きました\n#FE万紫千紅",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月20日",
+      },
+    ],
+  },
 ];
