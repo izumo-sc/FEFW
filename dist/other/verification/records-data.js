@@ -61,4 +61,44 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2102001637242097679",
+        text: "育成なんて後でいくらでも出来るからとにかく初週のアイテム集め\nレア物も数集めもひたすらやり込みたい\n取り返しのつかない要素すぎる",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月21日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2102257817197674509",
+        text: "これさぁ素材が安いならいいんだけどさぁ\nテフノミですら因果の欠片100個使うバランスが良くない\nしかもいちいち方尖塔戻らないといけないのもよくない",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月22日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2102425856765473249",
+        text: "よし、後悔はない\n最強1部1週目データ作るぞー！ https://t.co/bRBHg5Ydlv",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月22日",
+      },
+    ],
+  },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2103321089472602546",
+        text: "回避盾に脳焼かれてる馬鹿の文句なんだけどさ\n\nダークペガサスは魔力％で回避20上がるスキルがあると\n天翼兵は魔力成長5％、ダークペガサスも魔力成長補正がある\nそして聖天馬兵は回避＋7の兵種スキル\n\nここまでは噛みあっているよね\n\n聖天翼兵\n魔力成長率-5%\n\n-5%？？？？\n\nなんで？？？\n\n#FE万紫千紅",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月25日",
+      },
+    ],
+  },
 ];
