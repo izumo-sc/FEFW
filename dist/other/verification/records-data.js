@@ -101,4 +101,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2103524238657556765",
+        text: "マジーデ4ルート終わらせて3部始まったタイミングのワクワク感は異常だからなぁこのゲーム\n\nあの瞬間の脳汁だけで評価8点はいける\n\nまあその後1部サボってると怒られて冷えるんですけどね",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月25日",
+      },
+    ],
+  },
 ];
