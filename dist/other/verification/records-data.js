@@ -31,4 +31,14 @@ window.VERIFICATION_RECORDS = [
       },
     ],
   },
+  {
+    links: [
+      {
+        url: "https://x.com/miyu_lasp/status/2101839619692306842",
+        text: "#FE万紫千紅\n\n3部に向けて1部で必要な素材、AIにスプレッドシートでまとめさせたんでよかったら参考に\n\n聖櫃とか3部でも集められないわけではないけど、せっかくSRPG部分が本気出してきたところで手間取りたくないし、将来的に周回もするので、僕はカイ編と救世編の1章やり直します https://t.co/pSZtXKpzjA",
+        author: "miyu_lasp (@miyu_lasp)",
+        date: "2026年9月21日",
+      },
+    ],
+  },
 ];
