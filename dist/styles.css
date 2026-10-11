@@ -465,9 +465,15 @@ dialog p {
   gap: 8px;
 }
 
-.home-x-profile,
-.home-x-share {
+.home-contact-note {
+  color: white;
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+.home-x-profile {
   display: inline-flex;
+  flex-shrink: 0;
   min-height: 34px;
   align-items: center;
   justify-content: center;
@@ -485,16 +491,8 @@ dialog p {
   background: rgb(255 255 255 / 0.06);
 }
 
-.home-x-share {
-  border: 1px solid white;
-  color: var(--navy);
-  background: white;
-}
-
 .home-x-profile:hover,
-.home-x-profile:focus-visible,
-.home-x-share:hover,
-.home-x-share:focus-visible {
+.home-x-profile:focus-visible {
   transform: translateY(-1px);
 }
 
@@ -1800,8 +1798,7 @@ dialog p {
     gap: 5px;
   }
 
-  .home-x-profile,
-  .home-x-share {
+  .home-x-profile {
     min-height: 32px;
     padding-inline: 9px;
     font-size: 0.72rem;
