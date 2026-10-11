@@ -461,6 +461,14 @@ dialog p {
 
 .home-nav-actions {
   display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 8px;
+}
+
+.home-contact {
+  display: flex;
   align-items: center;
   gap: 8px;
 }
@@ -471,7 +479,8 @@ dialog p {
   line-height: 1.5;
 }
 
-.home-x-profile {
+.home-x-profile,
+.home-x-repost {
   display: inline-flex;
   flex-shrink: 0;
   min-height: 34px;
@@ -491,8 +500,16 @@ dialog p {
   background: rgb(255 255 255 / 0.06);
 }
 
+.home-x-repost {
+  border: 1px solid white;
+  color: var(--navy);
+  background: white;
+}
+
 .home-x-profile:hover,
-.home-x-profile:focus-visible {
+.home-x-profile:focus-visible,
+.home-x-repost:hover,
+.home-x-repost:focus-visible {
   transform: translateY(-1px);
 }
 
@@ -1788,6 +1805,9 @@ dialog p {
 
   .home-nav {
     min-height: 68px;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 10px;
   }
 
   .home-brand {
@@ -1795,10 +1815,12 @@ dialog p {
   }
 
   .home-nav-actions {
+    width: 100%;
     gap: 5px;
   }
 
-  .home-x-profile {
+  .home-x-profile,
+  .home-x-repost {
     min-height: 32px;
     padding-inline: 9px;
     font-size: 0.72rem;
