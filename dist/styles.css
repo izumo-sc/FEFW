@@ -461,14 +461,15 @@ dialog p {
 
 .home-nav-actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
+  max-width: 100%;
   gap: 8px;
 }
 
 .home-contact {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 7rem;
   align-items: center;
   gap: 8px;
 }
@@ -477,6 +478,7 @@ dialog p {
   color: white;
   font-size: 0.8rem;
   line-height: 1.5;
+  text-align: right;
 }
 
 .home-x-profile,
