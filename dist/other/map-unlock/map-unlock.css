@@ -92,8 +92,16 @@
 
   .map-unlock-location-preview,
   .map-unlock-location-head {
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr);
     gap: 8px;
+  }
+
+  .map-unlock-destination::before {
+    content: "（";
+  }
+
+  .map-unlock-destination::after {
+    content: "）";
   }
 
   .map-unlock-thumbnail {
@@ -101,7 +109,9 @@
     justify-self: end;
   }
 
-  .map-unlock-image-heading {
+  .map-unlock-image-heading,
+  .map-unlock-destination-heading,
+  .map-unlock-location-preview > [aria-hidden="true"] {
     display: none;
   }
 }
