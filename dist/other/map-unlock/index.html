@@ -8,7 +8,7 @@
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../styles.css?v=18" />
     <link rel="stylesheet" href="../other.css?v=3" />
-    <link rel="stylesheet" href="./map-unlock.css?v=8" />
+    <link rel="stylesheet" href="./map-unlock.css?v=9" />
     <link rel="stylesheet" href="../image-viewer.css?v=1" />
     <script src="../image-viewer.js?v=1" defer></script>
   </head>
@@ -32,7 +32,13 @@
             <tr>
               <th scope="col">州名</th>
               <th scope="col">地図販売の場所</th>
-              <th scope="col">探索・歩かないといけない場所</th>
+              <th scope="col">
+                <div class="map-unlock-location-head">
+                  <span>探索・歩かないといけない場所</span>
+                  <span>開放先</span>
+                  <span class="map-unlock-image-heading">画像</span>
+                </div>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -43,6 +49,7 @@
             <tr><td>ニュシアデス州</td><td></td><td>
               <div class="map-unlock-location-preview">
                 <a href="../desert/">砂漠について</a>
+                <span aria-hidden="true"></span>
                 <a class="map-unlock-thumbnail" href="./images/nyusiades-desert.jpg" data-image-viewer aria-label="ニュシアデス州の画像を拡大">
                   <img src="./images/nyusiades-desert.jpg" alt="バイナのオアシス周辺のニュシアデス州の地図" loading="lazy" />
                 </a>
@@ -51,6 +58,7 @@
             <tr><td>サヴェロン州</td><td>海都アレクトー<br>（サヴェロン地図）</td><td>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">朽ち木の狭道</p>
+                <p class="map-unlock-destination">キラの村</p>
                 <a class="map-unlock-thumbnail" href="./images/decaying-tree-path.png?v=2" data-image-viewer aria-label="朽ち木の狭道の画像を拡大">
                   <img src="./images/decaying-tree-path.png?v=2" alt="朽ち木の狭道の位置" loading="lazy" />
                 </a>
@@ -59,12 +67,14 @@
             <tr><td>ランバス州</td><td>デモニクの村<br>（ランパス地図）</td><td>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">ホメロス奇岩地帯</p>
+                <p class="map-unlock-destination">百穴岩窟</p>
                 <a class="map-unlock-thumbnail" href="./images/homeros-rocks.png" data-image-viewer aria-label="ホメロス奇岩地帯の画像を拡大">
                   <img src="./images/homeros-rocks.png" alt="ホメロス奇岩地帯の位置" loading="lazy" />
                 </a>
               </div>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">闇夜峠</p>
+                <p class="map-unlock-destination">暗がりの洞窟</p>
                 <a class="map-unlock-thumbnail" href="./images/dark-night-pass.png" data-image-viewer aria-label="闇夜峠の画像を拡大">
                   <img src="./images/dark-night-pass.png" alt="闇夜峠の位置" loading="lazy" />
                 </a>
@@ -73,12 +83,14 @@
             <tr><td>カスタリア州</td><td>パンドラの港町<br>（カスタリア地図）</td><td>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">巨鳥の頸</p>
+                <p class="map-unlock-destination">ダマセン岬</p>
                 <a class="map-unlock-thumbnail" href="./images/giant-bird-neck.png" data-image-viewer aria-label="巨鳥の頸の画像を拡大">
                   <img src="./images/giant-bird-neck.png" alt="巨鳥の頸の位置" loading="lazy" />
                 </a>
               </div>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">ゼートス大滝</p>
+                <p class="map-unlock-destination">滝の裏の洞窟</p>
                 <a class="map-unlock-thumbnail" href="./images/zetos-waterfall.png" data-image-viewer aria-label="ゼートス大滝の画像を拡大">
                   <img src="./images/zetos-waterfall.png" alt="ゼートス大滝の位置" loading="lazy" />
                 </a>
@@ -87,12 +99,14 @@
             <tr><td>ソリダス州</td><td>マオン城郭<br>（ソリダス地図）</td><td>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">叫獣渓谷</p>
+                <p class="map-unlock-destination">熱の道の洞窟</p>
                 <a class="map-unlock-thumbnail" href="./images/kyouju-valley.png" data-image-viewer aria-label="叫獣渓谷の画像を拡大">
                   <img src="./images/kyouju-valley.png" alt="叫獣渓谷の位置" loading="lazy" />
                 </a>
               </div>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">ヤシロ砦</p>
+                <p class="map-unlock-destination">イアペトス大洞窟</p>
                 <a class="map-unlock-thumbnail" href="./images/yashiro-fort.png" data-image-viewer aria-label="ヤシロ砦の画像を拡大">
                   <img src="./images/yashiro-fort.png" alt="ソリダス州のヤシロ砦の位置" loading="lazy" />
                 </a>
@@ -101,6 +115,7 @@
             <tr><td>プラクシテア州</td><td>城塞都市モンス<br>（プラクシテア地図）</td><td>
               <div class="map-unlock-location-preview">
                 <p class="map-unlock-location">ルミナリア峠</p>
+                <p class="map-unlock-destination">魔獣の通り跡<br>ポンパエの隠れ里</p>
                 <a class="map-unlock-thumbnail" href="./images/luminaria-pass.png?v=2" data-image-viewer aria-label="ルミナリア峠の画像を拡大">
                   <img src="./images/luminaria-pass.png?v=2" alt="ルミナリア峠の位置" loading="lazy" />
                 </a>
@@ -114,10 +129,11 @@
               <div class="map-unlock-location-preview">
                 <div>
                   <p class="map-unlock-location">パンドラの港町で会話</p>
-                  <p class="map-unlock-location">パンドラの魚巣</p>
+                  <p class="map-unlock-location">パンドラの漁巣</p>
                 </div>
-                <a class="map-unlock-thumbnail" href="./images/pandora-fishing.png?v=2" data-image-viewer aria-label="パンドラの魚巣の画像を拡大">
-                  <img src="./images/pandora-fishing.png?v=2" alt="リル海のパンドラの魚巣の位置" loading="lazy" />
+                <p class="map-unlock-destination">地図にない島</p>
+                <a class="map-unlock-thumbnail" href="./images/pandora-fishing.png?v=2" data-image-viewer aria-label="パンドラの漁巣の画像を拡大">
+                  <img src="./images/pandora-fishing.png?v=2" alt="リル海のパンドラの漁巣の位置" loading="lazy" />
                 </a>
               </div>
             </td></tr>
