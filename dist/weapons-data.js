@@ -159,4 +159,8 @@ window.WEAPONS = [
     name: "グレートソード",
     acquisition: "王都グランアラゴン",
   },
+  {
+    name: "疾風の指輪",
+    acquisition: "10章アンナの秘密の店",
+  },
 ];
