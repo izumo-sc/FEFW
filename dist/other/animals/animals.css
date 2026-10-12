@@ -27,7 +27,11 @@
 }
 
 .animals-table thead th:first-child {
-  width: 35%;
+  width: 23%;
+}
+
+.animals-table thead th:nth-child(2) {
+  width: 27%;
 }
 
 .animals-table tbody tr + tr {
@@ -53,6 +57,10 @@
   }
 
   .animals-table thead th:first-child {
-    width: 38%;
+    width: 27%;
+  }
+
+  .animals-table thead th:nth-child(2) {
+    width: 29%;
   }
 }
