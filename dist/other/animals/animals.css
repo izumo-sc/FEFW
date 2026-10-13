@@ -1,3 +1,26 @@
+.animals-note {
+  margin: 0 0 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  font-size: 0.9rem;
+  line-height: 1.7;
+}
+
+.animals-unavailable {
+  display: block;
+  width: fit-content;
+  margin-top: 4px;
+  padding: 1px 6px;
+  border-radius: 4px;
+  color: #71362f;
+  background: #fff0eb;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
 .animals-table-wrap {
   overflow: hidden;
   border: 1px solid var(--line);
