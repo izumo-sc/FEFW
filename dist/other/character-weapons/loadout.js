@@ -6,7 +6,7 @@
   const names = Object.fromEntries(Object.entries(catalogs).map(([key, list]) => [key, new Map(list.map(item => [item.id, item.name]))]));
   const find = id => document.getElementById(id);
   const board = find('loadout-board'), status = find('loadout-status'), picker = find('loadout-picker');
-  let state = read(), selected = 0, activeTeam = 0, category = 'character', pickerTarget = null, saveFailed = false;
+  let state = read(), activeTeam = 0, pickerTarget = null, saveFailed = false;
   let drag = null, touch = null, scrollFrame = null, suppressClickUntil = 0;
   function read() { try { return cleanState(JSON.parse(localStorage.getItem(storageKey))); } catch { return cleanState(null); } }
   function el(tag, className, text) {
@@ -20,26 +20,15 @@
     if (label) node.setAttribute('aria-label', label);
     return node;
   }
-  function announce(text) { status.textContent = text; }
+  function announce(text, error = false) { status.textContent = text; status.className = error ? 'loadout-error' : 'sr-only'; }
   function commit(edit, message) {
     if (!saveFailed) state = read();
-    if (edit(state) === false) { renderBoard(); renderLibrary(); if (picker.open) renderPicker(); announce('配置できませんでした。チームの空き枠やキャラの配置済みロックを確認してください。'); return false; }
+    if (edit(state) === false) { renderBoard(); if (picker.open) renderPicker(); announce('配置できませんでした。キャラの配置済みロックを確認してください。', true); return false; }
     try { localStorage.setItem(storageKey, JSON.stringify(state)); saveFailed = false; }
     catch { saveFailed = true; }
-    renderBoard(); renderLibrary();
-    announce(saveFailed ? '保存できませんでした。この画面を閉じると変更が失われ、錬成ページにも反映されません。' : `${message} 自動保存しました。`);
+    renderBoard();
+    announce(saveFailed ? '保存できませんでした。この画面を閉じると変更が失われ、錬成ページにも反映されません。' : message, saveFailed);
     return true;
-  }
-  function selectSlot(index) {
-    selected = index;
-    for (const card of board.querySelectorAll('.loadout-card')) {
-      const current = Number(card.dataset.slot) === selected;
-      card.classList.toggle('is-selected', current);
-      const target = card.querySelector('.loadout-target-button');
-      target.setAttribute('aria-pressed', String(current)); target.textContent = current ? '選択中' : 'PUSH先';
-    }
-    const name = names.character.get(state[selected].character);
-    find('loadout-selection').textContent = `武器のPUSH先：チーム${activeTeam + 1}・キャラ枠${selected + 1}${name ? `（${name}）` : ''}`;
   }
   function targetFrom(node) {
     return {slot:Number(node.dataset.slot), category:node.dataset.category, weaponSlot:Number(node.dataset.weaponSlot)};
@@ -63,7 +52,7 @@
     const choose = button(name || (kind === 'character' ? 'キャラを選択' : `武器${weaponSlot + 1}`), `${label}を選択${name ? `：${name}` : ''}`, 'loadout-choose');
     choose.addEventListener('click', () => {
       if (Date.now() < suppressClickUntil) return;
-      selectSlot(slot); pickerTarget = targetFrom(node);
+      pickerTarget = targetFrom(node);
       find('loadout-picker-title').textContent = `${label}を選択`;
       find('loadout-picker-search').value = '';
       renderPicker(); picker.showModal(); find('loadout-picker-search').focus();
@@ -79,7 +68,6 @@
   function renderBoard() {
     board.replaceChildren();
     const start = activeTeam * 8;
-    find('loadout-team-title').textContent = `チーム${activeTeam + 1}の所持武器`;
     board.setAttribute('aria-label', `チーム${activeTeam + 1}（キャラ枠${start + 1}～${start + 8}）`);
     for (const toggle of document.querySelectorAll('[data-team]')) {
       const current = Number(toggle.dataset.team) === activeTeam;
@@ -89,13 +77,10 @@
     for (let index = start; index < start + 8; index++) {
       const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', `キャラ枠${index + 1}`);
       const heading = el('div', 'loadout-card-heading');
-      const target = button('PUSH先', `キャラ枠${index + 1}をPUSH先にする`, 'loadout-target-button');
-      target.addEventListener('click', () => selectSlot(index));
-      heading.append(el('h3', '', `キャラ枠${index + 1}`), target); card.append(heading, cell(index, 'character'));
+      heading.append(el('h3', '', `キャラ枠${index + 1}`)); card.append(heading, cell(index, 'character'));
       for (let j = 0; j < model.weaponSlotCount; j++) card.append(cell(index, 'weapon', j));
       grid.append(card);
     }
-    selectSlot(selected);
   }
   function clearTarget(target) {
     commit(current => {
@@ -105,43 +90,11 @@
   }
   function place(target, payload) {
     const success = commit(current => applyItem(current, target, payload), '配置を更新しました。');
-    if (success) selectSlot(target.slot);
     return success;
-  }
-  function push(kind, id) {
-    const success = commit(current => {
-      if (kind === 'character') {
-        const slot = current.findIndex((item, index) => index >= activeTeam * 8 && index < (activeTeam + 1) * 8 && !item.character);
-        if (slot < 0) return false;
-        if (!applyItem(current, {category:kind, slot}, {category:kind, id})) return false;
-        selected = slot; return true;
-      }
-      const weaponSlot = current[selected].weapons.indexOf(null);
-      if (weaponSlot < 0) return false;
-      return applyItem(current, {category:kind, slot:selected, weaponSlot}, {category:kind, id});
-    }, `${names[kind].get(id)}を追加しました。`);
-    if (success) selectSlot(selected);
   }
   function filtered(kind, query) {
     const text = query.trim().toLocaleLowerCase('ja');
     return catalogs[kind].filter(item => item.name.toLocaleLowerCase('ja').includes(text));
-  }
-  function renderLibrary() {
-    const list = find('loadout-library-items'); list.replaceChildren();
-    for (const item of filtered(category, find('loadout-search').value)) {
-      const row = el('div', 'loadout-library-item');
-      const usedSlot = category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
-      const locked = usedSlot >= 0;
-      const name = el('span', '', item.name);
-      if (!locked) { name.draggable = true; Object.assign(name.dataset, {category, dragId:item.id}); }
-      row.classList.toggle('is-locked', locked);
-      if (locked) row.title = `チーム${Math.floor(usedSlot / 8) + 1}・キャラ枠${usedSlot + 1}に配置済み`;
-      const kind = category;
-      const add = button(locked ? '配置済み' : 'PUSH', locked ? `${item.name}は${row.title}` : `${item.name}をPUSH`);
-      add.disabled = locked; add.addEventListener('click', () => push(kind, item.id));
-      row.append(name, add); list.append(row);
-    }
-    if (!list.children.length) list.append(el('p', '', '該当する項目がありません。'));
   }
   function renderPicker() {
     const list = find('loadout-picker-items'); list.replaceChildren();
@@ -165,30 +118,19 @@
     board.querySelector(selector)?.focus({preventScroll:true});
   });
   find('loadout-picker-search').addEventListener('input', renderPicker);
-  find('loadout-search').addEventListener('input', renderLibrary);
   for (const toggle of document.querySelectorAll('[data-team]')) toggle.addEventListener('click', () => {
-    activeTeam = Number(toggle.dataset.team); selected = activeTeam * 8;
+    activeTeam = Number(toggle.dataset.team);
     renderBoard();
-  });
-  for (const toggle of document.querySelectorAll('[data-library]')) toggle.addEventListener('click', () => {
-    category = toggle.dataset.library;
-    for (const other of document.querySelectorAll('[data-library]')) { other.classList.toggle('is-active', other === toggle); other.setAttribute('aria-pressed', String(other === toggle)); }
-    find('loadout-search').value = ''; renderLibrary();
-  });
-  find('loadout-library-toggle').addEventListener('click', event => {
-    const body = find('loadout-library-body'); body.hidden = !body.hidden;
-    event.currentTarget.textContent = body.hidden ? '一覧を開く' : '一覧を閉じる';
-    event.currentTarget.setAttribute('aria-expanded', String(!body.hidden));
   });
   const reset = find('loadout-reset-dialog');
   find('loadout-reset').addEventListener('click', () => {reset.returnValue = 'cancel'; reset.showModal();});
   reset.addEventListener('close', () => {
-    if (reset.returnValue === 'confirm') {selected = activeTeam * 8; commit(current => current.splice(0, current.length, ...cleanState(null)), 'すべての枠を空にしました。');}
+    if (reset.returnValue === 'confirm') {commit(current => current.splice(0, current.length, ...cleanState(null)), 'すべての枠を空にしました。');}
   });
   window.addEventListener('storage', event => {
-    if (event.key === storageKey || event.key === null) {state = read(); renderBoard(); renderLibrary(); if (picker.open) renderPicker(); announce('別のページで変更された配置を反映しました。');}
+    if (event.key === storageKey || event.key === null) {state = read(); renderBoard(); if (picker.open) renderPicker(); announce('別のページで変更された配置を反映しました。');}
   });
-  window.addEventListener('pageshow', event => {if (event.persisted && !saveFailed) {state = read(); renderBoard(); renderLibrary();}});
+  window.addEventListener('pageshow', event => {if (event.persisted && !saveFailed) {state = read(); renderBoard();}});
   document.addEventListener('dragstart', event => {
     const source = event.target.closest('[data-drag-id]'); if (!source || event.target.closest('.loadout-clear')) return;
     drag = payloadFrom(source); event.dataTransfer.effectAllowed = drag.sourceSlot === undefined ? 'copy' : 'move';
@@ -216,9 +158,9 @@
   }
   function autoScroll() {
     if (!touch?.active) return;
-    const edge = 60, libraryBottom = find('loadout-library-body').parentElement.getBoundingClientRect().bottom;
+    const edge = 60;
     if (touch.y > window.innerHeight - edge) window.scrollBy(0, 10);
-    else if (touch.y < Math.min(libraryBottom + edge, window.innerHeight / 2)) window.scrollBy(0, -10);
+    else if (touch.y < edge) window.scrollBy(0, -10);
     touchTarget(); scrollFrame = requestAnimationFrame(autoScroll);
   }
   function finishTouch(cancelled) {
@@ -248,5 +190,5 @@
   }, {passive:false});
   document.addEventListener('pointerup', event => {if (touch?.pointerId === event.pointerId) finishTouch(false);});
   document.addEventListener('pointercancel', event => {if (touch?.pointerId === event.pointerId) finishTouch(true);});
-  renderBoard(); renderLibrary();
+  renderBoard();
 })();
