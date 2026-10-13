@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#102438" />
+  <meta name="description" content="40キャラ分の所持武器を5枠ずつ管理し、武器錬成素材の参考数を確認できます。" />
+  <title>万紫千紅 キャラ所持武器管理</title>
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../../styles.css?v=21" />
+  <link rel="stylesheet" href="./loadout.css?v=1" />
+</head>
+<body class="loadout-page">
+  <header class="site-header loadout-header">
+    <h1>キャラ所持武器管理</h1>
+    <nav><a class="site-home-link" href="../forging/">武器錬成素材へ</a><a class="site-home-link" href="../">その他へ戻る</a></nav>
+  </header>
+  <main class="loadout-main">
+    <section class="loadout-intro">
+      <p>キャラ40枠（横8×縦5）、各キャラに武器5枠。枠を押して選ぶか、一覧の名称をドラッグして配置できます。</p>
+      <p>PUSHで空き枠に追加します。武器は選択中のキャラ枠に入ります。配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。</p>
+    </section>
+    <section class="loadout-library" aria-labelledby="loadout-library-title">
+      <div class="loadout-toolbar"><h2 id="loadout-library-title">キャラ・武器一覧</h2><button id="loadout-library-toggle" class="quiet-button" type="button" aria-expanded="true" aria-controls="loadout-library-body">一覧を閉じる</button></div>
+      <div id="loadout-library-body">
+        <div class="loadout-library-controls">
+          <div role="group" aria-label="一覧の種類"><button class="filter-button is-active" type="button" data-library="character" aria-pressed="true">キャラ</button><button class="filter-button" type="button" data-library="weapon" aria-pressed="false">武器</button></div>
+          <label><span class="sr-only">キャラ・武器を検索</span><input id="loadout-search" type="search" placeholder="名前を検索" /></label>
+        </div>
+        <div id="loadout-library-items" class="loadout-library-items"></div>
+      </div>
+    </section>
+    <div class="loadout-toolbar loadout-board-toolbar"><h2>所持武器スロット</h2><button id="loadout-reset" class="quiet-button" type="button">すべてリセット</button></div>
+    <p id="loadout-selection" class="loadout-selection">武器のPUSH先：キャラ枠1</p>
+    <p id="loadout-status" class="loadout-status" role="status">入力内容はこのブラウザに自動保存されます。</p>
+    <div id="loadout-board" class="loadout-board"></div>
+    <noscript><p>所持武器を管理するにはJavaScriptを有効にしてください。</p></noscript>
+  </main>
+  <footer class="site-footer"><p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p></footer>
+  <dialog id="loadout-picker" aria-labelledby="loadout-picker-title">
+    <div class="loadout-toolbar"><h2 id="loadout-picker-title">選択</h2><button id="loadout-picker-close" class="quiet-button" type="button">閉じる</button></div>
+    <label class="loadout-picker-search"><span class="sr-only">選択候補を検索</span><input id="loadout-picker-search" type="search" placeholder="名前を検索" /></label>
+    <div id="loadout-picker-items" class="loadout-picker-items"></div>
+    <button id="loadout-picker-clear" class="quiet-button" type="button">この枠を空にする</button>
+  </dialog>
+  <dialog id="loadout-reset-dialog" aria-labelledby="loadout-reset-title">
+    <form method="dialog"><h2 id="loadout-reset-title">すべてリセットしますか？</h2><p>40枠のキャラと所持武器を空にします。武器錬成素材の作成数・採集数は残ります。</p><div class="dialog-actions"><button value="cancel" class="quiet-button">キャンセル</button><button value="confirm" class="danger-button">リセット</button></div></form>
+  </dialog>
+  <script src="../forging/forging-data.js?v=2"></script>
+  <script src="./characters-data.js?v=1"></script>
+  <script src="./loadout-model.js?v=1"></script>
+  <script src="./loadout.js?v=1"></script>
+</body>
+</html>

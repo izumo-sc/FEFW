@@ -8,7 +8,7 @@
     <title>万紫千紅 武器錬成素材</title>
     <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../styles.css?v=18" />
-    <link rel="stylesheet" href="./forging.css?v=3" />
+    <link rel="stylesheet" href="./forging.css?v=4" />
   </head>
   <body class="forging-page">
     <header class="site-header forging-header">
@@ -29,8 +29,9 @@
             <button class="quiet-button" type="button" data-reset="counts">作成数をリセット</button>
           </div>
           <p class="forging-description">作成数を入力すると、武器ごとの必要数と素材の合計数を計算します。</p>
+          <p class="forging-description">参考数は<a href="../character-weapons/">キャラ所持武器管理</a>に配置した武器の合計です。作成数には自動入力されません。</p>
           <table class="forging-table weapon-table">
-            <thead><tr><th scope="col">武器</th><th scope="col">1個分の素材</th><th scope="col">作成数</th><th scope="col">必要合計数</th></tr></thead>
+            <thead><tr><th scope="col">武器</th><th scope="col">1個分の素材</th><th scope="col">参考数</th><th scope="col">作成数</th><th scope="col">必要合計数</th></tr></thead>
             <tbody id="forging-weapons"></tbody>
           </table>
           <section class="forging-totals" aria-labelledby="material-totals-title">
@@ -73,7 +74,9 @@
       </form>
     </dialog>
     <script src="./forging-data.js?v=2"></script>
-    <script src="./forging.js?v=3"></script>
+    <script src="../character-weapons/characters-data.js?v=1"></script>
+    <script src="../character-weapons/loadout-model.js?v=1"></script>
+    <script src="./forging.js?v=4"></script>
     <script src="../../order.js?v=1"></script>
   </body>
 </html>

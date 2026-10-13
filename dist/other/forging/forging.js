@@ -55,11 +55,14 @@
   }
   const weaponFields = new Map();
   const weaponOutputs = new Map();
+  const referenceOutputs = new Map();
   for (const weapon of weapons) {
     const row = element("tr");
     const cost = element("td"); cost.dataset.label = "1個分の素材"; cost.append(materialList(weapon, 1));
     const result = element("td"); result.dataset.label = "必要合計数";
     const control = element("td"); control.dataset.label = "作成数";
+    const reference = element("td", "forging-reference"); reference.dataset.label = "参考数";
+    referenceOutputs.set(weapon.id, reference);
     const field = input(`${weapon.name}の作成数`, n => changeState(current => {current.counts[weapon.id] = n;}), weapon.maxCount);
     control.append(field);
     if (weapon.maxCount === 1) {
@@ -68,7 +71,7 @@
       field.setAttribute("aria-describedby", limit.id);
       control.append(limit);
     }
-    row.append(element("td", "", weapon.name), cost, control, result);
+    row.append(element("td", "", weapon.name), cost, reference, control, result);
     find("forging-weapons").append(row);
     weaponFields.set(weapon.id, field); weaponOutputs.set(weapon.id, result);
   }
@@ -100,7 +103,10 @@
   }
   function update() {
     const needed = requirements(state.counts);
+    let references = {};
+    try { references = window.WEAPON_LOADOUT.weaponCounts(JSON.parse(localStorage.getItem(window.WEAPON_LOADOUT.storageKey))); } catch {}
     for (const weapon of weapons) {
+      referenceOutputs.get(weapon.id).textContent = number(references[weapon.id] || 0);
       const count = weaponQuantity(weapon, state.counts[weapon.id]);
       const field = weaponFields.get(weapon.id);
       if (document.activeElement !== field) field.value = count ? String(count) : "";
@@ -139,6 +145,8 @@
   });
   window.addEventListener("storage", event => {
     if (event.key === storageKey || event.key === null) { state = readState(); update(); }
+    else if (event.key === window.WEAPON_LOADOUT.storageKey) update();
   });
+  window.addEventListener("pageshow", () => { state = readState(); update(); });
   update();
 })();
