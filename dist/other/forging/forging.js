@@ -60,7 +60,7 @@
     const control = element("td"); control.dataset.label = "作成数";
     const field = input(`${weapon.name}の作成数`, n => changeState(current => {current.counts[weapon.id] = n;}));
     control.append(field);
-    row.append(element("td", "", weapon.name), cost, result, control);
+    row.append(element("td", "", weapon.name), cost, control, result);
     find("forging-weapons").append(row);
     weaponFields.set(weapon.id, field); weaponOutputs.set(weapon.id, result);
   }
