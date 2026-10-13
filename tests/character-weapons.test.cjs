@@ -1,6 +1,6 @@
 const {test} = require('node:test');
 const assert = require('node:assert/strict');
-const {cleanState, weaponCounts, applyItem, characters, weapons} = require('../dist/other/character-weapons/loadout-model.js');
+const {cleanState, weaponCounts, applyItem, characters, weapons, classes, weaponTypes, canEquip} = require('../dist/other/character-weapons/loadout-model.js');
 const forging = require('../dist/other/forging/forging-data.js');
 
 test('保存データを40キャラ×5武器枠に正規化し、不明なIDと範囲外を捨てる', () => {
@@ -15,6 +15,7 @@ test('保存データを40キャラ×5武器枠に正規化し、不明なIDと�
 
 test('配置・置換・武器移動で参考数を正確に集計する', () => {
   const state = cleanState(null);
+  for (const slot of state) slot.classId = 'class-1';
   const put = (slot, weaponSlot, id) => applyItem(state, {slot, weaponSlot, category:'weapon'}, {id, category:'weapon'});
   assert.equal(put(0,0,'thunder-sword'), true);
   put(0,1,'thunder-sword'); put(39,4,'hammer');
@@ -80,4 +81,52 @@ test('旧データの重複キャラは先頭のみ残し、武器と全チー�
   assert.deepEqual(cleaned[32].weapons.slice(0,2), ['hammer','thunder-sword']);
   assert.equal(weaponCounts(cleaned).hammer, 2);
   assert.equal(weaponCounts(cleaned)['thunder-sword'], 1);
+});
+
+test('59兵種の使用可能技能と全26武器の種類で判定し、試験条件とは区別する', () => {
+  assert.equal(classes.length, 59);
+  for (const weapon of weapons) assert.ok(weaponTypes[weapon.id]);
+  const id = name => classes.find(item => item.name === name).id;
+  assert.equal(canEquip(id('剣士'), 'wood-spear'), true);
+  assert.equal(canEquip(id('剣士'), 'hammer'), false);
+  assert.equal(canEquip(id('ワイズマン'), 'salamander'), true);
+  assert.equal(canEquip(id('ワイズマン'), 'cerberus'), true);
+  assert.equal(canEquip(id('戦象兵'), 'wood-bow'), false);
+  assert.equal(canEquip(null, 'wood-sword'), false);
+});
+
+test('兵種未選択・不適合武器を拒否し、兵種変更では不適合武器だけ外す', () => {
+  const state = cleanState(null);
+  const put = (category, id, weaponSlot = 0) => applyItem(state, {slot:0,category,weaponSlot}, {category,id});
+  assert.equal(put('weapon','wood-sword'), false);
+  assert.equal(put('class','class-1'), true);
+  assert.equal(put('weapon','wood-sword'), true);
+  assert.equal(put('weapon','wood-bow',1), true);
+  assert.equal(put('class','class-8'), true); // 剣士：剣・槍
+  assert.deepEqual(state[0].weapons, ['wood-sword',null,null,null,null]);
+  assert.equal(put('weapon','wood-bow'), false);
+  assert.equal(weaponCounts(state)['wood-bow'],0);
+  assert.equal(put('class',null), true);
+  assert.ok(state[0].weapons.every(id => id === null));
+});
+
+test('武器を交換する際は両側の兵種を検証し、キャラ移動には兵種も伴う', () => {
+  const state = cleanState([
+    {character:characters[0].id,classId:'class-11',weapons:['wood-bow']}, // アーチャー
+    {classId:'class-1',weapons:['wood-sword']},
+  ]);
+  const before = structuredClone(state);
+  assert.equal(applyItem(state,{slot:1,category:'weapon',weaponSlot:0},{id:'wood-bow',category:'weapon',sourceSlot:0,sourceWeaponSlot:0}),false);
+  assert.deepEqual(state,before);
+  assert.equal(applyItem(state,{slot:8,category:'character'},{id:characters[0].id,category:'character',sourceSlot:0}),true);
+  assert.equal(state[8].classId,'class-11');
+  assert.equal(state[8].weapons[0],'wood-bow');
+});
+
+test('旧保存データの兵種なし武器は保ち、既知の兵種の不適合武器は除外する', () => {
+  const state=cleanState([{weapons:['hammer']},{classId:'class-11',weapons:['hammer','wood-bow']},{classId:'unknown'}]);
+  assert.equal(state[0].classId,null);
+  assert.equal(state[0].weapons[0],'hammer');
+  assert.deepEqual(state[1].weapons.slice(0,2),[null,'wood-bow']);
+  assert.equal(state[2].classId,null);
 });

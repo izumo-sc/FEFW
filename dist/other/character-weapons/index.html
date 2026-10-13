@@ -8,7 +8,7 @@
   <title>万紫千紅 キャラ所持武器管理</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../styles.css?v=21" />
-  <link rel="stylesheet" href="./loadout.css?v=4" />
+  <link rel="stylesheet" href="./loadout.css?v=5" />
 </head>
 <body class="loadout-page">
   <header class="site-header loadout-header">
@@ -24,7 +24,7 @@
       <button type="button" class="filter-button" data-team="4" aria-pressed="false" aria-controls="loadout-board">チーム5</button>
     </div>
     <section class="loadout-intro">
-      <p>上部のボタンで5チームを切り替えます。各チームは横8キャラ、各キャラに武器5枠。各枠を押してキャラ・武器を選択できます。同じキャラは全チームを通して1枠だけ配置できます。</p>
+      <p>上部のボタンで5チームを切り替えます。各チームは横8キャラ、各キャラに武器5枠。キャラ名の上で兵種を選ぶと、装備できる武器を選択できます。同じキャラは全チームを通して1枠だけ配置できます。</p>
       <p>全チームに配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。画面が狭い場合は武器スロット部分を横にスクロールできます。</p>
     </section>
     <p id="loadout-status" class="sr-only" role="status"></p>
@@ -36,6 +36,7 @@
   <dialog id="loadout-picker" aria-labelledby="loadout-picker-title">
     <div class="loadout-toolbar"><h2 id="loadout-picker-title">選択</h2><button id="loadout-picker-close" class="quiet-button" type="button">閉じる</button></div>
     <label class="loadout-picker-search"><span class="sr-only">選択候補を検索</span><input id="loadout-picker-search" type="search" placeholder="名前を検索" /></label>
+    <p id="loadout-picker-note" class="loadout-picker-note" hidden></p>
     <div id="loadout-picker-items" class="loadout-picker-items"></div>
     <button id="loadout-picker-clear" class="quiet-button" type="button">この枠を空にする</button>
   </dialog>
@@ -44,7 +45,8 @@
   </dialog>
   <script src="../forging/forging-data.js?v=2"></script>
   <script src="./characters-data.js?v=1"></script>
-  <script src="./loadout-model.js?v=2"></script>
-  <script src="./loadout.js?v=4"></script>
+  <script src="./classes-data.js?v=1"></script>
+  <script src="./loadout-model.js?v=3"></script>
+  <script src="./loadout.js?v=5"></script>
 </body>
 </html>

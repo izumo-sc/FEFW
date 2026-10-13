@@ -1,8 +1,8 @@
 (() => {
   'use strict';
   const model = window.WEAPON_LOADOUT;
-  const {characters, weapons, storageKey, cleanState, applyItem} = model;
-  const catalogs = {character:characters, weapon:weapons};
+  const {characters, weapons, classes, storageKey, cleanState, applyItem, canEquip} = model;
+  const catalogs = {character:characters, weapon:weapons, class:classes};
   const names = Object.fromEntries(Object.entries(catalogs).map(([key, list]) => [key, new Map(list.map(item => [item.id, item.name]))]));
   const find = id => document.getElementById(id);
   const board = find('loadout-board'), status = find('loadout-status'), picker = find('loadout-picker');
@@ -42,14 +42,14 @@
     return payload;
   }
   function cell(slot, kind, weaponSlot) {
-    const id = kind === 'character' ? state[slot].character : state[slot].weapons[weaponSlot];
+    const id = kind === 'class' ? state[slot].classId : kind === 'character' ? state[slot].character : state[slot].weapons[weaponSlot];
     const name = names[kind].get(id);
-    const label = kind === 'character' ? `キャラ枠${slot + 1}のキャラ` : `キャラ枠${slot + 1}の武器${weaponSlot + 1}`;
+    const label = kind === 'class' ? `キャラ枠${slot + 1}の兵種` : kind === 'character' ? `キャラ枠${slot + 1}のキャラ` : `キャラ枠${slot + 1}の武器${weaponSlot + 1}`;
     const node = el('div', `loadout-cell${id ? ' has-item' : ''}`);
     Object.assign(node.dataset, {slot:String(slot), category:kind});
     if (kind === 'weapon') node.dataset.weaponSlot = String(weaponSlot);
-    if (id) { node.draggable = true; node.dataset.dragId = id; }
-    const choose = button(name || (kind === 'character' ? 'キャラを選択' : `武器${weaponSlot + 1}`), `${label}を選択${name ? `：${name}` : ''}`, 'loadout-choose');
+    if (id && kind !== 'class') { node.draggable = true; node.dataset.dragId = id; }
+    const choose = button(name || (kind === 'class' ? '兵種を選択' : kind === 'character' ? 'キャラを選択' : `武器${weaponSlot + 1}`), `${label}を選択${name ? `：${name}` : ''}`, 'loadout-choose');
     choose.addEventListener('click', () => {
       if (Date.now() < suppressClickUntil) return;
       pickerTarget = targetFrom(node);
@@ -77,19 +77,27 @@
     for (let index = start; index < start + 8; index++) {
       const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', `キャラ枠${index + 1}`);
       const heading = el('div', 'loadout-card-heading');
-      heading.append(el('h3', '', `キャラ枠${index + 1}`)); card.append(heading, cell(index, 'character'));
+      heading.append(el('h3', '', `キャラ枠${index + 1}`)); card.append(heading, cell(index, 'class'), cell(index, 'character'));
       for (let j = 0; j < model.weaponSlotCount; j++) card.append(cell(index, 'weapon', j));
       grid.append(card);
     }
   }
   function clearTarget(target) {
+    if (target.category === 'class') { place(target, {category:'class', id:null}); return; }
     commit(current => {
       if (target.category === 'character') current[target.slot].character = null;
       else current[target.slot].weapons[target.weaponSlot] = null;
     }, '枠を空にしました。');
   }
   function place(target, payload) {
-    const success = commit(current => applyItem(current, target, payload), '配置を更新しました。');
+    let removed = 0;
+    const success = commit(current => {
+      const before = current[target.slot].weapons.filter(Boolean).length;
+      const applied = applyItem(current, target, payload);
+      if (applied && target.category === 'class') removed = before - current[target.slot].weapons.filter(Boolean).length;
+      return applied;
+    }, '配置を更新しました。');
+    if (success && removed && !saveFailed) announce(`兵種の変更により、装備できない武器${removed}個を枠から外しました。`, true);
     return success;
   }
   function filtered(kind, query) {
@@ -98,10 +106,16 @@
   }
   function renderPicker() {
     const list = find('loadout-picker-items'); list.replaceChildren();
+    const slot = state[pickerTarget.slot], classData = classes.find(item => item.id === slot.classId);
+    const note = find('loadout-picker-note');
+    note.textContent = pickerTarget.category === 'class' ? '兵種を変更・解除すると、装備できない武器は枠から外れます。' : pickerTarget.category === 'weapon' ? (classData ? `装備可能：${classData.weaponTypes.join('・') || '該当する武器なし'}` : '先にキャラ名の上の枠で兵種を選択してください。') : '';
+    note.hidden = !note.textContent;
     for (const item of filtered(pickerTarget.category, find('loadout-picker-search').value)) {
       const usedSlot = pickerTarget.category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
-      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : item.name);
-      pick.disabled = usedSlot >= 0;
+      const weaponLocked = pickerTarget.category === 'weapon' && !canEquip(slot.classId, item.id);
+      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : weaponLocked ? `${item.name}（${slot.classId ? '装備不可' : '兵種未選択'}）` : item.name);
+      pick.disabled = usedSlot >= 0 || weaponLocked;
+      if (pickerTarget.category === 'class') pick.append(el('small', 'loadout-class-types', `${item.group}／${item.weaponTypes.join('・') || '対象武器なし'}`));
       pick.addEventListener('click', () => {
         if (place(pickerTarget, {category:pickerTarget.category, id:item.id})) picker.close();
       });

@@ -15,6 +15,7 @@
 .loadout-card-heading h3 { margin: 0; color: var(--muted); font-size: .72rem; white-space: nowrap; }
 .loadout-cell { display: flex; gap: 2px; align-items: stretch; border: 1px dashed #b8c7d4; border-radius: 7px; margin-bottom: 6px; min-height: 44px; background: #f7f9fb; }
 .loadout-cell[data-category="character"] { background: #eaf2f8; border-style: solid; margin-bottom: 12px; }
+.loadout-cell[data-category="class"] { background: #f0edf7; border-style: solid; }
 .loadout-cell.has-item { border-style: solid; }
 .loadout-cell[data-drag-id] { touch-action: pan-y; }
 .loadout-cell button { border: 0; background: transparent; color: var(--ink); padding: 5px; font-size: .72rem; line-height: 1.5; }
@@ -44,3 +45,5 @@
 .loadout-picker-items button:disabled { background: #e2e8ef; color: #667789; cursor: not-allowed; }
 .loadout-reset-row { display: flex; justify-content: flex-end; margin-top: 12px; }
 .loadout-error { color: #a12626; font-size: .85rem; }
+.loadout-picker-note { font-size: .85rem; line-height: 1.6; }
+.loadout-class-types { display: block; margin-top: 4px; font-size: .7rem; color: var(--muted); }
