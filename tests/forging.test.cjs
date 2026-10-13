@@ -3,14 +3,27 @@ const assert = require('node:assert/strict');
 const {weapons, materialNames, quantity, requirements, balance} = require('../dist/other/forging/forging-data.js');
 
 test('武器を複数選び、共通素材を合算する。雷石は訂正後の5個を使用', () => {
-  const result = requirements({'thunder-sword':2, gracida:3, 'wood-sword':2, javelin:1});
-  assert.equal(result.materials.雷石, 19);
+  const result = requirements({'thunder-sword':2, gracida:1, 'wood-sword':2, javelin:1});
+  assert.equal(result.materials.雷石, 13);
   assert.equal(result.materials.錬成石, 79);
   assert.equal(result.materials.ブルースノール, 3);
-  assert.equal(result.materials.アガルチウム, 6);
-  assert.equal(result.total, 107);
-  assert.equal(result.gold, 14560);
+  assert.equal(result.materials.アガルチウム, 2);
+  assert.equal(result.total, 97);
+  assert.equal(result.gold, 10360);
   assert.ok(!Object.hasOwn(result.materials, '戦魂石'));
+});
+
+test('指定の7武器は末尾に並び、保存済みの2個以上も1個分で計算する', () => {
+  const ids = ['aurora', 'solel', 'shinza', 'mahamadou', 'gracida', 'assal', 'cerberus'];
+  assert.deepEqual(weapons.slice(-7).map(w => w.id), ids);
+  for (const id of ids) {
+    assert.equal(weapons.find(w => w.id === id).maxCount, 1);
+    assert.deepEqual(requirements({[id]:9}), requirements({[id]:1}));
+    assert.deepEqual(requirements({[id]:'2'}), requirements({[id]:1}));
+    assert.equal(requirements({[id]:0}).total, 0);
+  }
+  assert.equal(requirements({'thunder-sword':3}).materials.雷石, 15);
+  assert.equal(balance(0, {leda:3}).held, 3);
 });
 
 test('全26武器を1個ずつ選んだ合計を資料と照合', () => {

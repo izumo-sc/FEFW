@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const {weapons, routes, materialNames, quantity, requirements, balance} = window.FORGING;
+  const {weapons, routes, materialNames, quantity, weaponQuantity, requirements, balance} = window.FORGING;
   const storageKey = "fortune-weave-forging-v1";
   const find = id => document.getElementById(id);
   const status = find("forging-save-status");
@@ -9,7 +9,9 @@
     try {
       const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
       const object = value => value && typeof value === "object" && !Array.isArray(value) ? value : {};
-      return {counts: object(saved?.counts), inventory: object(saved?.inventory)};
+      const storedCounts = object(saved?.counts);
+      const counts = Object.fromEntries(weapons.map(weapon => [weapon.id, weaponQuantity(weapon, storedCounts[weapon.id])]));
+      return {counts, inventory: object(saved?.inventory)};
     } catch { return {counts:{}, inventory:{}}; }
   }
   let state = readState();
@@ -34,12 +36,12 @@
     if (text !== undefined) node.textContent = text;
     return node;
   }
-  function input(label, onInput) {
+  function input(label, onInput, max = 9999) {
     const field = element("input", "forging-input");
-    Object.assign(field, {type:"number", min:"0", max:"9999", step:"1", inputMode:"numeric", placeholder:"0"});
+    Object.assign(field, {type:"number", min:"0", max:String(max), step:"1", inputMode:"numeric", placeholder:"0"});
     field.setAttribute("aria-label", label);
     field.addEventListener("input", () => {
-      const n = quantity(field.value);
+      const n = Math.min(max, quantity(field.value));
       field.value = n ? String(n) : "";
       onInput(n);
     });
@@ -58,8 +60,14 @@
     const cost = element("td"); cost.dataset.label = "1個分の素材"; cost.append(materialList(weapon, 1));
     const result = element("td"); result.dataset.label = "必要合計数";
     const control = element("td"); control.dataset.label = "作成数";
-    const field = input(`${weapon.name}の作成数`, n => changeState(current => {current.counts[weapon.id] = n;}));
+    const field = input(`${weapon.name}の作成数`, n => changeState(current => {current.counts[weapon.id] = n;}), weapon.maxCount);
     control.append(field);
+    if (weapon.maxCount === 1) {
+      const limit = element("small", "forging-limit", "1個まで");
+      limit.id = `limit-${weapon.id}`;
+      field.setAttribute("aria-describedby", limit.id);
+      control.append(limit);
+    }
     row.append(element("td", "", weapon.name), cost, control, result);
     find("forging-weapons").append(row);
     weaponFields.set(weapon.id, field); weaponOutputs.set(weapon.id, result);
@@ -93,7 +101,7 @@
   function update() {
     const needed = requirements(state.counts);
     for (const weapon of weapons) {
-      const count = quantity(state.counts[weapon.id]);
+      const count = weaponQuantity(weapon, state.counts[weapon.id]);
       const field = weaponFields.get(weapon.id);
       if (document.activeElement !== field) field.value = count ? String(count) : "";
       weaponOutputs.get(weapon.id).replaceChildren(materialList(weapon, count));

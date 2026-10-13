@@ -2,6 +2,7 @@
   "use strict";
   // 動画 2026-10-14 00-54-24.mkv の表示値。サンダーソードの雷石はユーザー訂正で5個。
   // 戦魂石は3部限定素材として計算対象外。
+  const singleWeaponIds = new Set(["aurora", "solel", "shinza", "mahamadou", "gracida", "assal", "cerberus"]);
   const weapons = [
     ["wood-sword", "木製の剣+9", {錬成石:37, ブルースノール:1}, 2310],
     ["zanbato", "斬馬刀+3", {カレット:5}, 1120],
@@ -29,21 +30,24 @@
     ["kenkonken", "乾坤圏+3", {カレット:15}, 1120],
     ["salamander", "サラマンダー+5", {太陽石:6, オリハルコン:1}, 2520],
     ["cerberus", "ツェルベルス+3", {アガルチウム:3}, 1400],
-  ].map(([id, name, materials, gold]) => ({id, name, materials, gold}));
+  ].map(([id, name, materials, gold]) => ({id, name, materials, gold, maxCount: singleWeaponIds.has(id) ? 1 : 9999}));
   const routes = [
     {key:"leda", label:"レダ"}, {key:"dietrich", label:"ディートリヒ"},
     {key:"theodora", label:"セオドラ"}, {key:"kai", label:"カイ"},
   ];
   const materialNames = [...new Set(weapons.flatMap(w => Object.keys(w.materials)))];
+  // 素材表の並びは維持し、1個限定の武器だけを武器一覧の末尾へ移動する。
+  weapons.sort((left, right) => Number(left.maxCount === 1) - Number(right.maxCount === 1));
   const quantity = value => {
     const n = Number(value);
     return Number.isFinite(n) ? Math.min(9999, Math.max(0, Math.floor(n))) : 0;
   };
+  const weaponQuantity = (weapon, value) => Math.min(weapon.maxCount, quantity(value));
   function requirements(counts = {}) {
     const materials = Object.fromEntries(materialNames.map(name => [name, 0]));
     let gold = 0;
     for (const weapon of weapons) {
-      const count = quantity(counts[weapon.id]);
+      const count = weaponQuantity(weapon, counts[weapon.id]);
       for (const [name, amount] of Object.entries(weapon.materials)) materials[name] += amount * count;
       gold += weapon.gold * count;
     }
@@ -53,7 +57,7 @@
     const held = routes.reduce((sum, route) => sum + quantity(inventory?.[route.key]), 0);
     return {held, shortage: Math.max(0, required - held)};
   }
-  const api = {weapons, routes, materialNames, quantity, requirements, balance};
+  const api = {weapons, routes, materialNames, quantity, weaponQuantity, requirements, balance};
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.FORGING = api;
 })(typeof window !== "undefined" ? window : globalThis);
