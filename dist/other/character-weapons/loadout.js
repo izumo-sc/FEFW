@@ -2,7 +2,7 @@
   'use strict';
   const model = window.WEAPON_LOADOUT;
   const {characters, weapons, classes, storageKey, cleanState, applyItem, canEquip} = model;
-  const catalogs = {character:characters.filter(item => item.id !== model.saviorId), weapon:weapons, class:classes};
+  const catalogs = {character:characters.filter(item => item.id !== model.saviorId), weapon:weapons, class:[...classes].reverse()};
   const names = Object.fromEntries(Object.entries(catalogs).map(([key, list]) => [key, new Map(list.map(item => [item.id, item.name]))]));
   const find = id => document.getElementById(id);
   const board = find('loadout-board'), status = find('loadout-status'), picker = find('loadout-picker');
