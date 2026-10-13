@@ -15,13 +15,19 @@
   const weaponIds = new Set(weapons.map(item => item.id));
   const characterIds = new Set(characters.map(item => item.id));
   const storageKey = 'fortune-weave-character-weapons-v1';
-  const slotCount = 40, weaponSlotCount = 5;
+  const teamSlotCount = 40, saviorSlot = teamSlotCount, saviorId = 'kyuuseishu';
+  const slotCount = teamSlotCount + 1, weaponSlotCount = 5;
   function cleanState(value) {
-    const source = Array.isArray(value) ? value : [];
+    const source = Array.isArray(value) ? value.slice(0, slotCount) : [];
+    const oldSavior = source.slice(0, teamSlotCount).findIndex(slot => slot?.character === saviorId);
+    if (!source[saviorSlot] && oldSavior >= 0) {
+      source[saviorSlot] = source[oldSavior];
+      source[oldSavior] = null;
+    }
     const usedCharacters = new Set();
     return Array.from({length:slotCount}, (_, i) => {
       const id = source[i]?.character;
-      const character = characterIds.has(id) && !usedCharacters.has(id) ? id : null;
+      const character = i === saviorSlot ? saviorId : id !== saviorId && characterIds.has(id) && !usedCharacters.has(id) ? id : null;
       if (character) usedCharacters.add(character);
       const classId = classMap.has(source[i]?.classId) ? source[i].classId : null;
       return {character, classId, weapons: Array.from({length:weaponSlotCount}, (_, j) => {
@@ -47,6 +53,7 @@
     }
     const character = target.category === 'character';
     if (!character && target.category !== 'weapon') return false;
+    if (character && (target.slot === saviorSlot || payload.id === saviorId || payload.sourceSlot === saviorSlot)) return false;
     if (!(character ? characterIds : weaponIds).has(payload.id)) return false;
     if (!character && !validWeaponSlot(target.weaponSlot)) return false;
     if (!character && !canEquip(state[target.slot].classId, payload.id)) return false;
@@ -71,6 +78,6 @@
     else state[target.slot].weapons[target.weaponSlot] = payload.id;
     return true;
   }
-  const api = {weapons, characters, classes, weaponTypes, canEquip, storageKey, slotCount, weaponSlotCount, cleanState, weaponCounts, applyItem};
+  const api = {weapons, characters, classes, weaponTypes, canEquip, storageKey, slotCount, teamSlotCount, saviorSlot, saviorId, weaponSlotCount, cleanState, weaponCounts, applyItem};
   if (node) module.exports = api; else root.WEAPON_LOADOUT = api;
 })(typeof window !== 'undefined' ? window : globalThis);

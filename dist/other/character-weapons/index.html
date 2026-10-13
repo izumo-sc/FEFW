@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#102438" />
-  <meta name="description" content="40キャラ分の所持武器を5枠ずつ管理し、武器錬成素材の参考数を確認できます。" />
+  <meta name="description" content="5チーム40キャラと救世主固定枠の所持武器を5枠ずつ管理し、武器錬成素材の参考数を確認できます。" />
   <title>万紫千紅 キャラ所持武器管理</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../styles.css?v=21" />
-  <link rel="stylesheet" href="./loadout.css?v=5" />
+  <link rel="stylesheet" href="./loadout.css?v=6" />
 </head>
 <body class="loadout-page">
   <header class="site-header loadout-header">
@@ -24,11 +24,14 @@
       <button type="button" class="filter-button" data-team="4" aria-pressed="false" aria-controls="loadout-board">チーム5</button>
     </div>
     <section class="loadout-intro">
-      <p>上部のボタンで5チームを切り替えます。各チームは横8キャラ、各キャラに武器5枠。キャラ名の上で兵種を選ぶと、装備できる武器を選択できます。同じキャラは全チームを通して1枠だけ配置できます。</p>
-      <p>全チームに配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。画面が狭い場合は武器スロット部分を横にスクロールできます。</p>
+      <p>上部のボタンで5チームを切り替えます。各チームは横8キャラ、各キャラに武器5枠。救世主はチーム下の共通固定枠です。キャラ名の上で兵種を選ぶと、装備できる武器を選択できます。同じキャラは全チームを通して1枠だけ配置できます。</p>
+      <p>全チームと救世主に配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。画面が狭い場合は武器スロット部分を横にスクロールできます。</p>
     </section>
     <p id="loadout-status" class="sr-only" role="status"></p>
-    <div id="loadout-board" class="loadout-board" role="region" aria-label="チーム1" tabindex="0"></div>
+    <div id="loadout-slots">
+      <div id="loadout-board" class="loadout-board" role="region" aria-label="チーム1" tabindex="0"></div>
+      <div id="loadout-fixed" class="loadout-fixed"></div>
+    </div>
     <div class="loadout-reset-row"><button id="loadout-reset" class="quiet-button" type="button">すべてリセット</button></div>
     <noscript><p>所持武器を管理するにはJavaScriptを有効にしてください。</p></noscript>
   </main>
@@ -41,12 +44,12 @@
     <button id="loadout-picker-clear" class="quiet-button" type="button">この枠を空にする</button>
   </dialog>
   <dialog id="loadout-reset-dialog" aria-labelledby="loadout-reset-title">
-    <form method="dialog"><h2 id="loadout-reset-title">すべてリセットしますか？</h2><p>40枠のキャラと所持武器を空にします。武器錬成素材の作成数・採集数は残ります。</p><div class="dialog-actions"><button value="cancel" class="quiet-button">キャンセル</button><button value="confirm" class="danger-button">リセット</button></div></form>
+    <form method="dialog"><h2 id="loadout-reset-title">すべてリセットしますか？</h2><p>チーム40枠のキャラ・兵種・所持武器と、救世主の兵種・所持武器を空にします。救世主の固定枠と武器錬成素材の作成数・採集数は残ります。</p><div class="dialog-actions"><button value="cancel" class="quiet-button">キャンセル</button><button value="confirm" class="danger-button">リセット</button></div></form>
   </dialog>
   <script src="../forging/forging-data.js?v=2"></script>
   <script src="./characters-data.js?v=1"></script>
   <script src="./classes-data.js?v=1"></script>
-  <script src="./loadout-model.js?v=3"></script>
-  <script src="./loadout.js?v=5"></script>
+  <script src="./loadout-model.js?v=4"></script>
+  <script src="./loadout.js?v=6"></script>
 </body>
 </html>

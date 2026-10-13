@@ -2,10 +2,11 @@
   'use strict';
   const model = window.WEAPON_LOADOUT;
   const {characters, weapons, classes, storageKey, cleanState, applyItem, canEquip} = model;
-  const catalogs = {character:characters, weapon:weapons, class:classes};
+  const catalogs = {character:characters.filter(item => item.id !== model.saviorId), weapon:weapons, class:classes};
   const names = Object.fromEntries(Object.entries(catalogs).map(([key, list]) => [key, new Map(list.map(item => [item.id, item.name]))]));
   const find = id => document.getElementById(id);
   const board = find('loadout-board'), status = find('loadout-status'), picker = find('loadout-picker');
+  const slots = find('loadout-slots'), fixedBoard = find('loadout-fixed');
   let state = read(), activeTeam = 0, pickerTarget = null, saveFailed = false;
   let drag = null, touch = null, scrollFrame = null, suppressClickUntil = 0;
   function read() { try { return cleanState(JSON.parse(localStorage.getItem(storageKey))); } catch { return cleanState(null); } }
@@ -44,7 +45,8 @@
   function cell(slot, kind, weaponSlot) {
     const id = kind === 'class' ? state[slot].classId : kind === 'character' ? state[slot].character : state[slot].weapons[weaponSlot];
     const name = names[kind].get(id);
-    const label = kind === 'class' ? `キャラ枠${slot + 1}の兵種` : kind === 'character' ? `キャラ枠${slot + 1}のキャラ` : `キャラ枠${slot + 1}の武器${weaponSlot + 1}`;
+    const owner = slot === model.saviorSlot ? '救世主' : `キャラ枠${slot + 1}`;
+    const label = kind === 'class' ? `${owner}の兵種` : kind === 'character' ? `${owner}のキャラ` : `${owner}の武器${weaponSlot + 1}`;
     const node = el('div', `loadout-cell${id ? ' has-item' : ''}`);
     Object.assign(node.dataset, {slot:String(slot), category:kind});
     if (kind === 'weapon') node.dataset.weaponSlot = String(weaponSlot);
@@ -67,6 +69,7 @@
   }
   function renderBoard() {
     board.replaceChildren();
+    fixedBoard.replaceChildren();
     const start = activeTeam * 8;
     board.setAttribute('aria-label', `チーム${activeTeam + 1}（キャラ枠${start + 1}～${start + 8}）`);
     for (const toggle of document.querySelectorAll('[data-team]')) {
@@ -74,15 +77,18 @@
       toggle.classList.toggle('is-active', current); toggle.setAttribute('aria-pressed', String(current));
     }
     const grid = el('div', 'loadout-team-grid'); board.append(grid);
-    for (let index = start; index < start + 8; index++) {
-      const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', `キャラ枠${index + 1}`);
-      const heading = el('div', 'loadout-card-heading');
-      heading.append(el('h3', '', `キャラ枠${index + 1}`)); card.append(heading, cell(index, 'class'), cell(index, 'character'));
+    for (const index of [...Array.from({length:8}, (_, i) => start + i), model.saviorSlot]) {
+      const fixed = index === model.saviorSlot;
+      const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', fixed ? '救世主固定枠' : `キャラ枠${index + 1}`);
+      card.append(cell(index, 'class'));
+      if (fixed) card.append(el('div', 'loadout-fixed-name', '救世主'));
+      else card.append(cell(index, 'character'));
       for (let j = 0; j < model.weaponSlotCount; j++) card.append(cell(index, 'weapon', j));
-      grid.append(card);
+      (fixed ? fixedBoard : grid).append(card);
     }
   }
   function clearTarget(target) {
+    if (target.slot === model.saviorSlot && target.category === 'character') return;
     if (target.category === 'class') { place(target, {category:'class', id:null}); return; }
     commit(current => {
       if (target.category === 'character') current[target.slot].character = null;
@@ -129,7 +135,7 @@
     const target = pickerTarget;
     if (!target) return;
     const selector = `.loadout-cell[data-slot="${target.slot}"][data-category="${target.category}"]${target.category === 'weapon' ? `[data-weapon-slot="${target.weaponSlot}"]` : ''} .loadout-choose`;
-    board.querySelector(selector)?.focus({preventScroll:true});
+    slots.querySelector(selector)?.focus({preventScroll:true});
   });
   find('loadout-picker-search').addEventListener('input', renderPicker);
   for (const toggle of document.querySelectorAll('[data-team]')) toggle.addEventListener('click', () => {
@@ -150,16 +156,16 @@
     drag = payloadFrom(source); event.dataTransfer.effectAllowed = drag.sourceSlot === undefined ? 'copy' : 'move';
     event.dataTransfer.setData('application/x-fefw-loadout', JSON.stringify(drag));
   });
-  function clearHover() { for (const zone of board.querySelectorAll('.is-over')) zone.classList.remove('is-over'); }
+  function clearHover() { for (const zone of slots.querySelectorAll('.is-over')) zone.classList.remove('is-over'); }
   document.addEventListener('dragend', () => {drag = null; clearHover();});
-  board.addEventListener('dragover', event => {
+  slots.addEventListener('dragover', event => {
     const zone = event.target.closest('.loadout-cell');
     if (!zone || !drag || zone.dataset.category !== drag.category) return;
     event.preventDefault(); event.dataTransfer.dropEffect = drag.sourceSlot === undefined ? 'copy' : 'move';
     clearHover(); zone.classList.add('is-over');
   });
-  board.addEventListener('dragleave', event => event.target.closest('.loadout-cell')?.classList.remove('is-over'));
-  board.addEventListener('drop', event => {
+  slots.addEventListener('dragleave', event => event.target.closest('.loadout-cell')?.classList.remove('is-over'));
+  slots.addEventListener('drop', event => {
     const zone = event.target.closest('.loadout-cell'); if (!zone || !drag) return;
     event.preventDefault(); clearHover(); place(targetFrom(zone), drag); drag = null;
   });
