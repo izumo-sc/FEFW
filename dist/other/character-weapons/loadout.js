@@ -30,11 +30,12 @@
     announce(saveFailed ? '保存できませんでした。この画面を閉じると変更が失われ、錬成ページにも反映されません。' : `${message} 自動保存しました。`);
     return true;
   }
-  function selectSlot(index) {
+  function selectSlot(index, reveal = true) {
     selected = index;
-    for (const card of board.children) {
+    for (const card of board.querySelectorAll('.loadout-card')) {
       const current = Number(card.dataset.slot) === selected;
       card.classList.toggle('is-selected', current);
+      if (current && reveal) card.closest('details').open = true;
       const target = card.querySelector('.loadout-target-button');
       target.setAttribute('aria-pressed', String(current)); target.textContent = current ? '選択中' : 'PUSH先';
     }
@@ -77,7 +78,20 @@
     return node;
   }
   function renderBoard() {
+    const openSets = Array.from(board.querySelectorAll('.loadout-set'), set => set.open);
     board.replaceChildren();
+    const groups = [];
+    for (let start = 0; start < state.length; start += 8) {
+      const groupIndex = start / 8;
+      const group = el('details', 'loadout-set');
+      group.open = openSets[groupIndex] ?? true;
+      const label = `セット${groupIndex + 1}（キャラ枠${start + 1}～${Math.min(start + 8, state.length)}）`;
+      group.append(el('summary', 'loadout-set-heading', label));
+      const scroll = el('div', 'loadout-set-scroll');
+      scroll.tabIndex = 0; scroll.setAttribute('role', 'region'); scroll.setAttribute('aria-label', label);
+      const grid = el('div', 'loadout-set-grid');
+      scroll.append(grid); group.append(scroll); board.append(group); groups.push(grid);
+    }
     state.forEach((slot, index) => {
       const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', `キャラ枠${index + 1}`);
       const heading = el('div', 'loadout-card-heading');
@@ -85,9 +99,9 @@
       target.addEventListener('click', () => selectSlot(index));
       heading.append(el('h3', '', `キャラ枠${index + 1}`), target); card.append(heading, cell(index, 'character'));
       for (let j = 0; j < model.weaponSlotCount; j++) card.append(cell(index, 'weapon', j));
-      board.append(card);
+      groups[Math.floor(index / 8)].append(card);
     });
-    selectSlot(selected);
+    selectSlot(selected, false);
   }
   function clearTarget(target) {
     commit(current => {
@@ -101,7 +115,7 @@
     return success;
   }
   function push(kind, id) {
-    commit(current => {
+    const success = commit(current => {
       if (kind === 'character') {
         const slot = current.findIndex(item => !item.character);
         if (slot < 0) return false;
@@ -111,6 +125,7 @@
       if (weaponSlot < 0) return false;
       return applyItem(current, {category:kind, slot:selected, weaponSlot}, {category:kind, id});
     }, `${names[kind].get(id)}を追加しました。`);
+    if (success) selectSlot(selected);
   }
   function filtered(kind, query) {
     const text = query.trim().toLocaleLowerCase('ja');

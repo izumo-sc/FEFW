@@ -16,7 +16,14 @@
 .loadout-board-toolbar { margin-top: 20px; }
 .loadout-selection, .loadout-status { margin: 10px 0; font-size: .85rem; line-height: 1.6; }
 .loadout-status { color: var(--muted); min-height: 1.6em; }
-.loadout-board { display: grid; grid-template-columns: repeat(8,minmax(0,1fr)); gap: 8px; align-items: stretch; }
+.loadout-board { display: grid; gap: 12px; }
+.loadout-set { min-width: 0; border: 1px solid var(--line); border-radius: 10px; background: #f7fafc; }
+.loadout-set-heading { padding: 14px; cursor: pointer; font-weight: 700; color: var(--navy); }
+.loadout-set-heading::after { content: '開く'; float: right; font-size: .8rem; font-weight: 400; }
+.loadout-set[open] > .loadout-set-heading::after { content: '閉じる'; }
+.loadout-set-heading:focus-visible, .loadout-set-scroll:focus-visible { outline: 3px solid #237ba688; outline-offset: 2px; }
+.loadout-set-scroll { padding: 2px 10px 10px; overflow-x: auto; }
+.loadout-set-grid { display: grid; grid-template-columns: repeat(8,minmax(140px,1fr)); gap: 8px; }
 .loadout-card { background: white; border: 1px solid var(--line); border-radius: 10px; padding: 8px; min-width: 0; }
 .loadout-card.is-selected { border-color: #237ba6; box-shadow: 0 0 0 2px #237ba633; }
 .loadout-card-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 4px; }
@@ -38,14 +45,14 @@
 .loadout-picker-items { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; margin-bottom: 16px; max-height: 48vh; overflow: auto; }
 .loadout-picker-items button { min-height: 44px; border: 1px solid var(--line); border-radius: 7px; background: #f7fafc; color: var(--ink); font-size: .9rem; padding: 8px; }
 .loadout-drag-preview { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 20; background: var(--navy); color: white; padding: 10px; border-radius: 8px; font-size: .85rem; }
-@media(max-width:1100px) { .loadout-board { grid-template-columns: repeat(4,minmax(0,1fr)); } .loadout-cell button { font-size: .8rem; } }
+@media(max-width:1100px) { .loadout-cell button { font-size: .8rem; } }
 @media(max-width:600px) {
   .loadout-header { gap: 12px; }
   .loadout-header nav { max-width: 132px; }
   .loadout-header .site-home-link { font-size: .72rem; padding: 8px; }
   .loadout-intro { padding: 12px; }
   .loadout-intro p { font-size: .8rem; }
-  .loadout-board { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .loadout-set-heading { padding: 12px 10px; font-size: .85rem; }
   .loadout-library-items { grid-template-columns: repeat(2,minmax(0,1fr)); max-height: 112px; }
   .loadout-library-item { padding: 4px; }
   .loadout-library-item span { font-size: .72rem; }
