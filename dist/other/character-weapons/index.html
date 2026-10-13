@@ -8,7 +8,7 @@
   <title>万紫千紅 キャラ所持武器管理</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../styles.css?v=21" />
-  <link rel="stylesheet" href="./loadout.css?v=2" />
+  <link rel="stylesheet" href="./loadout.css?v=3" />
 </head>
 <body class="loadout-page">
   <header class="site-header loadout-header">
@@ -16,9 +16,16 @@
     <nav><a class="site-home-link" href="../forging/">武器錬成素材へ</a><a class="site-home-link" href="../">その他へ戻る</a></nav>
   </header>
   <main class="loadout-main">
+    <div class="loadout-teams" role="group" aria-label="表示するチーム">
+      <button type="button" class="filter-button is-active" data-team="0" aria-pressed="true" aria-controls="loadout-board">チーム1</button>
+      <button type="button" class="filter-button" data-team="1" aria-pressed="false" aria-controls="loadout-board">チーム2</button>
+      <button type="button" class="filter-button" data-team="2" aria-pressed="false" aria-controls="loadout-board">チーム3</button>
+      <button type="button" class="filter-button" data-team="3" aria-pressed="false" aria-controls="loadout-board">チーム4</button>
+      <button type="button" class="filter-button" data-team="4" aria-pressed="false" aria-controls="loadout-board">チーム5</button>
+    </div>
     <section class="loadout-intro">
-      <p>キャラ40枠（横8キャラ×5セット）、各キャラに武器5枠。セットごとに開閉できます。枠を押して選ぶか、一覧の名称をドラッグして配置できます。画面が狭い場合はセット内を横にスクロールできます。</p>
-      <p>PUSHで空き枠に追加します。武器は選択中のキャラ枠に入ります。配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。</p>
+      <p>上部のボタンで5チームを切り替えます。各チームは横8キャラ、各キャラに武器5枠。枠を押して選ぶか、一覧の名称をドラッグして配置できます。同じキャラは全チームを通して1枠だけ配置できます。</p>
+      <p>PUSHで表示中のチームの空き枠に追加します。武器は選択中のキャラ枠に入ります。全チームに配置した武器数は<a href="../forging/">武器錬成素材</a>の「参考数」に反映されます。画面が狭い場合は武器スロット部分を横にスクロールできます。</p>
     </section>
     <section class="loadout-library" aria-labelledby="loadout-library-title">
       <div class="loadout-toolbar"><h2 id="loadout-library-title">キャラ・武器一覧</h2><button id="loadout-library-toggle" class="quiet-button" type="button" aria-expanded="true" aria-controls="loadout-library-body">一覧を閉じる</button></div>
@@ -30,10 +37,10 @@
         <div id="loadout-library-items" class="loadout-library-items"></div>
       </div>
     </section>
-    <div class="loadout-toolbar loadout-board-toolbar"><h2>所持武器スロット</h2><button id="loadout-reset" class="quiet-button" type="button">すべてリセット</button></div>
+    <div class="loadout-toolbar loadout-board-toolbar"><h2 id="loadout-team-title">チーム1の所持武器</h2><button id="loadout-reset" class="quiet-button" type="button">すべてリセット</button></div>
     <p id="loadout-selection" class="loadout-selection">武器のPUSH先：キャラ枠1</p>
     <p id="loadout-status" class="loadout-status" role="status">入力内容はこのブラウザに自動保存されます。</p>
-    <div id="loadout-board" class="loadout-board"></div>
+    <div id="loadout-board" class="loadout-board" role="region" aria-label="チーム1" tabindex="0"></div>
     <noscript><p>所持武器を管理するにはJavaScriptを有効にしてください。</p></noscript>
   </main>
   <footer class="site-footer"><p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p></footer>
@@ -48,7 +55,7 @@
   </dialog>
   <script src="../forging/forging-data.js?v=2"></script>
   <script src="./characters-data.js?v=1"></script>
-  <script src="./loadout-model.js?v=1"></script>
-  <script src="./loadout.js?v=2"></script>
+  <script src="./loadout-model.js?v=2"></script>
+  <script src="./loadout.js?v=3"></script>
 </body>
 </html>

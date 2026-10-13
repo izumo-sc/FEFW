@@ -6,7 +6,7 @@
   const names = Object.fromEntries(Object.entries(catalogs).map(([key, list]) => [key, new Map(list.map(item => [item.id, item.name]))]));
   const find = id => document.getElementById(id);
   const board = find('loadout-board'), status = find('loadout-status'), picker = find('loadout-picker');
-  let state = read(), selected = 0, category = 'character', pickerTarget = null, saveFailed = false;
+  let state = read(), selected = 0, activeTeam = 0, category = 'character', pickerTarget = null, saveFailed = false;
   let drag = null, touch = null, scrollFrame = null, suppressClickUntil = 0;
   function read() { try { return cleanState(JSON.parse(localStorage.getItem(storageKey))); } catch { return cleanState(null); } }
   function el(tag, className, text) {
@@ -23,24 +23,23 @@
   function announce(text) { status.textContent = text; }
   function commit(edit, message) {
     if (!saveFailed) state = read();
-    if (edit(state) === false) { announce('配置できませんでした。空き枠や選択した項目を確認してください。'); return false; }
+    if (edit(state) === false) { renderBoard(); renderLibrary(); if (picker.open) renderPicker(); announce('配置できませんでした。チームの空き枠やキャラの配置済みロックを確認してください。'); return false; }
     try { localStorage.setItem(storageKey, JSON.stringify(state)); saveFailed = false; }
     catch { saveFailed = true; }
-    renderBoard();
+    renderBoard(); renderLibrary();
     announce(saveFailed ? '保存できませんでした。この画面を閉じると変更が失われ、錬成ページにも反映されません。' : `${message} 自動保存しました。`);
     return true;
   }
-  function selectSlot(index, reveal = true) {
+  function selectSlot(index) {
     selected = index;
     for (const card of board.querySelectorAll('.loadout-card')) {
       const current = Number(card.dataset.slot) === selected;
       card.classList.toggle('is-selected', current);
-      if (current && reveal) card.closest('details').open = true;
       const target = card.querySelector('.loadout-target-button');
       target.setAttribute('aria-pressed', String(current)); target.textContent = current ? '選択中' : 'PUSH先';
     }
     const name = names.character.get(state[selected].character);
-    find('loadout-selection').textContent = `武器のPUSH先：キャラ枠${selected + 1}${name ? `（${name}）` : ''}`;
+    find('loadout-selection').textContent = `武器のPUSH先：チーム${activeTeam + 1}・キャラ枠${selected + 1}${name ? `（${name}）` : ''}`;
   }
   function targetFrom(node) {
     return {slot:Number(node.dataset.slot), category:node.dataset.category, weaponSlot:Number(node.dataset.weaponSlot)};
@@ -78,30 +77,25 @@
     return node;
   }
   function renderBoard() {
-    const openSets = Array.from(board.querySelectorAll('.loadout-set'), set => set.open);
     board.replaceChildren();
-    const groups = [];
-    for (let start = 0; start < state.length; start += 8) {
-      const groupIndex = start / 8;
-      const group = el('details', 'loadout-set');
-      group.open = openSets[groupIndex] ?? true;
-      const label = `セット${groupIndex + 1}（キャラ枠${start + 1}～${Math.min(start + 8, state.length)}）`;
-      group.append(el('summary', 'loadout-set-heading', label));
-      const scroll = el('div', 'loadout-set-scroll');
-      scroll.tabIndex = 0; scroll.setAttribute('role', 'region'); scroll.setAttribute('aria-label', label);
-      const grid = el('div', 'loadout-set-grid');
-      scroll.append(grid); group.append(scroll); board.append(group); groups.push(grid);
+    const start = activeTeam * 8;
+    find('loadout-team-title').textContent = `チーム${activeTeam + 1}の所持武器`;
+    board.setAttribute('aria-label', `チーム${activeTeam + 1}（キャラ枠${start + 1}～${start + 8}）`);
+    for (const toggle of document.querySelectorAll('[data-team]')) {
+      const current = Number(toggle.dataset.team) === activeTeam;
+      toggle.classList.toggle('is-active', current); toggle.setAttribute('aria-pressed', String(current));
     }
-    state.forEach((slot, index) => {
+    const grid = el('div', 'loadout-team-grid'); board.append(grid);
+    for (let index = start; index < start + 8; index++) {
       const card = el('article', 'loadout-card'); card.dataset.slot = String(index); card.setAttribute('aria-label', `キャラ枠${index + 1}`);
       const heading = el('div', 'loadout-card-heading');
       const target = button('PUSH先', `キャラ枠${index + 1}をPUSH先にする`, 'loadout-target-button');
       target.addEventListener('click', () => selectSlot(index));
       heading.append(el('h3', '', `キャラ枠${index + 1}`), target); card.append(heading, cell(index, 'character'));
       for (let j = 0; j < model.weaponSlotCount; j++) card.append(cell(index, 'weapon', j));
-      groups[Math.floor(index / 8)].append(card);
-    });
-    selectSlot(selected, false);
+      grid.append(card);
+    }
+    selectSlot(selected);
   }
   function clearTarget(target) {
     commit(current => {
@@ -117,9 +111,10 @@
   function push(kind, id) {
     const success = commit(current => {
       if (kind === 'character') {
-        const slot = current.findIndex(item => !item.character);
+        const slot = current.findIndex((item, index) => index >= activeTeam * 8 && index < (activeTeam + 1) * 8 && !item.character);
         if (slot < 0) return false;
-        selected = slot; return applyItem(current, {category:kind, slot}, {category:kind, id});
+        if (!applyItem(current, {category:kind, slot}, {category:kind, id})) return false;
+        selected = slot; return true;
       }
       const weaponSlot = current[selected].weapons.indexOf(null);
       if (weaponSlot < 0) return false;
@@ -135,9 +130,15 @@
     const list = find('loadout-library-items'); list.replaceChildren();
     for (const item of filtered(category, find('loadout-search').value)) {
       const row = el('div', 'loadout-library-item');
-      const name = el('span', '', item.name); name.draggable = true; Object.assign(name.dataset, {category, dragId:item.id});
+      const usedSlot = category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
+      const locked = usedSlot >= 0;
+      const name = el('span', '', item.name);
+      if (!locked) { name.draggable = true; Object.assign(name.dataset, {category, dragId:item.id}); }
+      row.classList.toggle('is-locked', locked);
+      if (locked) row.title = `チーム${Math.floor(usedSlot / 8) + 1}・キャラ枠${usedSlot + 1}に配置済み`;
       const kind = category;
-      const add = button('PUSH', `${item.name}をPUSH`); add.addEventListener('click', () => push(kind, item.id));
+      const add = button(locked ? '配置済み' : 'PUSH', locked ? `${item.name}は${row.title}` : `${item.name}をPUSH`);
+      add.disabled = locked; add.addEventListener('click', () => push(kind, item.id));
       row.append(name, add); list.append(row);
     }
     if (!list.children.length) list.append(el('p', '', '該当する項目がありません。'));
@@ -145,7 +146,9 @@
   function renderPicker() {
     const list = find('loadout-picker-items'); list.replaceChildren();
     for (const item of filtered(pickerTarget.category, find('loadout-picker-search').value)) {
-      const pick = button(item.name);
+      const usedSlot = pickerTarget.category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
+      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : item.name);
+      pick.disabled = usedSlot >= 0;
       pick.addEventListener('click', () => {
         if (place(pickerTarget, {category:pickerTarget.category, id:item.id})) picker.close();
       });
@@ -163,6 +166,10 @@
   });
   find('loadout-picker-search').addEventListener('input', renderPicker);
   find('loadout-search').addEventListener('input', renderLibrary);
+  for (const toggle of document.querySelectorAll('[data-team]')) toggle.addEventListener('click', () => {
+    activeTeam = Number(toggle.dataset.team); selected = activeTeam * 8;
+    renderBoard();
+  });
   for (const toggle of document.querySelectorAll('[data-library]')) toggle.addEventListener('click', () => {
     category = toggle.dataset.library;
     for (const other of document.querySelectorAll('[data-library]')) { other.classList.toggle('is-active', other === toggle); other.setAttribute('aria-pressed', String(other === toggle)); }
@@ -176,12 +183,12 @@
   const reset = find('loadout-reset-dialog');
   find('loadout-reset').addEventListener('click', () => {reset.returnValue = 'cancel'; reset.showModal();});
   reset.addEventListener('close', () => {
-    if (reset.returnValue === 'confirm') {selected = 0; commit(current => current.splice(0, current.length, ...cleanState(null)), 'すべての枠を空にしました。');}
+    if (reset.returnValue === 'confirm') {selected = activeTeam * 8; commit(current => current.splice(0, current.length, ...cleanState(null)), 'すべての枠を空にしました。');}
   });
   window.addEventListener('storage', event => {
-    if (event.key === storageKey || event.key === null) {state = read(); renderBoard(); announce('別のページで変更された配置を反映しました。');}
+    if (event.key === storageKey || event.key === null) {state = read(); renderBoard(); renderLibrary(); if (picker.open) renderPicker(); announce('別のページで変更された配置を反映しました。');}
   });
-  window.addEventListener('pageshow', event => {if (event.persisted && !saveFailed) {state = read(); renderBoard();}});
+  window.addEventListener('pageshow', event => {if (event.persisted && !saveFailed) {state = read(); renderBoard(); renderLibrary();}});
   document.addEventListener('dragstart', event => {
     const source = event.target.closest('[data-drag-id]'); if (!source || event.target.closest('.loadout-clear')) return;
     drag = payloadFrom(source); event.dataTransfer.effectAllowed = drag.sourceSlot === undefined ? 'copy' : 'move';

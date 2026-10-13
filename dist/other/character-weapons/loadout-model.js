@@ -9,10 +9,13 @@
   const slotCount = 40, weaponSlotCount = 5;
   function cleanState(value) {
     const source = Array.isArray(value) ? value : [];
-    return Array.from({length:slotCount}, (_, i) => ({
-      character: characterIds.has(source[i]?.character) ? source[i].character : null,
-      weapons: Array.from({length:weaponSlotCount}, (_, j) => weaponIds.has(source[i]?.weapons?.[j]) ? source[i].weapons[j] : null),
-    }));
+    const usedCharacters = new Set();
+    return Array.from({length:slotCount}, (_, i) => {
+      const id = source[i]?.character;
+      const character = characterIds.has(id) && !usedCharacters.has(id) ? id : null;
+      if (character) usedCharacters.add(character);
+      return {character, weapons: Array.from({length:weaponSlotCount}, (_, j) => weaponIds.has(source[i]?.weapons?.[j]) ? source[i].weapons[j] : null)};
+    });
   }
   function weaponCounts(value) {
     const counts = Object.fromEntries(weapons.map(w => [w.id, 0]));
@@ -40,7 +43,10 @@
         state[target.slot].weapons[target.weaponSlot] = payload.id;
         state[payload.sourceSlot].weapons[payload.sourceWeaponSlot] = previous;
       }
-    } else if (character) state[target.slot].character = payload.id;
+    } else if (character) {
+      if (state.some((slot, index) => index !== target.slot && slot.character === payload.id)) return false;
+      state[target.slot].character = payload.id;
+    }
     else state[target.slot].weapons[target.weaponSlot] = payload.id;
     return true;
   }

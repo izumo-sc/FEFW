@@ -57,3 +57,27 @@ test('参考数は配置された全武器を数え、錬成の作成数制限�
   assert.equal(forging.requirements({cerberus:200}).materials.アガルチウム, 3);
   assert.equal(forging.requirements({}).total, 0);
 });
+
+test('同一キャラは別チームでも重複配置できず、解除後は再配置できる', () => {
+  const state = cleanState(null), id = characters[0].id;
+  const place = slot => applyItem(state, {slot,category:'character'}, {id,category:'character'});
+  assert.equal(place(0), true);
+  for (const slot of [1,8,16,24,32]) assert.equal(place(slot), false);
+  assert.equal(state.filter(slot => slot.character === id).length, 1);
+  assert.ok(applyItem(state, {slot:32,category:'character'}, {id,category:'character',sourceSlot:0}));
+  assert.equal(place(0), false);
+  state[32].character = null;
+  assert.equal(place(8), true);
+});
+
+test('旧データの重複キャラは先頭のみ残し、武器と全チームの参考数は保持する', () => {
+  const saved = Array.from({length:40}, () => ({character:null,weapons:[]}));
+  saved[0] = {character:characters[0].id, weapons:['hammer']};
+  saved[32] = {character:characters[0].id, weapons:['hammer','thunder-sword']};
+  const cleaned = cleanState(saved);
+  assert.equal(cleaned[0].character, characters[0].id);
+  assert.equal(cleaned[32].character, null);
+  assert.deepEqual(cleaned[32].weapons.slice(0,2), ['hammer','thunder-sword']);
+  assert.equal(weaponCounts(cleaned).hammer, 2);
+  assert.equal(weaponCounts(cleaned)['thunder-sword'], 1);
+});
