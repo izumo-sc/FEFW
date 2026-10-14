@@ -108,6 +108,10 @@ window.WEAPONS = [
     acquisition: "宝箱",
   },
   {
+    name: "ショートボウ",
+    acquisition: "スカウト",
+  },
+  {
     name: "馬殺しの弓",
     acquisition: "調査中",
   },
