@@ -114,12 +114,12 @@
     const list = find('loadout-picker-items'); list.replaceChildren();
     const slot = state[pickerTarget.slot], classData = classes.find(item => item.id === slot.classId);
     const note = find('loadout-picker-note');
-    note.textContent = pickerTarget.category === 'class' ? '兵種を変更・解除すると、装備できない武器は枠から外れます。' : pickerTarget.category === 'weapon' ? (classData ? `装備可能：${classData.weaponTypes.join('・') || '該当する武器なし'}` : '先にキャラ名の上の枠で兵種を選択してください。') : '';
+    note.textContent = pickerTarget.category === 'class' ? '兵種を選択・変更すると、装備できない武器は枠から外れます。' : pickerTarget.category === 'weapon' && classData ? `装備可能：${classData.weaponTypes.join('・') || '該当する武器なし'}` : '';
     note.hidden = !note.textContent;
     for (const item of filtered(pickerTarget.category, find('loadout-picker-search').value)) {
       const usedSlot = pickerTarget.category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
       const weaponLocked = pickerTarget.category === 'weapon' && !canEquip(slot.classId, item.id);
-      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : weaponLocked ? `${item.name}（${slot.classId ? '装備不可' : '兵種未選択'}）` : item.name);
+      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : weaponLocked ? `${item.name}（装備不可）` : item.name);
       pick.disabled = usedSlot >= 0 || weaponLocked;
       if (pickerTarget.category === 'class') pick.append(el('small', 'loadout-class-types', `${item.group}／${item.weaponTypes.join('・') || '対象武器なし'}`));
       pick.addEventListener('click', () => {

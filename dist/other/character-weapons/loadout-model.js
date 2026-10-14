@@ -11,7 +11,7 @@
     ['斧', ['hammer']], ['弓', ['wood-bow','beast-bow','long-bow','horse-bow','short-bow']],
     ['籠手', ['wood-gauntlet','kenkonken','salamander','cerberus']],
   ].flatMap(([type, ids]) => ids.map(id => [id, type])));
-  function canEquip(classId, weaponId) { return Boolean(classMap.get(classId)?.weaponTypes.includes(weaponTypes[weaponId])); }
+  function canEquip(classId, weaponId) { return weaponIds.has(weaponId) && (classId == null || Boolean(classMap.get(classId)?.weaponTypes.includes(weaponTypes[weaponId]))); }
   const weaponIds = new Set(weapons.map(item => item.id));
   const characterIds = new Set(characters.map(item => item.id));
   const storageKey = 'fortune-weave-character-weapons-v1';

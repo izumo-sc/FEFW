@@ -120,14 +120,14 @@ test('59兵種の使用可能技能と全26武器の種類で判定し、試験�
   assert.equal(canEquip(id('ワイズマン'), 'salamander'), true);
   assert.equal(canEquip(id('ワイズマン'), 'cerberus'), true);
   assert.equal(canEquip(id('戦象兵'), 'wood-bow'), false);
-  assert.equal(canEquip(null, 'wood-sword'), false);
+  for (const weapon of weapons) assert.equal(canEquip(null, weapon.id), true);
+  assert.equal(canEquip(null, 'unknown'), false);
+  assert.equal(canEquip('unknown', 'wood-sword'), false);
 });
 
-test('兵種未選択・不適合武器を拒否し、兵種変更では不適合武器だけ外す', () => {
+test('兵種未選択では自由に配置でき、選択時は不適合武器だけ外し、解除時は保持する', () => {
   const state = cleanState(null);
   const put = (category, id, weaponSlot = 0) => applyItem(state, {slot:0,category,weaponSlot}, {category,id});
-  assert.equal(put('weapon','wood-sword'), false);
-  assert.equal(put('class','class-1'), true);
   assert.equal(put('weapon','wood-sword'), true);
   assert.equal(put('weapon','wood-bow',1), true);
   assert.equal(put('class','class-8'), true); // 剣士：剣・槍
@@ -135,7 +135,28 @@ test('兵種未選択・不適合武器を拒否し、兵種変更では不適�
   assert.equal(put('weapon','wood-bow'), false);
   assert.equal(weaponCounts(state)['wood-bow'],0);
   assert.equal(put('class',null), true);
-  assert.ok(state[0].weapons.every(id => id === null));
+  assert.equal(state[0].weapons[0], 'wood-sword');
+  assert.equal(put('weapon','wood-bow',1), true);
+  assert.deepEqual(cleanState(JSON.parse(JSON.stringify(state))), state);
+  assert.equal(weaponCounts(state)['wood-sword'],1);
+  assert.equal(weaponCounts(state)['wood-bow'],1);
+});
+
+test('兵種未選択の救世主にも全武器を配置でき、未選択枠と兵種あり枠の交換は両側を判定する', () => {
+  const state = cleanState(null);
+  for (const weapon of weapons) {
+    assert.equal(applyItem(state,{slot:40,category:'weapon',weaponSlot:0},{category:'weapon',id:weapon.id}),true);
+  }
+  state[0] = {character:null,classId:null,weapons:['wood-bow',null,null,null,null]};
+  state[1] = {character:null,classId:'class-11',weapons:['long-bow',null,null,null,null]};
+  const swap = () => applyItem(state,{slot:1,category:'weapon',weaponSlot:0},{category:'weapon',id:state[0].weapons[0],sourceSlot:0,sourceWeaponSlot:0});
+  assert.equal(swap(),true);
+  assert.equal(state[0].weapons[0],'long-bow');
+  assert.equal(state[1].weapons[0],'wood-bow');
+  state[0].weapons[0]='wood-sword';
+  const before=structuredClone(state);
+  assert.equal(swap(),false);
+  assert.deepEqual(state,before);
 });
 
 test('武器を交換する際は両側の兵種を検証し、キャラ移動には兵種も伴う', () => {
