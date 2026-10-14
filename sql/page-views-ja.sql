@@ -15,6 +15,7 @@ WITH pages(page, name) AS (
     ('other/forging', '武器錬成素材'),
     ('other', 'その他'),
     ('other/map-unlock', 'マップ開放で注意するところ'),
+    ('other/scout-weapons', 'スカウト武器について'),
     ('other/verification', '検証記録'),
     ('weapons', '有用武器')
 )

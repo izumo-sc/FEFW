@@ -116,7 +116,14 @@
 
       const acquisition = document.createElement("p");
       acquisition.className = "weapon-acquisition";
-      acquisition.textContent = weapon.acquisition;
+      if (weapon.acquisition === "スカウト") {
+        const link = document.createElement("a");
+        link.href = "../other/scout-weapons/";
+        link.textContent = weapon.acquisition;
+        acquisition.append(link);
+      } else {
+        acquisition.textContent = weapon.acquisition;
+      }
 
       const routeChecks = document.createElement("div");
       routeChecks.className = "weapon-route-checks";
