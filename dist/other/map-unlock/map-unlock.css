@@ -61,7 +61,7 @@
 .map-unlock-location-preview,
 .map-unlock-location-head {
   display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) 160px;
+  grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr);
   align-items: center;
   gap: 12px;
 }
