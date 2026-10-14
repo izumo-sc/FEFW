@@ -95,10 +95,14 @@ Productionに設定し、Pagesを再デプロイします。Previewで計測す�
 `/api/page-view` は既知のページIDだけを許可してSQLパラメーターとして渡します。旧 `/api/home-view` はキャッシュされたHOME用として残し、新しいHOMEは新APIだけを呼びます。ページ追加時は `node scripts/sync-page-counters.cjs` を実行して、カウンターと許可リストを同期してください。
 集計は導入後から始まります。ユニーク人数ではなく閲覧回数であり、自動アクセスや広告ブロッカー等により実閲覧数と差が出ることがあります。
 
-管理者が現在の件数を確認する場合は、プロジェクトのフォルダーで次を実行します。
+日本語名で現在の件数を確認する場合は、CloudflareのD1 → `fefw-stats` → Consoleで `sql/page-views-ja.sql` の内容を実行します。ページ名・閲覧数・最終更新日時（UTC）を表示します。集計対象16ページに限定し、未訪問のページも0件として表示します。個別キャラページの過去の行が残っていても、この一覧には含めません。
+
+このSQLは読み取り専用です。内部ID・累計値・テーブル構造は変更せず、DB移行も不要です。GitへのpushだけでD1管理画面の標準テーブル表示が変わるわけではなく、このSQLの実行結果が日本語になります。ページ追加時の同期スクリプトで日本語名の一覧も更新します。
+
+CLIで確認する場合は、プロジェクトのフォルダーで次を実行します。
 
 ```powershell
-npx wrangler d1 execute fefw-stats --remote --command="SELECT page, count, updated_at FROM page_views;"
+npx wrangler d1 execute fefw-stats --remote --file=sql/page-views-ja.sql
 ```
 
 ## 5. 次回以降の更新コマンド
