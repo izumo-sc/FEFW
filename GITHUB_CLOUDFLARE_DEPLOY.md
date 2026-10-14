@@ -74,9 +74,9 @@ git config --global --add safe.directory (Get-Location).Path
 公開URLは `https://fefw.pages.dev/`、復興素材管理は `https://fefw.pages.dev/materials/` になります。
 `fefw.pages.dev` が既に使われている場合は、短い任意名に変更します。
 
-## 4. HOME閲覧数用のD1を設定する
+## 4. 各ページの閲覧数用D1を設定する
 
-HOMEを開いた回数はCloudflare D1に保存します。初回だけ次の設定が必要です。
+各ページを開いた回数はCloudflare D1に保存します。初回だけ次の設定が必要です。既存の `COUNTER_DB` と `page_views` があれば再作成・初期化は不要で、HOMEの累計も引き継ぎます。
 
 1. Cloudflare Dashboardの **Storage & Databases** → **D1 SQL database** を開く
 2. `fefw-stats` というデータベースを作成する
@@ -89,8 +89,11 @@ HOMEを開いた回数はCloudflare D1に保存します。初回だけ次の設
 | Variable name | `COUNTER_DB` |
 | D1 database | `fefw-stats` |
 
-ProductionとPreviewの両方に同じバインディングを設定し、Pagesを再デプロイします。
-閲覧数にはIPアドレスやブラウザ情報を保存せず、HOMEが読み込まれるたびに裏側で1回加算します。閲覧者の画面には件数を表示しません。
+Productionに設定し、Pagesを再デプロイします。Previewで計測する場合は検証専用の別D1を用意し、本番DBとは共有しません。
+各HTMLページが読み込まれるたびに裏側で1回加算します。リロードは加算し、同一ページ内のタブ切替は加算しません。閲覧者の画面には件数を表示しません。
+ブラウザから送るのはHTMLに埋め込んだ固定ページIDだけです。URLの検索文字列・ハッシュ・localStorageは読み取らず、CookieとRefererも計測リクエストには付けません。D1にはページID、累計、最終更新日時だけを保存し、IPアドレスやブラウザ情報は保存しません。ネットワーク層のIP情報やCloudflare側のログ設定とは別です。
+`/api/page-view` は既知のページIDだけを許可してSQLパラメーターとして渡します。旧 `/api/home-view` はキャッシュされたHOME用として残し、新しいHOMEは新APIだけを呼びます。ページ追加時は `node scripts/sync-page-counters.cjs` を実行して、カウンターと許可リストを同期してください。
+集計は導入後から始まります。ユニーク人数ではなく閲覧回数であり、自動アクセスや広告ブロッカー等により実閲覧数と差が出ることがあります。
 
 管理者が現在の件数を確認する場合は、プロジェクトのフォルダーで次を実行します。
 
@@ -111,5 +114,5 @@ git push
 
 - 必要数・所持数・不足数・採集ポイントを表示
 - 入力値は閲覧者ごとのブラウザに保存
-- サーバー側のデータベースは未使用
+- 素材等の入力値にはサーバー側DBを使用しない（ページ閲覧数のみD1で集計）
 - 別端末や別ブラウザへ所持数は同期されない
