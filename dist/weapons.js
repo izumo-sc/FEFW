@@ -9,8 +9,6 @@
     { key: "kai", label: "カイ" },
   ];
   const storageKey = "fortune-weave-weapon-checks-v1";
-  const list = document.querySelector("#weapon-list");
-  const count = document.querySelector("#weapon-count");
   const duplicateNames = new Set(
     weapons
       .map((weapon) => weapon.name)
@@ -103,10 +101,17 @@
   }
 
   function render() {
-    count.textContent = `${weapons.length}件`;
+    renderList(weapons.filter(item => item.category !== "accessory"), "#weapon-list", "#weapon-count");
+    renderList(weapons.filter(item => item.category === "accessory"), "#accessory-list", "#accessory-count");
+  }
+
+  function renderList(items, listSelector, countSelector) {
+    const list = document.querySelector(listSelector);
+    const count = document.querySelector(countSelector);
+    count.textContent = `${items.length}件`;
     list.replaceChildren();
 
-    for (const weapon of weapons) {
+    for (const weapon of items) {
       const row = document.createElement("article");
       row.className = "weapon-row";
 

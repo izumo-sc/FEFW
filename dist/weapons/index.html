@@ -8,6 +8,7 @@
     <title>万紫千紅 有用武器</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css?v=11" />
+    <link rel="stylesheet" href="./weapons.css?v=1" />
   </head>
   <body class="weapons-page">
     <header class="site-header weapons-header">
@@ -42,14 +43,34 @@
         </div>
         <div id="weapon-list" class="weapon-list"></div>
       </section>
+      <section class="weapon-panel" aria-labelledby="accessory-list-title">
+        <div class="weapon-panel-heading">
+          <div>
+            <p class="section-kicker">ACCESSORIES</p>
+            <h2 id="accessory-list-title">アクセサリー</h2>
+          </div>
+          <span id="accessory-count" class="weapon-count">0件</span>
+        </div>
+        <div class="weapon-table-header" aria-hidden="true">
+          <span>名前</span>
+          <span>入手方法</span>
+          <div class="weapon-route-labels">
+            <span>レダ</span>
+            <span>ディートリヒ</span>
+            <span>セオドラ</span>
+            <span>カイ</span>
+          </div>
+        </div>
+        <div id="accessory-list" class="weapon-list"></div>
+      </section>
     </main>
 
     <footer class="site-footer">
       <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
     </footer>
 
-    <script src="../weapons-data.js?v=29"></script>
-    <script src="../weapons.js?v=12"></script>
+    <script src="../weapons-data.js?v=30"></script>
+    <script src="../weapons.js?v=13"></script>
     <script src="../page-counter.js?v=1" data-page="weapons"></script>
   </body>
 </html>

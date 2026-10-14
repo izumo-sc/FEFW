@@ -166,6 +166,7 @@ window.WEAPONS = [
   {
     name: "疾風の指輪",
     acquisition: "10章アンナの秘密の店",
+    category: "accessory",
   },
   {
     name: "ナイトキラー",

@@ -1,0 +1,3 @@
+.weapons-main > .weapon-panel + .weapon-panel {
+  margin-top: 40px;
+}
