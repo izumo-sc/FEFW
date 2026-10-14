@@ -163,4 +163,12 @@ window.WEAPONS = [
     name: "疾風の指輪",
     acquisition: "10章アンナの秘密の店",
   },
+  {
+    name: "ナイトキラー",
+    acquisition: "スカウト",
+  },
+  {
+    name: "ナイトキラー",
+    acquisition: "王都メガエラ",
+  },
 ];
