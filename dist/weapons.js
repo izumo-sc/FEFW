@@ -53,6 +53,7 @@
   function migrateLegacyChecks(saved) {
     let changed = false;
     const renamedWeapons = [
+      ["必愛の宝珠", "必聖の宝珠"],
       ["アウロラの聖槍・改", "アウロラの聖槍＋1"],
       ["カーラの弓・改", "カーラの弓＋1"],
     ];

@@ -169,7 +169,7 @@ window.WEAPONS = [
     category: "accessory",
   },
   {
-    name: "必愛の宝珠",
+    name: "必聖の宝珠",
     acquisition: "ランダム配置の商会",
     category: "accessory",
   },
