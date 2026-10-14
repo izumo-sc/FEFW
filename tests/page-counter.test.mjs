@@ -26,17 +26,22 @@ function context(db, page, options = {}) {
   )};
 }
 
-test('全ページがカウンターを1回だけ読み込み、階層によらず固定IDのみ送る', async () => {
+test('個別キャラは計測せず、対象ページはカウンターを1回だけ読み込んで固定IDのみ送る', async () => {
   const source = fs.readFileSync(path.join(root, 'dist/page-counter.js'), 'utf8');
   const files = fs.readdirSync(path.join(root, 'dist'), {recursive:true}).filter(file => /(^|[\\/])index\.html$/.test(file));
   const installed = [];
   for (const file of files) {
     const html = fs.readFileSync(path.join(root, 'dist', file), 'utf8');
     assert(!html.includes('home-counter.js'));
+    const expected = path.dirname(file).split(path.sep).join('/');
+    if (expected.startsWith('other/characters/')) {
+      assert(!html.includes('page-counter.js'), file);
+      assert(!pageIds.has(expected));
+      continue;
+    }
     const tags = [...html.matchAll(/<script src="([^"]*page-counter\.js[^\"]*)" data-page="([^"]+)"><\/script>/g)];
     assert.equal(tags.length,1,file);
     const [, src, id] = tags[0];
-    const expected = path.dirname(file).split(path.sep).join('/');
     assert.equal(id, expected === '.' ? 'home' : expected);
     installed.push(id);
     const scriptUrl = new URL(src, 'http://127.0.0.1:8788/' + file.split(path.sep).join('/'));
@@ -57,6 +62,8 @@ test('全ページがカウンターを1回だけ読み込み、階層によら�
     assert.equal(calls[0].options.body,undefined);
   }
   assert.deepEqual(installed.sort(), [...pageIds].sort());
+  assert(pageIds.has('other/characters'));
+  assert.equal(pageIds.size,16);
 });
 
 test('HOME累計を維持し、旧APIと新APIで同じ行に加算する', async () => {
@@ -76,7 +83,7 @@ test('HOME累計を維持し、旧APIと新APIで同じ行に加算する', asyn
 
 test('不明ID・URL・SQL文字列を拒否してDBに書かない', async () => {
   const db=database();
-  for (const page of [null,'','unknown','home?email=private','https://example.invalid/',"home'); DROP TABLE page_views;--"]) {
+  for (const page of [null,'','unknown','other/characters/kai','home?email=private','https://example.invalid/',"home'); DROP TABLE page_views;--"]) {
     assert.equal((await pageRequest(context(db,page))).status,400);
   }
   assert.equal(db.calls.length,0);

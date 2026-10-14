@@ -12,11 +12,16 @@ const ids = [];
 for (const file of pages(dist).sort()) {
   const relative = path.relative(dist, path.dirname(file)).split(path.sep).join('/');
   const id = relative || 'home';
-  ids.push(id);
   const src = (relative ? '../'.repeat(relative.split('/').length) : './') + 'page-counter.js?v=1';
   const html = fs.readFileSync(file, 'utf8');
   const newline = html.includes('\r\n') ? '\r\n' : '\n';
   const clean = html.replace(/^[ \t]*<script\b[^>]*src="[^"\n]*(?:home-counter|page-counter)\.js[^"\n]*"[^>]*><\/script>\r?\n/gm, '');
+  // Character details are excluded; only their index page is counted.
+  if (id.startsWith('other/characters/')) {
+    if (clean !== html) fs.writeFileSync(file, clean);
+    continue;
+  }
+  ids.push(id);
   const updated = clean.replace(/([ \t]*)<\/body>/, `    <script src="${src}" data-page="${id}"></script>${newline}$1</body>`);
   if (updated === clean) throw new Error(`Missing body: ${file}`);
   if (updated !== html) fs.writeFileSync(file, updated);
