@@ -1,0 +1,53 @@
+.scout-note,
+.scout-article {
+  padding: 20px 24px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  line-height: 1.8;
+}
+
+.scout-note {
+  margin-bottom: 16px;
+}
+
+.scout-article h2 {
+  margin: 0 0 16px;
+  font-size: 1.2rem;
+}
+
+.scout-article h3 {
+  margin: 24px 0 8px;
+  font-size: 1.05rem;
+}
+
+.scout-article dl {
+  margin: 0;
+}
+
+.scout-article dl > div {
+  display: grid;
+  grid-template-columns: 10em minmax(0, 1fr);
+  gap: 8px 16px;
+  padding: 6px 0;
+}
+
+.scout-article dt {
+  font-weight: 700;
+}
+
+.scout-article dd {
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .scout-note,
+  .scout-article {
+    padding: 16px;
+  }
+
+  .scout-article dl > div {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
