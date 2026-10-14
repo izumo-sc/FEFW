@@ -26,16 +26,17 @@ test('指定の7武器は末尾に並び、保存済みの2個以上も1個分�
   assert.equal(balance(0, {leda:3}).held, 3);
 });
 
-test('全26武器を1個ずつ選んだ合計を資料と照合', () => {
-  assert.equal(weapons.length, 26);
-  assert.equal(new Set(weapons.map(w => w.id)).size, 26);
-  assert.equal(materialNames.length, 13);
+test('全57武器を1個ずつ選んだ合計を2本の動画資料と照合', () => {
+  assert.equal(weapons.length, 57);
+  assert.equal(new Set(weapons.map(w => w.id)).size, 57);
+  assert.equal(materialNames.length, 15);
   const result = requirements(Object.fromEntries(weapons.map(w => [w.id, 1])));
   assert.deepEqual(result.materials, {
-    錬成石:193, ブルースノール:6, カレット:35, 雷石:8, ウーツ鋼:5, 月光石:3,
-    玉鋼:36, 海星石:3, アダマント:2, 太陽石:18, オリハルコン:2, アガルチウム:5, マジックアレイ:2,
+    錬成石:480, ブルースノール:25, カレット:55, 雷石:13, ウーツ鋼:10, 月光石:3,
+    玉鋼:41, 海星石:8, アダマント:3, 太陽石:19, オリハルコン:2, アガルチウム:5, マジックアレイ:2,
+    風石:15, 毒石:30,
   });
-  assert.equal(result.total, 318);
+  assert.equal(result.total, 711);
 });
 
 test('4ルートの採集数を合算し、余剰でも不足数を負にしない', () => {

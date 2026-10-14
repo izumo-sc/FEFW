@@ -111,7 +111,7 @@ test('旧データの重複キャラは先頭のみ残し、武器と全チー�
   assert.equal(weaponCounts(cleaned)['thunder-sword'], 1);
 });
 
-test('59兵種の使用可能技能と全26武器の種類で判定し、試験条件とは区別する', () => {
+test('59兵種の使用可能技能と全57武器の種類で判定し、試験条件とは区別する', () => {
   assert.equal(classes.length, 59);
   for (const weapon of weapons) assert.ok(weaponTypes[weapon.id]);
   const id = name => classes.find(item => item.name === name).id;
@@ -123,6 +123,22 @@ test('59兵種の使用可能技能と全26武器の種類で判定し、試験�
   for (const weapon of weapons) assert.equal(canEquip(null, weapon.id), true);
   assert.equal(canEquip(null, 'unknown'), false);
   assert.equal(canEquip('unknown', 'wood-sword'), false);
+});
+
+test('追加武器を保存・再読込・参考数・素材計算に連携し、兵種で制限する', () => {
+  const state = cleanState([{weapons:['wind-sword','wind-bow','poison-bow','wind-fire-wheel','bronze-sword']}]);
+  assert.deepEqual(cleanState(JSON.parse(JSON.stringify(state))), state);
+  const result = forging.requirements(weaponCounts(state));
+  assert.equal(result.materials.風石, 10);
+  assert.equal(result.materials.毒石, 30);
+  assert.equal(result.materials.太陽石, 1);
+  assert.equal(result.materials.アダマント, 1);
+  assert.equal(result.materials.錬成石, 16);
+  assert.equal(result.gold, 7840);
+  const swordsman = classes.find(item => item.name === '剣士').id;
+  assert.equal(canEquip(swordsman, 'bronze-sword'), true);
+  assert.equal(canEquip(swordsman, 'halberd'), true);
+  for (const id of ['wood-axe','wind-bow','wind-fire-wheel']) assert.equal(canEquip(swordsman, id), false);
 });
 
 test('兵種未選択では自由に配置でき、選択時は不適合武器だけ外し、解除時は保持する', () => {

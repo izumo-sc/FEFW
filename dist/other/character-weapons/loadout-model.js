@@ -10,6 +10,11 @@
     ['槍', ['wood-spear','javelin','short-spear','knight-killer','aurora','solel','shinza','mahamadou','gracida','assal']],
     ['斧', ['hammer']], ['弓', ['wood-bow','beast-bow','long-bow','horse-bow','short-bow']],
     ['籠手', ['wood-gauntlet','kenkonken','salamander','cerberus']],
+    ["剣",["bronze-sword","iron-sword","damina-sword","killing-edge","wind-sword"]],
+    ["槍",["bronze-spear","iron-spear","damina-spear","halberd"]],
+    ["斧",["wood-axe","bronze-axe","iron-axe","damina-axe","hand-axe","short-axe","sagaris","smash-axe","shield-axe","hawk-axe","bardiche","mace"]],
+    ["弓",["bronze-bow","iron-bow","damina-bow","wind-bow","poison-bow"]],
+    ["籠手",["bronze-gauntlet","iron-gauntlet","damina-gauntlet","counter-gauntlet","wind-fire-wheel"]],
   ].flatMap(([type, ids]) => ids.map(id => [id, type])));
   function canEquip(classId, weaponId) { return weaponIds.has(weaponId) && (classId == null || Boolean(classMap.get(classId)?.weaponTypes.includes(weaponTypes[weaponId]))); }
   const weaponIds = new Set(weapons.map(item => item.id));
