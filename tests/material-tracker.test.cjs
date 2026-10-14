@@ -45,6 +45,7 @@ function tracker(exchange = false) {
   return {
     get: id => ids[prefix + id].textContent,
     shortage: name => row(name).children[5].textContent,
+    remarks: name => row(name).children[7].textContent,
     input(name, route, value) {
       const input = row(name).children[3].children[route].children[1];
       input.value = String(value); input.fire("input");
@@ -58,33 +59,48 @@ function tracker(exchange = false) {
   };
 }
 
+test("宝珠の交換素材を4ルート分加算し、備考に宝珠名を表示する", () => {
+  const t = tracker();
+  for (const [name, shortage, orb] of [
+    ["アカキンバイ", "3（4）", "必愛の宝珠"],
+    ["レッドフリッカ", "10（12）", "必愛の宝珠"],
+    ["ロカ", "15（40）", "必愛の宝珠"],
+    ["アオギンジ", "1（12）", "祝勝の宝珠"],
+  ]) {
+    assert.equal(t.shortage(name), shortage);
+    assert.equal(t.remarks(name), orb);
+  }
+  for (const route of [0, 1, 2, 3]) t.input("アオギンジ", route, 3);
+  assert.equal(t.shortage("アオギンジ"), "1（0）");
+});
+
 test("上部の必要数・不足数に4ルートの交換分も含める", () => {
   const t = tracker();
-  assert.equal(t.get("required-total"), "836");
-  assert.equal(t.get("shortage-total"), "836");
+  assert.equal(t.get("required-total"), "904");
+  assert.equal(t.get("shortage-total"), "904");
   t.input("サンノミ", 0, 5);
   assert.equal(t.shortage("サンノミ"), "25（35）");
-  assert.equal(t.get("shortage-total"), "831");
+  assert.equal(t.get("shortage-total"), "899");
   t.input("サンノミ", 0, 20);
   assert.equal(t.shortage("サンノミ"), "15（30）");
-  assert.equal(t.get("shortage-total"), "816");
+  assert.equal(t.get("shortage-total"), "884");
 });
 
 test("余剰を他ルートに流用せず、必要ルートへの入力で不足を解消する", () => {
   const t = tracker();
   t.input("サンノミ", 0, 100);
   assert.equal(t.shortage("サンノミ"), "0（30）");
-  assert.equal(t.get("shortage-total"), "801");
+  assert.equal(t.get("shortage-total"), "869");
   for (const route of [1,2,3]) t.input("サンノミ", route, 10);
   assert.equal(t.shortage("サンノミ"), "0（0）");
-  assert.equal(t.get("shortage-total"), "771");
+  assert.equal(t.get("shortage-total"), "839");
 });
 
 test("交換専用素材の不足を集計し、OFF/ONで入力値を保持する", () => {
   const t = tracker();
   t.input("ラドンパイク", 0, 12);
   assert.equal(t.shortage("ラドンパイク"), "（9）");
-  assert.equal(t.get("shortage-total"), "833");
+  assert.equal(t.get("shortage-total"), "901");
   t.input("サンノミ", 0, 20);
   t.toggle();
   assert.equal(t.rows(),55);
@@ -94,7 +110,7 @@ test("交換専用素材の不足を集計し、OFF/ONで入力値を保持す�
   t.toggle();
   assert.equal(t.rows(),58);
   assert.equal(t.shortage("ラドンパイク"), "（9）");
-  assert.equal(t.get("shortage-total"), "813");
+  assert.equal(t.get("shortage-total"), "881");
 });
 
 test("ページ間同期後の追加入力も最新の数値で再計算する", () => {
@@ -102,15 +118,15 @@ test("ページ間同期後の追加入力も最新の数値で再計算する",
   t.sync({サンノミ:{leda:20}});
   t.input("サンノミ", 1, 10);
   assert.equal(t.shortage("サンノミ"), "15（20）");
-  assert.equal(t.get("shortage-total"), "806");
+  assert.equal(t.get("shortage-total"), "874");
 });
 
 test("武器交換ページは交換分のみをルート別上限で集計する", () => {
   const t = tracker(true);
-  assert.equal(t.get("required-total"), "168");
+  assert.equal(t.get("required-total"), "236");
   t.input("サンノミ", 0, 100);
   assert.equal(t.shortage("サンノミ"), "30");
-  assert.equal(t.get("shortage-total"), "158");
+  assert.equal(t.get("shortage-total"), "226");
 });
 
 test("括弧内は交換分のみで、復興分と独立して不足を表示する", () => {
@@ -118,5 +134,5 @@ test("括弧内は交換分のみで、復興分と独立して不足を表示�
   assert.equal(t.shortage("サンノミ"), "25（40）");
   for (const route of [0, 1, 2, 3]) t.input("サンノミ", route, 10);
   assert.equal(t.shortage("サンノミ"), "25（0）");
-  assert.equal(t.get("shortage-total"), "796");
+  assert.equal(t.get("shortage-total"), "864");
 });

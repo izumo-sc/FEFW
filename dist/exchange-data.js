@@ -19,6 +19,10 @@
     },
     { exchangeFor: "アーカイヴΓ", name: "ポンゴ", required: 10 },
     { exchangeFor: "アーカイヴΓ", name: "グルマオサ", required: 1 },
+    { exchangeFor: "必愛の宝珠", name: "アカキンバイ", required: 1 },
+    { exchangeFor: "必愛の宝珠", name: "レッドフリッカ", required: 3 },
+    { exchangeFor: "必愛の宝珠", name: "ロカ", required: 10 },
+    { exchangeFor: "祝勝の宝珠", name: "アオギンジ", required: 3 },
   ];
 
   window.EXCHANGE_MATERIALS = exchangeMaterials.map((material) => ({
