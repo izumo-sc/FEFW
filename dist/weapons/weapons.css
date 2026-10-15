@@ -1,3 +1,16 @@
+.weapons-header > .weapons-header-actions {
+  margin-left: auto;
+  justify-items: end;
+  gap: 8px;
+  text-align: right;
+}
+
+.weapons-header-actions p {
+  margin: 0;
+  color: #d7e6ee;
+  font-size: 0.86rem;
+}
+
 .weapons-main > .weapon-panel + .weapon-panel {
   margin-top: 40px;
 }
