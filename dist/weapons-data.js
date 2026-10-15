@@ -170,12 +170,12 @@ window.WEAPONS = [
   },
   {
     name: "必聖の宝珠",
-    acquisition: "ランダム配置の商会",
+    acquisition: "タレイア州・ソトー湖（ヴァンダル商会）",
     category: "accessory",
   },
   {
     name: "祝勝の宝珠",
-    acquisition: "ランダム配置の商会",
+    acquisition: "アマルテア州・ゴーラ草原帯（ヴァンダル商会）",
     category: "accessory",
   },
   {
