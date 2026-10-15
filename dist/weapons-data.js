@@ -186,4 +186,12 @@ window.WEAPONS = [
     name: "ナイトキラー",
     acquisition: "王都メガエラ",
   },
+  {
+    name: "獣狩りの弓",
+    acquisition: "リベイラ村",
+  },
+  {
+    name: "獣狩りの弓",
+    acquisition: "イデュイア州・ガレーン砦跡",
+  },
 ];
