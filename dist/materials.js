@@ -4,6 +4,7 @@ window.MATERIALS = [
     "category": "魚",
     "required": 20,
     "locations": [
+      "パンドラの港町（カスタリア州）（5・購入）",
       "パンドラの魚巣（リル海）",
       "アイフ海峡（リル海）",
       "大鮫の巣（リル海）",
@@ -72,6 +73,7 @@ window.MATERIALS = [
     "category": "魚",
     "required": 10,
     "locations": [
+      "パンドラの港町（カスタリア州）（10・購入）",
       "パンドラの魚巣（リル海）",
       "アイフ海峡（リル海）",
       "叫びの海（リル海）",
@@ -100,6 +102,8 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 50,
     "locations": [
+      "ヤーマン村（アマルテア州）（5・購入）",
+      "アギーニョ村（メリアス州）（5・購入）",
       "クリュティオス平原（メリアス州）",
       "咽せ風の谷（アマルテア州）",
       "ネイピアの森（アマルテア州）"
@@ -151,6 +155,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 35,
     "locations": [
+      "メッシリーナ大農園（サヴェロン州）（5・購入）",
       "巨人の丘（パシテア州）",
       "オーガス山道（パシテア州）",
       "哭き木の森（オーマ州）",
@@ -227,6 +232,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 13,
     "locations": [
+      "トバリンの村（ランパス州）（5・購入）",
       "アイギーナ山（イデュイア州）",
       "笑み岩（ランパス州）",
       "タシット平原（ランパス州）"
@@ -254,6 +260,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 10,
     "locations": [
+      "メッシリーナ大農園（サヴェロン州）（5・購入）",
       "ミュグリアの大樹（サヴェロン州）",
       "月見峠（サヴェロン州）"
     ],
@@ -265,6 +272,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 10,
     "locations": [
+      "アギーニョ村（メリアス州）（5・購入）",
       "ドラグデン峠（イデュイア州）",
       "アイギーナ山（イデュイア州）",
       "深緑の穴（ランパス州）",
@@ -354,6 +362,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 1,
     "locations": [
+      "メッシリーナ大農園（サヴェロン州）（1・購入）",
       "月見峠（サヴェロン州）"
     ],
     "routeLimited": false,
@@ -374,6 +383,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 1,
     "locations": [
+      "アギーニョ村（メリアス州）（1・購入）",
       "ダダ平原（メリアス州）"
     ],
     "routeLimited": false,
@@ -458,6 +468,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 45,
     "locations": [
+      "トバリンの村（ランパス州）（10・購入）",
       "焼け草の砂丘（ランパス州）",
       "笑み岩（ランパス州）"
     ],
@@ -469,6 +480,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 45,
     "locations": [
+      "バイナのオアシス（ニュシアデス州）（10・購入）",
       "骸の大流砂（ニュシアデス州）",
       "砂虫の巣（ニュシアデス州）",
       "砂流れの道（ニュシアデス州）",
@@ -510,6 +522,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 10,
     "locations": [
+      "バイナのオアシス（ニュシアデス州）（5・購入）",
       "骸の大流砂（ニュシアデス州）",
       "砂虫の巣（ニュシアデス州）"
     ],
@@ -521,6 +534,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 10,
     "locations": [
+      "バイナのオアシス（ニュシアデス州）（10・購入）",
       "骸の大流砂（ニュシアデス州）",
       "砂流れの道（ニュシアデス州）"
     ],
@@ -581,6 +595,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 3,
     "locations": [
+      "アギーニョ村（メリアス州）（5・購入）",
       "ウォレの森（プラクシテア州）",
       "裏山道（パシテア州）"
     ],
@@ -615,6 +630,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 1,
     "locations": [
+      "バイナのオアシス（ニュシアデス州）（1・購入）",
       "砂虫の巣（ニュシアデス州）"
     ],
     "routeLimited": true,
@@ -625,6 +641,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 1,
     "locations": [
+      "メッシリーナ大農園（サヴェロン州）（1・購入）",
       "クーガーの屋根（プラクシテア州）"
     ],
     "routeLimited": true,
@@ -645,6 +662,7 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 1,
     "locations": [
+      "メッシリーナ大農園（サヴェロン州）（1・購入）",
       "笑み岩（ランパス州）"
     ],
     "routeLimited": true,
