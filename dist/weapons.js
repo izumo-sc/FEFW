@@ -15,6 +15,7 @@
       .filter((name, index, names) => names.indexOf(name) !== index),
   );
   const unavailableRoutes = new Map([
+    ["アーカイヴZ｜ニュシアデス州・南の通路", new Set(["leda", "kai"])],
     ["アウロラの聖槍＋1｜強化忘れず（任意）", new Set(["leda", "dietrich", "theodora"])],
     ["アンスウェラー・改｜12章イベント（任意）", new Set(["leda", "theodora", "kai"])],
     ["カーラの弓＋1｜強化忘れず（任意）", new Set(["dietrich", "theodora", "kai"])],
