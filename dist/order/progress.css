@@ -1,0 +1,79 @@
+.chart-step {
+  position: relative;
+  margin: 0 0 10px;
+  padding: 10px 12px;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  scroll-margin-block: 24px 150px;
+}
+
+.chart-step:hover {
+  background: #f6f8fa;
+}
+
+.chart-step.is-current {
+  border-color: #e8b900;
+  background: #fffbea;
+}
+
+.chart-step > p:last-of-type {
+  margin-bottom: 0;
+}
+
+.chart-step-select {
+  display: block;
+  margin: 6px 0 0 auto;
+  padding: 4px 8px;
+  border: 1px solid #b9c6cf;
+  border-radius: 5px;
+  background: #fff;
+  color: #415267;
+  font: inherit;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.chart-step-select:disabled {
+  color: #665300;
+  border-color: #e8b900;
+  background: #fff6ca;
+  cursor: default;
+}
+
+.chart-progress {
+  position: fixed;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(16px, env(safe-area-inset-bottom));
+  z-index: 20;
+  max-width: calc(100vw - 32px);
+  padding: 12px;
+  border: 1px solid #d5b755;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 24px rgb(16 36 56 / 20%);
+}
+
+.chart-progress[hidden] { display: none; }
+.chart-progress-status { margin: 0 0 8px; color: #415267; font-size: 0.85rem; }
+.chart-progress-actions { display: flex; gap: 8px; }
+.chart-progress button {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 1px solid #b9c6cf;
+  border-radius: 7px;
+  background: #fff;
+  color: #102438;
+  font: inherit;
+  cursor: pointer;
+}
+.chart-progress .chart-progress-next { background: #ffe17a; border-color: #d4ab25; }
+.chart-progress button:disabled { opacity: 0.5; cursor: default; }
+.chart-progress button:focus-visible,
+.chart-step-select:focus-visible { outline: 3px solid #237ba6; outline-offset: 3px; }
+.order-page.has-chart-progress { padding-bottom: 140px; }
+
+@media (max-width: 600px) {
+  .chart-step { padding: 8px; }
+  .chart-progress { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); padding: 10px; }
+  .chart-progress button { padding-inline: 12px; }
+}
