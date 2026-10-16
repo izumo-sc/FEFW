@@ -84,6 +84,40 @@
   font-variant-numeric: tabular-nums;
 }
 
+.character-affinity {
+  margin-bottom: 24px;
+}
+
+.character-affinity h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.character-affinity-table {
+  width: 100%;
+  max-width: 720px;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: center;
+}
+
+.character-affinity-table th,
+.character-affinity-table td {
+  border: 1px solid var(--line);
+  padding: 8px 4px;
+}
+
+.character-affinity-table th {
+  background: var(--page);
+  font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+  font-weight: 600;
+}
+
+.character-affinity-table td {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
 @media (max-width: 640px) {
   .character-growth-stats {
     grid-template-columns: repeat(3, minmax(0, 1fr));
