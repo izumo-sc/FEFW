@@ -1,8 +1,11 @@
 .chart-step {
   position: relative;
-  margin: 0 0 10px;
-  padding: 10px 12px;
-  border: 3px solid transparent;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 8px;
+  margin: 0 0 4px;
+  padding: 0 6px;
+  border: 2px solid transparent;
   border-radius: 8px;
   scroll-margin-block: 24px 150px;
 }
@@ -16,20 +19,29 @@
   background: #fffbea;
 }
 
-.chart-step > p:last-of-type {
-  margin-bottom: 0;
+.chart-step > p {
+  grid-column: 1;
+  margin: 0;
+}
+
+.chart-step > p + p {
+  margin-top: 4px;
 }
 
 .chart-step-select {
-  display: block;
-  margin: 6px 0 0 auto;
-  padding: 4px 8px;
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  margin: 2px 0 0;
+  padding: 0 5px;
   border: 1px solid #b9c6cf;
   border-radius: 5px;
   background: #fff;
   color: #415267;
   font: inherit;
   font-size: 0.75rem;
+  line-height: 1.6;
+  white-space: nowrap;
   cursor: pointer;
 }
 
@@ -73,7 +85,7 @@
 .order-page.has-chart-progress { padding-bottom: 140px; }
 
 @media (max-width: 600px) {
-  .chart-step { padding: 8px; }
+  .chart-step { padding: 0 4px; column-gap: 4px; }
   .chart-progress { right: 10px; bottom: max(10px, env(safe-area-inset-bottom)); padding: 10px; }
   .chart-progress button { padding-inline: 12px; }
 }
