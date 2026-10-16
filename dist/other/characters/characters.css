@@ -114,8 +114,42 @@
 }
 
 .character-affinity-table td {
+  padding: 0;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.character-requirements {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, 30px);
+  align-items: center;
+  background: linear-gradient(to bottom right,
+    transparent calc(50% - 0.5px),
+    var(--line) calc(50% - 0.5px),
+    var(--line) calc(50% + 0.5px),
+    transparent calc(50% + 0.5px));
+}
+
+.character-fame {
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.character-affinity-value {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.character-requirement-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
 
 @media (max-width: 640px) {
