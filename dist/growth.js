@@ -78,8 +78,12 @@
     status.textContent = message;
   }
 
+  function getBaseClassName(item) {
+    return item?.baseName || item?.name;
+  }
+
   function getClassMountType(itemId) {
-    return classMountTypes.get(itemById.get(itemId)?.name) || null;
+    return classMountTypes.get(getBaseClassName(itemById.get(itemId))) || null;
   }
 
   function getAnimalMountType(itemId) {
@@ -87,7 +91,7 @@
   }
 
   function itemMeta(category, item) {
-    if (category === "class") return `${item.group} · ${classMountTypes.get(item.name) || "動物なし"}`;
+    if (category === "class") return `${item.group} · ${getClassMountType(item.id) || "動物なし"}`;
     if (category === "animal") return getAnimalMountType(item.id);
     return item.group;
   }
@@ -101,7 +105,7 @@
 
   function getGrowthMultiplier(slotIndex, category) {
     if (category !== "animal") return 1;
-    return itemById.get(state[slotIndex].class)?.name === "戦車兵" ? 2 : 1;
+    return getBaseClassName(itemById.get(state[slotIndex].class)) === "戦車兵" ? 2 : 1;
   }
 
   function getTotals(slotIndex) {
@@ -201,14 +205,14 @@
           key === "class" && classOrderMode === "evolution"
             ? [...data[dataKey]].sort(
                 (left, right) =>
-                  (evolutionClassOrder.get(left.name) ?? Number.MAX_SAFE_INTEGER) -
-                  (evolutionClassOrder.get(right.name) ?? Number.MAX_SAFE_INTEGER),
+                  (evolutionClassOrder.get(getBaseClassName(left)) ?? Number.MAX_SAFE_INTEGER) -
+                  (evolutionClassOrder.get(getBaseClassName(right)) ?? Number.MAX_SAFE_INTEGER),
               )
             : data[dataKey];
         const rows = sourceItems.length
           ? sourceItems
               .map((item) => {
-                const requirements = key === "class" ? classRequirements[item.name] || [] : [];
+                const requirements = key === "class" ? classRequirements[getBaseClassName(item)] || [] : [];
                 const requirementsHtml = requirements.length
                   ? `<div class="class-requirements" aria-label="要求技能">${requirements
                       .map(
