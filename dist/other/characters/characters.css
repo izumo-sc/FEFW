@@ -44,6 +44,135 @@
   line-height: 1.8;
 }
 
+.character-index-page {
+  min-height: 100vh;
+  background-repeat: no-repeat;
+}
+
+.character-index [hidden] {
+  display: none;
+}
+
+.character-close-row {
+  margin-bottom: 8px;
+}
+
+.character-route-buttons {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.character-control {
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.character-control[aria-expanded="true"] {
+  color: white;
+  background: var(--navy-soft);
+  border-color: var(--navy-soft);
+}
+
+.character-control:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.character-control:focus-visible {
+  outline: 3px solid #4596c2;
+  outline-offset: 2px;
+}
+
+.character-route-panel,
+.character-later-panel {
+  padding: 16px 0 4px;
+}
+
+.character-index .character-grid {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.character-index .character-link {
+  justify-content: center;
+  min-height: 54px;
+  padding: 10px 8px;
+  text-align: center;
+}
+
+.character-protagonist {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+  margin: 0 0 16px 48px;
+}
+
+.character-fame-group {
+  display: grid;
+  grid-template-columns: 40px minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.character-fame-group h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--muted);
+  text-align: center;
+}
+
+.character-later-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+}
+
+.character-later-panel .character-protagonist {
+  margin-left: 0;
+}
+
+@media (max-width: 640px) {
+  .character-route-buttons,
+  .character-index .character-grid,
+  .character-protagonist {
+    gap: 4px;
+  }
+
+  .character-route-buttons .character-control {
+    padding: 8px 2px;
+    font-size: 0.75rem;
+  }
+
+  .character-index .character-link {
+    padding: 8px 3px;
+  }
+
+  .character-index .character-link strong {
+    font-size: 0.75rem;
+  }
+
+  .character-fame-group {
+    grid-template-columns: 28px minmax(0, 1fr);
+    gap: 4px;
+  }
+
+  .character-fame-group h3 {
+    font-size: 0.75rem;
+  }
+
+  .character-protagonist {
+    margin-left: 32px;
+  }
+}
+
 .character-pending {
   margin: 0;
   color: var(--muted);
