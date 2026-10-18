@@ -222,6 +222,79 @@
   margin-bottom: 24px;
 }
 
+.character-skills {
+  margin-bottom: 24px;
+  min-width: 0;
+}
+
+.character-skills h2 {
+  margin: 0 0 12px;
+  font-size: 1.1rem;
+}
+
+.character-skills-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.character-skills-scroll:focus-visible {
+  outline: 2px solid var(--navy-soft);
+  outline-offset: 2px;
+}
+
+.character-skills-table {
+  width: 100%;
+  min-width: 1280px;
+  table-layout: fixed;
+  border-spacing: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.character-skills-table th,
+.character-skills-table td {
+  height: 38px;
+  padding: 6px 4px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  overflow-wrap: anywhere;
+}
+
+.character-skills-table thead th {
+  color: white;
+  background: var(--navy-soft);
+}
+
+.character-skills-table tr > :first-child {
+  position: sticky;
+  left: 0;
+  z-index: 1;
+  width: 64px;
+}
+
+.character-skills-table tbody th {
+  background: var(--page);
+}
+
+.character-skills-table tbody td {
+  background: var(--surface);
+}
+
+.character-skills-table tbody tr:nth-child(even) td {
+  background: #f5f8fa;
+}
+
+.character-skills-table tr > :last-child {
+  border-right: 0;
+}
+
+.character-skills-table tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
 .character-affinity h2 {
   margin: 0 0 12px;
   font-size: 1.1rem;
