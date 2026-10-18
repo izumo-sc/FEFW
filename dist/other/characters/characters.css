@@ -189,17 +189,22 @@
 
 .character-growth-stats {
   display: grid;
-  grid-template-columns: repeat(9, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(72px, 1fr));
   gap: 8px;
   margin: 0;
 }
 
 .character-growth-stats > div {
-  padding: 8px 4px;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  gap: 4px;
+  padding: 4px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: var(--page);
   text-align: center;
+  white-space: nowrap;
 }
 
 .character-growth-stats dt {
