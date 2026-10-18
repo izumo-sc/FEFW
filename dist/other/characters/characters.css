@@ -232,6 +232,22 @@
   font-size: 1.1rem;
 }
 
+.character-skill-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.character-skill-buttons .character-control {
+  padding: 8px 6px;
+  font-size: 0.85rem;
+}
+
+.character-skills [hidden] {
+  display: none;
+}
+
 .character-skills-scroll {
   max-width: 100%;
   overflow-x: auto;
@@ -246,7 +262,6 @@
 
 .character-skills-table {
   width: 100%;
-  min-width: 1280px;
   table-layout: fixed;
   border-spacing: 0;
   font-size: 0.8rem;
@@ -272,7 +287,7 @@
   position: sticky;
   left: 0;
   z-index: 1;
-  width: 64px;
+  width: 48px;
 }
 
 .character-skills-table tbody th {
@@ -293,6 +308,27 @@
 
 .character-skills-table tbody tr:last-child > * {
   border-bottom: 0;
+}
+
+@media (max-width: 640px) {
+  .character-skill-buttons .character-control {
+    padding: 6px 3px;
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  .character-skills-table {
+    font-size: 0.7rem;
+  }
+
+  .character-skills-table th,
+  .character-skills-table td {
+    padding: 5px 2px;
+  }
+
+  .character-skills-table tr > :first-child {
+    width: 34px;
+  }
 }
 
 .character-affinity h2 {
