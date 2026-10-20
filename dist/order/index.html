@@ -9,6 +9,10 @@
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css?v=9" />
     <link rel="stylesheet" href="./progress.css?v=2" />
+    <!-- page-board-assets -->
+    <link rel="stylesheet" href="/other/board/page-board.css?v=1">
+    <script src="/other/board/page-board.js?v=1" data-board-page="order" defer></script>
+    <!-- /page-board-assets -->
   </head>
   <body class="order-page">
     <header class="site-header order-header">
@@ -335,6 +339,13 @@
           <button class="order-route-toggle" type="button" data-order-toggle="kai" aria-expanded="false" aria-controls="order-kai">カイ</button>
         </div>
       </section>
+      <!-- page-board -->
+      <section class="page-board" aria-labelledby="page-board-title">
+        <h2 id="page-board-title">このページへの投稿</h2>
+        <p id="page-board-status" role="status">読み込み中…</p>
+        <div id="page-board-posts"></div>
+      </section>
+      <!-- /page-board -->
     </main>
 
     <footer class="site-footer">

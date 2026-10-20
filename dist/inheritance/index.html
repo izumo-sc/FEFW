@@ -8,6 +8,10 @@
     <title>万紫千紅 引継ぎ仕様のまとめ</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css?v=16" />
+    <!-- page-board-assets -->
+    <link rel="stylesheet" href="/other/board/page-board.css?v=1">
+    <script src="/other/board/page-board.js?v=1" data-board-page="inheritance" defer></script>
+    <!-- /page-board-assets -->
   </head>
   <body class="inheritance-page">
     <header class="site-header inheritance-header">
@@ -102,6 +106,13 @@
           <p>設定→ユーザー→ユーザーの追加→ログインせずに追加で簡単に増やせる</p>
         </section>
       </article>
+      <!-- page-board -->
+      <section class="page-board" aria-labelledby="page-board-title">
+        <h2 id="page-board-title">このページへの投稿</h2>
+        <p id="page-board-status" role="status">読み込み中…</p>
+        <div id="page-board-posts"></div>
+      </section>
+      <!-- /page-board -->
     </main>
 
     <footer class="site-footer">

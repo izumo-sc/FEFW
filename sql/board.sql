@@ -5,9 +5,11 @@ CREATE TABLE IF NOT EXISTS board_posts (
   body TEXT NOT NULL CHECK(length(body) BETWEEN 1 AND 2000),
   created_at INTEGER NOT NULL,
   owner_hash TEXT NOT NULL,
-  client_hash TEXT NOT NULL
+  client_hash TEXT NOT NULL,
+  page TEXT NOT NULL DEFAULT 'general'
 );
 CREATE INDEX IF NOT EXISTS board_posts_client_time ON board_posts(client_hash, created_at);
+CREATE INDEX IF NOT EXISTS board_posts_page_id ON board_posts(page, id DESC);
 CREATE TABLE IF NOT EXISTS board_rate_limits (
   client_hash TEXT PRIMARY KEY,
   last_post INTEGER NOT NULL

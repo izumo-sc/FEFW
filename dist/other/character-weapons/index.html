@@ -9,6 +9,10 @@
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml" />
   <link rel="stylesheet" href="../../styles.css?v=21" />
   <link rel="stylesheet" href="./loadout.css?v=6" />
+    <!-- page-board-assets -->
+    <link rel="stylesheet" href="/other/board/page-board.css?v=1">
+    <script src="/other/board/page-board.js?v=1" data-board-page="other/character-weapons" defer></script>
+    <!-- /page-board-assets -->
 </head>
 <body class="loadout-page">
   <header class="site-header loadout-header">
@@ -31,6 +35,13 @@
     </div>
     <div class="loadout-reset-row"><button id="loadout-reset" class="quiet-button" type="button">すべてリセット</button></div>
     <noscript><p>所持武器を管理するにはJavaScriptを有効にしてください。</p></noscript>
+      <!-- page-board -->
+      <section class="page-board" aria-labelledby="page-board-title">
+        <h2 id="page-board-title">このページへの投稿</h2>
+        <p id="page-board-status" role="status">読み込み中…</p>
+        <div id="page-board-posts"></div>
+      </section>
+      <!-- /page-board -->
   </main>
   <footer class="site-footer"><p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p></footer>
   <dialog id="loadout-picker" aria-labelledby="loadout-picker-title">

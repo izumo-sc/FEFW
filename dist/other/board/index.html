@@ -9,8 +9,9 @@
   <title>万紫千紅 掲示板</title>
   <link rel="stylesheet" href="../../styles.css?v=15">
   <link rel="stylesheet" href="../other.css?v=2">
-  <link rel="stylesheet" href="./board.css?v=1">
-  <script src="./board.js?v=2" defer></script>
+  <link rel="stylesheet" href="./board.css?v=2">
+  <script src="./board-pages.js?v=1" defer></script>
+  <script src="./board.js?v=3" defer></script>
 </head>
 <body>
   <header class="site-header other-header">
@@ -21,6 +22,8 @@
     <section class="board-card" aria-labelledby="post-title">
       <h2 id="post-title">投稿する</h2>
       <form id="post-form">
+        <label for="post-page">投稿先</label>
+        <select id="post-page" name="page" required></select>
         <label for="post-name">名前（任意）</label>
         <input id="post-name" name="name" maxlength="30" placeholder="名無し" autocomplete="off">
         <label for="post-body">本文</label>
@@ -33,6 +36,7 @@
       <p class="board-note">自分の投稿は、投稿したブラウザから削除できます。</p>
     </section>
     <div class="board-heading"><h2>投稿一覧</h2><button id="refresh-posts" type="button">更新</button></div>
+    <div class="board-filter"><label for="filter-page">表示する投稿先</label><select id="filter-page"><option value="">すべて</option></select></div>
     <p id="board-status" role="status" aria-live="polite"></p>
     <div id="posts"></div>
     <button id="more-posts" type="button" hidden>以前の投稿を表示</button>

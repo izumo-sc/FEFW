@@ -1,9 +1,13 @@
 .board-card { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin-bottom: 16px; }
 .board-card h2, .board-heading h2 { margin: 0; font-size: 1.15rem; }
+#post-title { margin-bottom: 12px; }
 .board-note { color: var(--muted); font-size: .85rem; line-height: 1.7; }
 #post-form { display: grid; gap: 8px; }
 #post-form label { font-size: .9rem; font-weight: 700; }
-#post-form input, #post-form textarea { width: 100%; border: 1px solid #a9b9c6; border-radius: 6px; padding: 10px; background: white; color: var(--ink); font: inherit; }
+#post-form input, #post-form textarea, #post-page, #filter-page { width: 100%; border: 1px solid #a9b9c6; border-radius: 6px; padding: 10px; background: white; color: var(--ink); font: inherit; }
+#post-page, #filter-page { max-width: 100%; margin-bottom: 8px; }
+.board-filter { display: grid; gap: 8px; font-size: .9rem; }
+.post-destination { display: block; flex-basis: 100%; font-size: .85rem; color: var(--navy); overflow-wrap: anywhere; }
 #post-form input { max-width: 300px; margin-bottom: 8px; }
 #post-form textarea { resize: vertical; min-height: 100px; }
 .board-actions, .board-heading, .post-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }

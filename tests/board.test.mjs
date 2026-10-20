@@ -2,6 +2,8 @@ import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
+import {DatabaseSync} from 'node:sqlite';
+import {boardPages} from '../lib/board-pages.mjs';
 import {handleBoard} from '../lib/board.mjs';
 import {openLocalD1} from '../scripts/local-d1.mjs';
 
@@ -24,7 +26,8 @@ test('投稿・一覧・所有者による削除。非公開フィールドは�
   assert.equal(response.status, 201);
   const {post} = await response.json();
   assert.equal(post.name, '名無し');
-  assert.deepEqual(Object.keys(post).sort(), ['body', 'created_at', 'id', 'name']);
+  assert.deepEqual(Object.keys(post).sort(), ['body', 'created_at', 'id', 'name', 'page']);
+  assert.equal(post.page, 'general');
   const listing = await request(db);
   assert.equal(listing.headers.get('cache-control'), 'no-store');
   const data = await listing.json();
@@ -77,6 +80,66 @@ test('ページングで重複せず全件を取得', async t => {
   assert.equal(new Set([...first.posts, ...second.posts].map(p => p.id)).size, 35);
   assert.equal((await request(db, 'GET', undefined, {query: '?before=-1'})).status, 400);
 });
+test('指定ページの最新10件だけを返し、全体一覧・絞り込みのページングも保つ', async t => {
+  const db = setup(t);
+  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,page) VALUES(?,?,?,?,?,?)');
+  for (let n = 1; n <= 35; n++) insert.run('名無し', String(n), n, 'hash', 'test', n % 2 ? 'weapons' : 'materials');
+  const first = await (await request(db, 'GET', undefined, {query: '?page=weapons&limit=10'})).json();
+  assert.equal(first.posts.length, 10);
+  assert(first.posts.every(post => post.page === 'weapons'));
+  assert.deepEqual(first.posts.map(post => post.id), [35, 33, 31, 29, 27, 25, 23, 21, 19, 17]);
+  const second = await (await request(db, 'GET', undefined, {query: '?page=weapons&limit=10&before=' + first.next})).json();
+  assert.equal(second.posts.length, 8);
+  assert.equal(second.next, null);
+  const all = await (await request(db)).json();
+  assert.equal(all.posts.length, 30);
+  assert.deepEqual(new Set(all.posts.map(post => post.page)), new Set(['weapons', 'materials']));
+});
+test('投稿先を保存し、ページを変えても連投制限を回避できない', async t => {
+  const db = setup(t);
+  const result = await request(db, 'POST', {body: 'キャラ一覧宛て', page: 'other/characters', token});
+  assert.equal(result.status, 201);
+  assert.equal((await result.json()).post.page, 'other/characters');
+  assert.equal((await request(db, 'POST', {body: '別ページ', page: 'weapons', token})).status, 429);
+  for (const page of ['other/characters/kai', 'other/board', 'unknown', '../weapons', "x' OR 1=1--", null, {}]) {
+    assert.equal((await request(db, 'POST', {body: '不正な投稿先', page, token})).status, 400);
+  }
+  for (const query of ['?page=other%2Fcharacters%2Fkai', '?page=unknown', '?limit=31', '?limit=-1', '?limit=0', '?limit=1.5']) {
+    assert.equal((await request(db, 'GET', undefined, {query})).status, 400);
+  }
+});
+test('既存DBの移行で投稿本文・日時・削除情報・連投記録を保持する', t => {
+  const db = new DatabaseSync(':memory:');
+  t.after(() => db.close());
+  db.exec(`CREATE TABLE board_posts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT NOT NULL, body TEXT NOT NULL,
+    created_at INTEGER NOT NULL, owner_hash TEXT NOT NULL, client_hash TEXT NOT NULL
+  ); CREATE TABLE board_rate_limits(client_hash TEXT PRIMARY KEY, last_post INTEGER NOT NULL);`);
+  db.prepare('INSERT INTO board_posts VALUES(?,?,?,?,?,?)').run(42, '既存投稿', '本文', 1000, 'owner', 'client');
+  db.prepare('INSERT INTO board_rate_limits VALUES(?,?)').run('client', 1000);
+  const before = db.prepare('SELECT * FROM board_posts').get();
+  db.exec(fs.readFileSync(new URL('../sql/board-pages.sql', import.meta.url), 'utf8'));
+  const after = db.prepare('SELECT * FROM board_posts').get();
+  assert.equal(after.page, 'general');
+  delete after.page;
+  assert.deepEqual(after, before);
+  assert.equal(db.prepare('SELECT last_post FROM board_rate_limits').get().last_post, 1000);
+});
+test('18ページに表示欄を設置し、個別キャラは一覧ページに統一する', () => {
+  assert.equal(boardPages.length, 19);
+  assert(boardPages.some(page => page.id === 'other/characters'));
+  assert(!boardPages.some(page => page.id.startsWith('other/characters/')));
+  const root = new URL('../dist/', import.meta.url);
+  for (const page of boardPages.filter(page => page.id !== 'general')) {
+    const file = new URL((page.id === 'home' ? '' : page.id + '/') + 'index.html', root);
+    const html = fs.readFileSync(file, 'utf8');
+    assert.equal((html.match(/id="page-board-posts"/g) || []).length, 1, page.id);
+    assert(html.includes(`data-board-page="${page.id}"`), page.id);
+  }
+  for (const dir of fs.readdirSync(new URL('other/characters/', root), {withFileTypes: true}).filter(entry => entry.isDirectory())) {
+    assert(!fs.readFileSync(new URL(`other/characters/${dir.name}/index.html`, root), 'utf8').includes('page-board'));
+  }
+});
 test('未設定・DB障害で内部情報を漏らさない', async () => {
   assert.equal((await request(undefined)).status, 503);
   assert.equal((await request({}, 'GET', undefined, {env: {BOARD_SECRET: ''}})).status, 503);
@@ -98,13 +161,13 @@ test('隠し画面には検索除外があり通常メニューとPV集計に出
   assert.match(html, /name="robots" content="noindex, nofollow, noarchive"/);
   assert(!html.includes('page-counter.js'));
   for (const file of ['dist/index.html', 'dist/other/index.html']) {
-    assert(!fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8').includes('/board/'));
+    assert(!/<a\b[^>]*href=["'][^"']*\/board\//.test(fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8')));
   }
   const js = fs.readFileSync(new URL('../dist/other/board/board.js', import.meta.url), 'utf8');
   assert(!js.includes('innerHTML'));
 });
 
-test('削除はページ内確認後だけ送信し、キャンセル時には送信しない', async () => {
+test('画面の削除確認・絞り込み・投稿先指定がAPIへ正しく伝わる', async () => {
   class Element {
     constructor() { this.children = []; this.dataset = {}; this.attributes = {}; this.handlers = {}; }
     append(...children) { for (const child of children) { this.children.push(child); child.parent = this; } }
@@ -112,6 +175,7 @@ test('削除はページ内確認後だけ送信し、キャンセル時には�
     addEventListener(name, handler) { this.handlers[name] = handler; }
     replaceChildren() { this.children = []; }
     remove() { this.parent.children = this.parent.children.filter(child => child !== this); }
+    reportValidity() { return true; }
   }
   const elements = new Map();
   const storage = new Map([['fefw-board-owner-v1', token], ['fefw-board-posts-v1', '[1]']]);
@@ -121,12 +185,12 @@ test('削除はページ内確認後だけ送信し、キャンセル時には�
     createElement() { return new Element(); },
   };
   vm.runInNewContext(fs.readFileSync(new URL('../dist/other/board/board.js', import.meta.url), 'utf8'), {
-    document, crypto,
+    document, crypto, URLSearchParams, window: {BOARD_PAGES: boardPages, location: {search: ''}},
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
     async fetch(url, options) {
       calls.push({url, ...options});
       return {ok: true, async json() {
-        return options.method === 'DELETE' ? {deleted: 1} :
+        return options.method === 'DELETE' ? {deleted: 1} : options.method === 'POST' ? {post: {id: 2}} :
           {posts: [{id: 1, name: 'テスト', body: '<script>literal</script>', created_at: 1}], next: null};
       }};
     },
@@ -148,4 +212,35 @@ test('削除はページ内確認後だけ送信し、キャンセル時には�
   assert.deepEqual(JSON.parse(calls[1].body), {id: 1, token});
   assert.equal(elements.get('posts').children.length, 0);
   assert.equal(elements.get('board-status').textContent, '削除しました。');
+  elements.get('filter-page').value = 'weapons';
+  await elements.get('filter-page').handlers.change();
+  assert.equal(calls.at(-1).url, '/api/board?page=weapons');
+  elements.get('post-page').value = 'other/characters';
+  elements.get('post-body').value = 'キャラへの投稿';
+  document.getElementById('post-name').value = '名前';
+  await elements.get('post-form').handlers.submit({preventDefault() {}});
+  const posted = JSON.parse(calls.find(call => call.method === 'POST').body);
+  assert.equal(posted.page, 'other/characters');
+  assert.equal(posted.body, 'キャラへの投稿');
+  assert.equal(elements.get('filter-page').value, 'other/characters');
+  assert.equal(elements.get('post-body').value, '');
+});
+
+test('各ページの表示は本文をHTMLにせず、そのページの10件までに制限する', async () => {
+  const element = () => ({children: [], append(...children) {this.children.push(...children);}, replaceChildren() {this.children = [];}});
+  const status = element(), list = element(), calls = [];
+  const posts = [
+    {name: '別ページ', page: 'materials', body: '非表示', created_at: 1},
+    ...Array.from({length: 12}, (_, i) => ({name: '投稿' + i, page: 'weapons', body: '<script>文字列</script>', created_at: i + 1})),
+  ];
+  vm.runInNewContext(fs.readFileSync(new URL('../dist/other/board/page-board.js', import.meta.url), 'utf8'), {
+    document: {currentScript: {dataset: {boardPage: 'weapons'}},
+      getElementById: id => id === 'page-board-status' ? status : list, createElement: element},
+    async fetch(url) { calls.push(url); return {ok: true, async json() { return {posts}; }}; },
+  });
+  await new Promise(resolve => setImmediate(resolve));
+  assert.deepEqual(calls, ['/api/board?page=weapons&limit=10']);
+  assert.equal(list.children.length, 10);
+  assert.equal(list.children[0].children[1].textContent, '<script>文字列</script>');
+  assert.equal(list.children[0].children[0].children[0].textContent, '投稿0');
 });
