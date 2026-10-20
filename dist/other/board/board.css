@@ -1,0 +1,23 @@
+.board-card { padding: 20px; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); margin-bottom: 16px; }
+.board-card h2, .board-heading h2 { margin: 0; font-size: 1.15rem; }
+.board-note { color: var(--muted); font-size: .85rem; line-height: 1.7; }
+#post-form { display: grid; gap: 8px; }
+#post-form label { font-size: .9rem; font-weight: 700; }
+#post-form input, #post-form textarea { width: 100%; border: 1px solid #a9b9c6; border-radius: 6px; padding: 10px; background: white; color: var(--ink); font: inherit; }
+#post-form input { max-width: 300px; margin-bottom: 8px; }
+#post-form textarea { resize: vertical; min-height: 100px; }
+.board-actions, .board-heading, .post-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.board-heading { margin: 24px 0 12px; }
+.other-main button { padding: 8px 16px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); font: inherit; }
+.other-main #submit-post { background: var(--navy); color: white; }
+.other-main button:disabled { opacity: .5; cursor: wait; }
+.other-main :focus-visible { outline: 3px solid #dfad2b; outline-offset: 3px; }
+.post-meta { flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
+.post-meta strong { color: var(--ink); overflow-wrap: anywhere; }
+.post-body { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; margin-bottom: 0; }
+.post-delete { margin-top: 12px; }
+#board-status { color: var(--muted); line-height: 1.6; }
+#board-status[data-error="true"] { color: var(--danger); }
+#more-posts { display: block; margin: 16px auto; }
+#more-posts[hidden] { display: none; }
+@media (max-width: 480px) { .board-card { padding: 16px; } }

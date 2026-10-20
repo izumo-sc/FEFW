@@ -18,7 +18,7 @@ for (const file of pages(dist).sort()) {
   const newline = html.includes('\r\n') ? '\r\n' : '\n';
   const clean = html.replace(/^[ \t]*<script\b[^>]*src="[^"\n]*(?:home-counter|page-counter)\.js[^"\n]*"[^>]*><\/script>\r?\n/gm, '');
   // Character details are excluded; only their index page is counted.
-  if (id.startsWith('other/characters/')) {
+  if (id.startsWith('other/characters/') || id === 'other/board') {
     if (clean !== html) fs.writeFileSync(file, clean);
     continue;
   }

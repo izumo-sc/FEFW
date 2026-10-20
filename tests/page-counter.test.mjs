@@ -34,7 +34,7 @@ test('個別キャラは計測せず、対象ページはカウンターを1回�
     const html = fs.readFileSync(path.join(root, 'dist', file), 'utf8');
     assert(!html.includes('home-counter.js'));
     const expected = path.dirname(file).split(path.sep).join('/');
-    if (expected.startsWith('other/characters/')) {
+    if (expected.startsWith('other/characters/') || expected === 'other/board') {
       assert(!html.includes('page-counter.js'), file);
       assert(!pageIds.has(expected));
       continue;
