@@ -1,5 +1,6 @@
 (() => {
   'use strict';
+  function startBoard(admin = false) {
   const $ = id => document.getElementById(id);
   const form = $('post-form'), status = $('board-status'), list = $('posts');
   const more = $('more-posts'), refresh = $('refresh-posts'), submit = $('submit-post');
@@ -42,12 +43,13 @@
       if (before) params.set('before', before);
       if (filterPage.value) params.set('page', filterPage.value);
     }
-    const response = await fetch('/api/board' + (params.size ? '?' + params : ''), {
-      method, credentials: 'omit', cache: 'no-store',
+    const response = await fetch((admin ? '/api/board-admin' : '/api/board') + (params.size ? '?' + params : ''), {
+      method, credentials: admin ? 'same-origin' : 'omit', cache: 'no-store',
       ...(data ? {headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)} : {}),
     });
     let result;
     try { result = await response.json(); } catch { throw new Error('掲示板に接続できません。'); }
+    if (admin && response.status === 401) window.boardAdminExpired?.();
     if (!response.ok) throw new Error(result.error || '操作に失敗しました。');
     return result;
   }
@@ -61,6 +63,10 @@
     time.dateTime = new Date(post.created_at).toISOString();
     time.textContent = new Date(post.created_at).toLocaleString('ja-JP');
     meta.append(number, name, time);
+    if (post.is_admin === 1) {
+      const badge = document.createElement('span'); badge.className = 'board-admin-badge';
+      badge.textContent = '管理者'; meta.append(badge);
+    }
     const destination = destinations.get(post.page);
     if (destination) {
       const label = document.createElement(destination.url ? 'a' : 'span');
@@ -70,7 +76,7 @@
     }
     const body = document.createElement('p'); body.className = 'post-body'; body.textContent = post.body;
     article.append(meta, body);
-    if (owned().includes(post.id)) {
+    if (admin || owned().includes(post.id)) {
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'post-delete'; button.textContent = '削除';
       button.setAttribute('aria-label', '投稿 #' + post.id + ' を削除');
@@ -90,9 +96,9 @@
         }
         busy = true; button.disabled = cancel.disabled = true;
         try {
-          await api('DELETE', {id: post.id, token: token()});
+          await api('DELETE', {id: post.id, ...(admin ? {} : {token: token()})});
           article.remove();
-          try { remember(post.id, true); } catch { /* Server deletion already succeeded. */ }
+          try { if (!admin) remember(post.id, true); } catch { /* Server deletion already succeeded. */ }
           message('削除しました。');
         } catch (error) { message(error.message, true); }
         finally { busy = false; button.disabled = cancel.disabled = false; }
@@ -119,12 +125,12 @@
     event.preventDefault();
     if (busy || !form.reportValidity()) return;
     let ownerToken;
-    try { ownerToken = token(); } catch { message('投稿には、このブラウザの保存機能を有効にしてください。', true); return; }
+    try { if (!admin) ownerToken = token(); } catch { message('投稿には、このブラウザの保存機能を有効にしてください。', true); return; }
     busy = true; submit.disabled = postPage.disabled = filterPage.disabled = true;
     const targetPage = postPage.value;
     try {
       const result = await api('POST', {name: $('post-name').value, body: $('post-body').value, page: targetPage, token: ownerToken});
-      try { remember(result.post.id); } catch { /* Do not encourage a duplicate submission. */ }
+      try { if (!admin) remember(result.post.id); } catch { /* Do not encourage a duplicate submission. */ }
       $('post-body').value = ''; $('body-count').textContent = '0 / 2000';
       filterPage.value = targetPage;
       busy = false;
@@ -137,4 +143,7 @@
   more.onclick = () => load(true);
   filterPage.addEventListener('change', () => load());
   load();
+  }
+  if (document.currentScript?.dataset.boardAdmin === 'true') window.startAdminBoard = () => startBoard(true);
+  else startBoard();
 })();

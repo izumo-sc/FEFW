@@ -1,0 +1,6 @@
+[hidden] { display: none !important; }
+#login-form { display: grid; gap: 12px; max-width: 420px; margin-top: 16px; }
+#login-form input { width: 100%; border: 1px solid #a9b9c6; border-radius: 6px; padding: 10px; background: white; color: var(--ink); font: inherit; }
+#login-button { justify-self: start; }
+#auth-status { line-height: 1.6; }
+#admin-panel > .board-actions { margin-bottom: 16px; }

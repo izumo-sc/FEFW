@@ -10,6 +10,20 @@ URL: `/other/board/`
 
 既存の投稿は「全体」に引き継ぐ。`/other/board/?page=weapons` のように有効なページIDを渡すと、投稿先・一覧の絞り込みを初期選択できる。
 
+## 管理者画面
+
+URL: `/other/board/admin/`
+
+パスワードでログインし、全投稿の削除と「管理者」バッジ付き投稿ができる。投稿先の選択・絞り込みは通常の掲示板と共通。管理者バッジは掲示板と各ページの最新10件に表示される。通常投稿の名前を「管理者」にしてもバッジは付かない。通常メニュー・PV集計・投稿先には管理画面を追加しない。
+
+既存の掲示板に追加する手順：
+
+1. D1 `fefw-board` のConsoleで `sql/board-admin.sql` を一度だけ実行する。`board-pages.sql` がまだなら、先にそちらを実行する。既存投稿は通常投稿として維持される。新しいDBでは `sql/board.sql` のみを実行する。
+2. Pages → 設定 → 変数とシークレットで、種類 **Secret**、名前 **`BOARD_ADMIN_PASSWORD`** を追加する。値は `BOARD_SECRET` と別の、暗号学的な乱数32バイト以上の文字列を使い、パスワード管理アプリなどに保存する。これは管理画面のログインに入力する値。既存の `BOARD_SECRET` は変更しない。
+3. コードをデプロイし、上記URLでログインする。シークレットの追加・変更は次のデプロイで反映される。
+
+ログインは8時間有効。セッションはHttpOnly・SameSite=Strict・Secure Cookieで保持し、DBにはトークンのハッシュだけを保存する。ログアウト時に削除し、管理者パスワード変更後のデプロイでも古いセッションは無効になる。失敗試行は接続元ごとに15分間で5回まで。管理者投稿も通常投稿と同じ30秒間隔制限を使う。管理者APIが未設定でも通常の掲示板は利用できる（DB移行は必要）。
+
 ## 設定済みの掲示板を更新する場合
 
 **今回のページ別投稿に対応するコードをデプロイする前に**、D1 `fefw-board` のConsoleで `sql/board-pages.sql` を一度だけ実行する。投稿先列と検索用インデックスを追加し、既存の本文・日時・削除情報は維持する。新規作成の場合は更新済みの `sql/board.sql` だけでよい。移行済みDBで `board-pages.sql` を再実行すると列重複エラーになる。
@@ -34,10 +48,12 @@ Node.js 22.13以降（`node:sqlite` 対応）で実行する。
 
 ```powershell
 node scripts/preview-board.mjs 4173
-node --test tests/board.test.mjs tests/page-counter.test.mjs tests/page-view-report.test.mjs
+node --test tests/board.test.mjs tests/board-admin.test.mjs tests/page-counter.test.mjs tests/page-view-report.test.mjs
 ```
 
 プレビューは `127.0.0.1` のみで待ち受け、公開対象を `dist` に限定する。APIは本番と同じハンドラーを使い、D1の代わりにローカルSQLiteを使う。閲覧数は `counter.sqlite`、掲示板は `board.sqlite` に分ける。ローカルDB・シークレットは既定でOSの一時ディレクトリ内 `fefw-board-preview` に保存し、HTTPで公開しない。第2引数でポート、第3引数で保存先を指定できる。
+
+管理者画面のローカル確認は、起動前に環境変数 `BOARD_ADMIN_PASSWORD` にローカル専用の32文字以上の値を設定する。本番用の値は使わない。ローカルDBは起動時に移行される。HTTPでのログインはlocalhost・127.0.0.1だけ許可し、その場合のみSecure属性を省く。環境変数を設定していない場合は管理者ログインを無効にする。
 
 ## 保存情報と制限
 
@@ -45,5 +61,5 @@ node --test tests/board.test.mjs tests/page-counter.test.mjs tests/page-view-rep
 - 削除トークンはブラウザに保存し、DBにはハッシュだけを保存する。投稿一覧APIはこの情報を返さない。
 - 同じ接続元からの投稿を30秒間隔に制限する。IPそのものはDBに保存せず、サーバーシークレットによるHMACを保存する。削除後も制限は残る。
 - APIは本文サイズ、文字数、型、同一Originを検査する。SQLはバインドし、投稿はHTMLとして解釈しない。
-- 通常の掲示板として広く公開する場合は、管理者削除・通報やTurnstileなどの対策を別途追加する。
+- 通常の掲示板として広く公開する場合は、通報やTurnstileなどの対策を別途追加する。
 - 管理者が緊急削除する場合はD1コンソールで対象IDを確認し、`DELETE FROM board_posts WHERE id = 対象ID;` を実行する。

@@ -21,6 +21,10 @@
         time.dateTime = new Date(post.created_at).toISOString();
         time.textContent = new Date(post.created_at).toLocaleString('ja-JP');
         meta.append(number, name, time);
+        if (post.is_admin === 1) {
+          const badge = document.createElement('span'); badge.className = 'board-admin-badge';
+          badge.textContent = '管理者'; meta.append(badge);
+        }
         const body = document.createElement('p'); body.className = 'page-board-body'; body.textContent = post.body;
         article.append(meta, body); list.append(article);
       }

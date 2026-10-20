@@ -8,6 +8,7 @@ import {fileURLToPath} from 'node:url';
 import {randomBytes} from 'node:crypto';
 import {openLocalD1} from './local-d1.mjs';
 import {handleBoard} from '../lib/board.mjs';
+import {handleBoardAdmin} from '../lib/board-admin.mjs';
 import {recordPageView} from '../lib/page-counter.mjs';
 
 const dist = fs.realpathSync(fileURLToPath(new URL('../dist/', import.meta.url)));
@@ -18,6 +19,7 @@ fs.mkdirSync(dataDir, {recursive: true});
 const secretFile = path.join(dataDir, 'board-secret.txt');
 if (!fs.existsSync(secretFile)) fs.writeFileSync(secretFile, randomBytes(32).toString('hex'));
 const env = {
+  BOARD_ADMIN_PASSWORD: process.env.BOARD_ADMIN_PASSWORD,
   COUNTER_DB: openLocalD1(path.join(dataDir, 'counter.sqlite'), 'counter'),
   BOARD_DB: openLocalD1(path.join(dataDir, 'board.sqlite'), 'board'),
   BOARD_SECRET: fs.readFileSync(secretFile, 'utf8'),
@@ -37,6 +39,7 @@ const server = http.createServer(async (req, res) => {
       if (!['GET', 'HEAD'].includes(req.method)) { options.body = req; options.duplex = 'half'; }
       const context = {request: new Request(url, options), env};
       const response = url.pathname === '/api/board' ? await handleBoard(context) :
+        url.pathname === '/api/board-admin' ? await handleBoardAdmin(context) :
         ['/api/page-view', '/api/home-view'].includes(url.pathname)
           ? await recordPageView(context, url.pathname === '/api/home-view' ? 'home' : url.searchParams.get('page'))
           : new Response('', {status: 404});

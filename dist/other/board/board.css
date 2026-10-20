@@ -36,3 +36,5 @@
   .post-meta { gap: 3px 8px; }
   .post-destination { margin-left: 0; }
 }
+
+.board-admin-badge { display: inline-block; padding: 1px 7px; border-radius: 4px; background: #163e64; color: #fff; font-size: .75rem; font-weight: 700; line-height: 1.5; }

@@ -11,7 +11,7 @@ const decode = text => text.replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace
 const pages = [{id: 'general', name: '全体', url: null}];
 for (const file of walk(dist).sort()) {
   const relative = path.relative(dist, path.dirname(file)).split(path.sep).join('/');
-  if (relative === 'other/board') continue;
+  if ((relative === 'other/board' || relative.startsWith('other/board/'))) continue;
   const id = relative || 'home';
   let html = fs.readFileSync(file, 'utf8');
   html = html.replace(/[ \t]*<!-- page-board-assets -->[\s\S]*?<!-- \/page-board-assets -->\r?\n?/g, '')
@@ -28,8 +28,8 @@ for (const file of walk(dist).sort()) {
   if ((html.match(/<\/main>/g) || []).length !== 1) throw new Error(`Expected one main: ${file}`);
   const assets = [
     '    <!-- page-board-assets -->',
-    '    <link rel="stylesheet" href="/other/board/page-board.css?v=2">',
-    `    <script src="/other/board/page-board.js?v=2" data-board-page="${id}" defer></script>`,
+    '    <link rel="stylesheet" href="/other/board/page-board.css?v=3">',
+    `    <script src="/other/board/page-board.js?v=3" data-board-page="${id}" defer></script>`,
     '    <!-- /page-board-assets -->',
   ].join(newline) + newline;
   const section = [

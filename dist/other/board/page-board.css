@@ -10,3 +10,5 @@
 .page-board-meta time { color: var(--muted, #657384); }
 .page-board-body { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
 @media (max-width: 480px) { .page-board-post { padding: 12px; } .page-board-meta { gap: 3px 8px; } }
+
+.board-admin-badge { display: inline-block; padding: 1px 7px; border-radius: 4px; background: #163e64; color: #fff; font-size: .75rem; font-weight: 700; line-height: 1.5; }

@@ -26,7 +26,7 @@ test('投稿・一覧・所有者による削除。非公開フィールドは�
   assert.equal(response.status, 201);
   const {post} = await response.json();
   assert.equal(post.name, '名無し');
-  assert.deepEqual(Object.keys(post).sort(), ['body', 'created_at', 'id', 'name', 'page']);
+  assert.deepEqual(Object.keys(post).sort(), ['body', 'created_at', 'id', 'is_admin', 'name', 'page']);
   assert.equal(post.page, 'general');
   const listing = await request(db);
   assert.equal(listing.headers.get('cache-control'), 'no-store');
@@ -231,7 +231,7 @@ test('各ページの表示は本文をHTMLにせず、そのページの10件�
   const status = element(), list = element(), calls = [];
   const posts = [
     {name: '別ページ', page: 'materials', body: '非表示', created_at: 1},
-    ...Array.from({length: 12}, (_, i) => ({name: '投稿' + i, page: 'weapons', body: '<script>文字列</script>', created_at: i + 1})),
+    ...Array.from({length: 12}, (_, i) => ({name: '投稿' + i, is_admin: i === 0 ? 1 : 0, page: 'weapons', body: '<script>文字列</script>', created_at: i + 1})),
   ];
   vm.runInNewContext(fs.readFileSync(new URL('../dist/other/board/page-board.js', import.meta.url), 'utf8'), {
     document: {currentScript: {dataset: {boardPage: 'weapons'}},
@@ -243,4 +243,6 @@ test('各ページの表示は本文をHTMLにせず、そのページの10件�
   assert.equal(list.children.length, 10);
   assert.equal(list.children[0].children[1].textContent, '<script>文字列</script>');
   assert.equal(list.children[0].children[0].children[1].textContent, '投稿0');
+  assert.equal(list.children[0].children[0].children[3].textContent, '管理者');
+  assert.equal(list.children[1].children[0].children.length, 3);
 });
