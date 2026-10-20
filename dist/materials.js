@@ -607,7 +607,8 @@ window.MATERIALS = [
     "category": "野菜",
     "required": 3,
     "locations": [
-      "叫獣渓谷（ソリダス州）"
+      "叫獣渓谷（ソリダス州）",
+      "ベルナール峠（タレイア州）"
     ],
     "routeLimited": true,
     "sectionStart": false
