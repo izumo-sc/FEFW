@@ -1,10 +1,12 @@
-.page-board { grid-column: 1 / -1; width: 100%; min-width: 0; margin-top: 32px; padding: 20px; border: 1px solid var(--line, #d8e0e7); border-radius: 12px; background: var(--surface, white); color: var(--ink, #152332); }
-.page-board h2 { margin: 0 0 16px; font-size: 1.15rem; }
-.page-board #page-board-status { margin: 0; color: var(--muted, #657384); font-size: .9rem; }
-.page-board-post { border-top: 1px solid var(--line, #d8e0e7); padding: 16px 0; }
+.page-board { grid-column: 1 / -1; width: 100%; min-width: 0; margin-top: 32px; padding: 0; border-block: 1px solid var(--line, #d8e0e7); background: var(--surface, white); color: var(--ink, #152332); }
+.page-board h2 { margin: 0; padding: 12px 16px; font-size: 1rem; background: #e5ebef; border-bottom: 1px solid var(--line, #d8e0e7); }
+.page-board #page-board-status { margin: 0; padding: 12px 16px; color: var(--muted, #657384); font-size: .9rem; }
+.page-board #page-board-status:empty { display: none; }
+.page-board-post { border-top: 1px solid var(--line, #d8e0e7); padding: 14px 16px; }
 .page-board-post:first-child { border-top: 0; }
-.page-board-post:last-child { padding-bottom: 0; }
-.page-board-meta { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 16px; font-size: .85rem; overflow-wrap: anywhere; }
+.page-board-meta { display: flex; align-items: baseline; flex-wrap: wrap; justify-content: flex-start; gap: 4px 12px; font-size: .8rem; line-height: 1.6; overflow-wrap: anywhere; color: var(--muted, #657384); }
+.page-board-meta strong { color: #27664c; }
+.page-board-number, .page-board-meta time { font-variant-numeric: tabular-nums; }
 .page-board-meta time { color: var(--muted, #657384); }
-.page-board-body { margin: 10px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; }
-@media (max-width: 480px) { .page-board { padding: 16px; } }
+.page-board-body { margin: 6px 0 0; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; }
+@media (max-width: 480px) { .page-board-post { padding: 12px; } .page-board-meta { gap: 3px 8px; } }

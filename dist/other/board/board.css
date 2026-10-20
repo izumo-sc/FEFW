@@ -7,21 +7,32 @@
 #post-form input, #post-form textarea, #post-page, #filter-page { width: 100%; border: 1px solid #a9b9c6; border-radius: 6px; padding: 10px; background: white; color: var(--ink); font: inherit; }
 #post-page, #filter-page { max-width: 100%; margin-bottom: 8px; }
 .board-filter { display: grid; gap: 8px; font-size: .9rem; }
-.post-destination { display: block; flex-basis: 100%; font-size: .85rem; color: var(--navy); overflow-wrap: anywhere; }
+.post-destination { margin-left: auto; font-size: .8rem; color: var(--navy); overflow-wrap: anywhere; text-underline-offset: 3px; }
 #post-form input { max-width: 300px; margin-bottom: 8px; }
 #post-form textarea { resize: vertical; min-height: 100px; }
-.board-actions, .board-heading, .post-meta { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.board-actions, .board-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .board-heading { margin: 24px 0 12px; }
 .other-main button { padding: 8px 16px; border: 1px solid var(--line); border-radius: 6px; background: white; color: var(--ink); font: inherit; }
 .other-main #submit-post { background: var(--navy); color: white; }
 .other-main button:disabled { opacity: .5; cursor: wait; }
 .other-main :focus-visible { outline: 3px solid #dfad2b; outline-offset: 3px; }
-.post-meta { flex-wrap: wrap; font-size: .85rem; color: var(--muted); }
-.post-meta strong { color: var(--ink); overflow-wrap: anywhere; }
-.post-body { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.8; margin-bottom: 0; }
-.post-delete { margin-top: 12px; }
+#posts { background: var(--surface); border-block: 1px solid var(--line); }
+#posts:empty { display: none; }
+.board-post { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+.board-post:last-child { border-bottom: 0; }
+.post-meta { display: flex; align-items: baseline; flex-wrap: wrap; justify-content: flex-start; gap: 4px 12px; font-size: .8rem; line-height: 1.6; color: var(--muted); }
+.post-number { font-variant-numeric: tabular-nums; }
+.post-meta strong { color: #27664c; overflow-wrap: anywhere; }
+.post-meta time { font-variant-numeric: tabular-nums; }
+.post-body { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.65; margin: 6px 0 0; }
+.other-main .post-delete { margin-top: 8px; padding: 2px 8px; font-size: .75rem; }
 #board-status { color: var(--muted); line-height: 1.6; }
 #board-status[data-error="true"] { color: var(--danger); }
 #more-posts { display: block; margin: 16px auto; }
 #more-posts[hidden] { display: none; }
 @media (max-width: 480px) { .board-card { padding: 16px; } }
+@media (max-width: 480px) {
+  .board-post { padding: 12px; }
+  .post-meta { gap: 3px 8px; }
+  .post-destination { margin-left: 0; }
+}

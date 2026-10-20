@@ -242,5 +242,5 @@ test('各ページの表示は本文をHTMLにせず、そのページの10件�
   assert.deepEqual(calls, ['/api/board?page=weapons&limit=10']);
   assert.equal(list.children.length, 10);
   assert.equal(list.children[0].children[1].textContent, '<script>文字列</script>');
-  assert.equal(list.children[0].children[0].children[0].textContent, '投稿0');
+  assert.equal(list.children[0].children[0].children[1].textContent, '投稿0');
 });

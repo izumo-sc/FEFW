@@ -28,8 +28,8 @@ for (const file of walk(dist).sort()) {
   if ((html.match(/<\/main>/g) || []).length !== 1) throw new Error(`Expected one main: ${file}`);
   const assets = [
     '    <!-- page-board-assets -->',
-    '    <link rel="stylesheet" href="/other/board/page-board.css?v=1">',
-    `    <script src="/other/board/page-board.js?v=1" data-board-page="${id}" defer></script>`,
+    '    <link rel="stylesheet" href="/other/board/page-board.css?v=2">',
+    `    <script src="/other/board/page-board.js?v=2" data-board-page="${id}" defer></script>`,
     '    <!-- /page-board-assets -->',
   ].join(newline) + newline;
   const section = [

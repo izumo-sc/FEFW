@@ -53,13 +53,14 @@
   }
   function render(post) {
     const article = document.createElement('article');
-    article.className = 'board-card';
+    article.className = 'board-post';
     const meta = document.createElement('div'); meta.className = 'post-meta';
+    const number = document.createElement('span'); number.className = 'post-number'; number.textContent = '#' + post.id;
     const name = document.createElement('strong'); name.textContent = post.name;
     const time = document.createElement('time');
     time.dateTime = new Date(post.created_at).toISOString();
-    time.textContent = '#' + post.id + ' · ' + new Date(post.created_at).toLocaleString('ja-JP');
-    meta.append(name, time);
+    time.textContent = new Date(post.created_at).toLocaleString('ja-JP');
+    meta.append(number, name, time);
     const destination = destinations.get(post.page);
     if (destination) {
       const label = document.createElement(destination.url ? 'a' : 'span');
