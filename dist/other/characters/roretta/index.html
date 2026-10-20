@@ -9,7 +9,7 @@
     <link rel="icon" href="../../../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../../../styles.css?v=18" />
     <link rel="stylesheet" href="../../other.css?v=3" />
-    <link rel="stylesheet" href="../characters.css?v=5" />
+    <link rel="stylesheet" href="../characters.css?v=7" />
   </head>
   <body>
     <header class="site-header other-header">
@@ -46,11 +46,77 @@
             </tbody>
           </table>
         </section>
+        <section class="character-skills" aria-labelledby="character-skills-title">
+          <h2 id="character-skills-title">スキル・戦技習得表</h2>
+          <div class="character-skill-buttons" aria-label="表示する技能">
+            <button type="button" class="character-control" id="skills-button-weapons" data-skill-group="weapons" aria-controls="skills-weapons" aria-expanded="true">剣・槍・斧・弓</button>
+            <button type="button" class="character-control" id="skills-button-magic-command" data-skill-group="magic-command" aria-controls="skills-magic-command" aria-expanded="false">格闘・黒・白・指揮</button>
+            <button type="button" class="character-control" id="skills-button-movement" data-skill-group="movement" aria-controls="skills-movement" aria-expanded="false">歩兵・馬・重装・飛行</button>
+          </div>
+          <div class="character-skills-scroll" id="skills-weapons" role="region" aria-labelledby="skills-button-weapons">
+            <table class="character-skills-table" aria-labelledby="skills-button-weapons">
+              <thead><tr><th scope="col">技能Lv</th><th scope="col">剣術</th><th scope="col">槍術</th><th scope="col">斧術</th><th scope="col">弓術</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">E</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">E＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">D</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">D＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">C</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">C＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">B</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">B＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">A</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">A＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S＋</th><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="character-skills-scroll" id="skills-magic-command" role="region" aria-labelledby="skills-button-magic-command" hidden>
+            <table class="character-skills-table" aria-labelledby="skills-button-magic-command">
+              <thead><tr><th scope="col">技能Lv</th><th scope="col">格闘術</th><th scope="col">黒魔術</th><th scope="col">白魔術</th><th scope="col">指揮術</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">E</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">E＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">D</th><td></td><td>ファイアー</td><td>ライブ</td><td></td></tr>
+                <tr><th scope="row">D＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">C</th><td></td><td>サンダー</td><td>レスト</td><td></td></tr>
+                <tr><th scope="row">C＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">B</th><td></td><td>ボルガノン</td><td>エンジェル</td><td></td></tr>
+                <tr><th scope="row">B＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">A</th><td></td><td>トロン</td><td>リカバー</td><td></td></tr>
+                <tr><th scope="row">A＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S＋</th><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="character-skills-scroll" id="skills-movement" role="region" aria-labelledby="skills-button-movement" hidden>
+            <table class="character-skills-table" aria-labelledby="skills-button-movement">
+              <thead><tr><th scope="col">技能Lv</th><th scope="col">歩兵術</th><th scope="col">馬術</th><th scope="col">重装術</th><th scope="col">飛行術</th></tr></thead>
+              <tbody>
+                <tr><th scope="row">E</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">E＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">D</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">D＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">C</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">C＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">B</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">B＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">A</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">A＋</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S</th><td></td><td></td><td></td><td></td></tr>
+                <tr><th scope="row">S＋</th><td></td><td></td><td></td><td></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
         <p class="character-pending">作成中</p>
       </article>
     </main>
     <footer class="site-footer">
       <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
     </footer>
+    <script src="../character-skills.js?v=1" defer></script>
   </body>
 </html>

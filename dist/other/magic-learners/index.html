@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#102438" />
+    <meta name="description" content="万紫千紅のスキル・戦技・魔法ごとの修得キャラと技能レベルの一覧。" />
+    <title>万紫千紅 スキル・戦技・魔法</title>
+    <link rel="icon" href="../../favicon.svg" />
+    <link rel="stylesheet" href="../../styles.css?v=18" />
+    <link rel="stylesheet" href="../other.css?v=4" />
+    <link rel="stylesheet" href="./magic-learners.css?v=3" />
+    <script src="./learners-data.js?v=3" defer></script>
+    <script src="./magic-learners.js?v=3" defer></script>
+  </head>
+  <body>
+    <header class="site-header other-header">
+      <div>
+        <p class="eyebrow">その他</p>
+        <h1>スキル・戦技・魔法</h1>
+      </div>
+      <a class="site-home-link" href="../">その他へ戻る</a>
+    </header>
+    <main class="other-main">
+      <div class="magic-filters" aria-label="技能の種類">
+        <button type="button" data-magic-skill="剣術" aria-pressed="true">剣術</button>
+        <button type="button" data-magic-skill="槍術" aria-pressed="false">槍術</button>
+        <button type="button" data-magic-skill="斧術" aria-pressed="false">斧術</button>
+        <button type="button" data-magic-skill="弓術" aria-pressed="false">弓術</button>
+        <button type="button" data-magic-skill="格闘術" aria-pressed="false">格闘術</button>
+        <button type="button" data-magic-skill="黒魔術" aria-pressed="false">黒魔術</button>
+        <button type="button" data-magic-skill="白魔術" aria-pressed="false">白魔術</button>
+        <button type="button" data-magic-skill="指揮術" aria-pressed="false">指揮術</button>
+        <button type="button" data-magic-skill="歩兵術" aria-pressed="false">歩兵術</button>
+        <button type="button" data-magic-skill="馬術" aria-pressed="false">馬術</button>
+        <button type="button" data-magic-skill="重装術" aria-pressed="false">重装術</button>
+        <button type="button" data-magic-skill="飛行術" aria-pressed="false">飛行術</button>
+      </div>
+      <section class="magic-panel" aria-labelledby="magic-heading">
+        <h2 id="magic-heading">剣術</h2>
+        <p id="magic-empty" role="status">修得データは準備中です。</p>
+        <table id="magic-table" hidden>
+          <thead><tr><th scope="col">名称</th><th scope="col">修得キャラ（技能Lv）</th></tr></thead>
+          <tbody id="magic-rows"></tbody>
+        </table>
+        <noscript><p>一覧を表示するにはJavaScriptを有効にしてください。</p></noscript>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
+    </footer>
+    <script src="../../page-counter.js?v=1" data-page="other/magic-learners"></script>
+  </body>
+</html>

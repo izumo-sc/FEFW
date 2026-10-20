@@ -63,7 +63,8 @@ test('個別キャラは計測せず、対象ページはカウンターを1回�
   }
   assert.deepEqual(installed.sort(), [...pageIds].sort());
   assert(pageIds.has('other/characters'));
-  assert.equal(pageIds.size,17);
+  assert(pageIds.has('other/magic-learners'));
+  assert.equal(pageIds.size,18);
 });
 
 test('HOME累計を維持し、旧APIと新APIで同じ行に加算する', async () => {
