@@ -29,7 +29,7 @@ for (const file of walk(dist).sort()) {
   if ((html.match(/<\/main>/g) || []).length !== 1) throw new Error(`Expected one main: ${file}`);
   const assets = [
     '    <!-- page-board-assets -->',
-    '    <link rel="stylesheet" href="/other/board/page-board.css?v=4">',
+    '    <link rel="stylesheet" href="/other/board/page-board.css?v=5">',
     `    <script src="/other/board/page-board.js?v=3" data-board-page="${id}" defer></script>`,
     '    <!-- /page-board-assets -->',
   ].join(newline) + newline;
@@ -45,7 +45,7 @@ for (const file of walk(dist).sort()) {
   const headerLink = `<!-- board-header-link --><a class="site-home-link board-header-link" href="/other/board/?page=${encodeURIComponent(id)}">掲示板</a><!-- /board-header-link -->` + newline;
   if (!html.includes('</header>')) throw new Error(`Missing header: ${file}`);
   html = html.replace(/<header\b[\s\S]*?<\/header>/, header =>
-    header.includes('</nav>') ? header.replace('</nav>', headerLink + '</nav>') : header.replace('</header>', headerLink + '</header>'));
+    header.replace('</header>', headerLink + '</header>'));
   html = html.replace(/([ \t]*)<\/head>/, assets + '$1</head>')
     .replace(/([ \t]*)<\/main>/, section + '$1</main>');
   if (html !== fs.readFileSync(file, 'utf8')) fs.writeFileSync(file, html);

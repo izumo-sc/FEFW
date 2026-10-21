@@ -13,7 +13,5 @@
 
 .board-admin-badge { display: inline-block; padding: 1px 7px; border-radius: 4px; background: #163e64; color: #fff; font-size: .75rem; font-weight: 700; line-height: 1.5; }
 
-.board-header-link { display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0; margin-left: auto; padding: 8px 14px; border: 1px solid currentColor; border-radius: 6px; text-decoration: none; font-size: .9rem; }
-
-header nav:has(.board-header-link) { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; }
-header nav .board-header-link { margin-left: 0; }
+header:has(> .board-header-link) { position: relative; padding-bottom: 64px; }
+.board-header-link { position: absolute; right: max(16px, calc((100% - 1380px) / 2)); bottom: 16px; display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border: 1px solid currentColor; border-radius: 6px; text-decoration: none; font-size: .9rem; }
