@@ -46,12 +46,11 @@
     const article = document.createElement('article');
     article.className = 'board-post';
     const meta = document.createElement('div'); meta.className = 'post-meta';
-    const number = document.createElement('span'); number.className = 'post-number'; number.textContent = '#' + post.id;
     const name = document.createElement('strong'); name.textContent = post.name;
     const time = document.createElement('time');
     time.dateTime = new Date(post.created_at).toISOString();
     time.textContent = new Date(post.created_at).toLocaleString('ja-JP');
-    meta.append(number, name, time);
+    meta.append(name, time);
     if (post.is_admin === 1) {
       const badge = document.createElement('span'); badge.className = 'board-admin-badge';
       badge.textContent = '管理者'; meta.append(badge);
@@ -72,7 +71,7 @@
       const button = document.createElement('button');
       const label = hidden ? '再表示' : '非表示';
       button.type = 'button'; button.className = 'post-delete'; button.textContent = label;
-      button.setAttribute('aria-label', '投稿 #' + post.id + ' を' + label);
+      button.setAttribute('aria-label', '投稿を' + label);
       const cancel = document.createElement('button');
       cancel.type = 'button'; cancel.textContent = 'キャンセル'; cancel.hidden = true;
       let confirming = false;

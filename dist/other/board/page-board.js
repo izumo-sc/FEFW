@@ -15,12 +15,11 @@
         const article = document.createElement('article');
         article.className = 'page-board-post';
         const meta = document.createElement('div'); meta.className = 'page-board-meta';
-        const number = document.createElement('span'); number.className = 'page-board-number'; number.textContent = '#' + post.id;
         const name = document.createElement('strong'); name.textContent = post.name;
         const time = document.createElement('time');
         time.dateTime = new Date(post.created_at).toISOString();
         time.textContent = new Date(post.created_at).toLocaleString('ja-JP');
-        meta.append(number, name, time);
+        meta.append(name, time);
         if (post.is_admin === 1) {
           const badge = document.createElement('span'); badge.className = 'board-admin-badge';
           badge.textContent = '管理者'; meta.append(badge);

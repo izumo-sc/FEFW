@@ -30,7 +30,7 @@ for (const file of walk(dist).sort()) {
   const assets = [
     '    <!-- page-board-assets -->',
     '    <link rel="stylesheet" href="/other/board/page-board.css?v=5">',
-    `    <script src="/other/board/page-board.js?v=3" data-board-page="${id}" defer></script>`,
+    `    <script src="/other/board/page-board.js?v=4" data-board-page="${id}" defer></script>`,
     '    <!-- /page-board-assets -->',
   ].join(newline) + newline;
   const section = [
