@@ -51,6 +51,16 @@ test('禁止語は名前・本文とも保存せず、拒否後の修正投稿�
   assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_rate_limits').get().n, 0);
   assert.equal((await request(db, 'POST', {body: '馬殺しの弓の入手先は？', token})).status, 201);
 });
+test('通常投稿では管理者を含む名前を表記揺れも含めて拒否する', async t => {
+  const db = setup(t);
+  for (const name of ['管理者', '管理者です', '【管理者】', '管 理 者', '管\u200b理\ufe0f者']) {
+    const response = await request(db, 'POST', {name, body: '投稿', token, admin: true, is_admin: 1});
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /別の名前/);
+  }
+  assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_posts').get().n, 0);
+  assert.equal((await request(db, 'POST', {name: '一般ユーザー', body: '管理者への質問です', token})).status, 201);
+});
 test('不正形式・過大入力・別Originを拒否', async t => {
   const db = setup(t);
   for (const body of [{body: '', token}, {body: 'x'.repeat(2001), token},

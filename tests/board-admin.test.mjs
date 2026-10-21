@@ -44,7 +44,7 @@ test('未認証・偽Cookieは一覧・投稿・削除の管理者APIを利用�
 test('管理者投稿のバッジ・非表示と再表示・通常ユーザーの権限分離', async t => {
   const {call, login, db} = setup(t);
   const token = 'a'.repeat(64);
-  const spoof = await call('POST', {body: '通常投稿', name: '管理者', page: 'weapons', token, is_admin: 1, admin: true}, {public: true});
+  const spoof = await call('POST', {body: '通常投稿', name: '通常ユーザー', page: 'weapons', token, is_admin: 1, admin: true}, {public: true});
   assert.equal(spoof.status, 201);
   const ordinary = (await spoof.json()).post;
   assert.equal(ordinary.is_admin, 0);
