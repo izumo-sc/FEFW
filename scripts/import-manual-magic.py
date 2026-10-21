@@ -11,6 +11,7 @@ import runpy
 from pathlib import Path
 from zipfile import ZipFile
 import xml.etree.ElementTree as ET
+from common_skill_learnsets import is_common_skill
 
 NS = {'s': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
 REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
@@ -28,7 +29,7 @@ def split_names(value, rank):
         if match:
             name = match[1].strip()
             target = match[2].replace('+', '＋')
-        if re.fullmatch(r'(黒|白)魔術(?:Lv\.?\s*[1-5]|の深奥)[+＋]?', name):
+        if is_common_skill(name):
             continue
         yield target, name
 

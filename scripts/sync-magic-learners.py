@@ -2,6 +2,7 @@
 import json
 import re
 from pathlib import Path
+from common_skill_learnsets import display_ranks
 
 LEVELS = ['E', 'E＋', 'D', 'D＋', 'C', 'C＋', 'B', 'B＋', 'A', 'A＋', 'S', 'S＋']
 SKILLS = ['剣術', '槍術', '斧術', '弓術', '格闘術', '黒魔術', '白魔術', '指揮術', '歩兵術', '馬術', '重装術', '飛行術']
@@ -17,7 +18,7 @@ def collect(data):
         assert identifier not in seen_ids, identifier
         seen_ids.add(identifier)
         for skill in SKILLS:
-            ranks = character['skills'].get(skill, {})
+            ranks = display_ranks(skill, character['skills'].get(skill, {}))
             assert set(ranks) <= set(LEVELS), (identifier, skill)
             for rank in LEVELS:
                 names = ranks.get(rank, [])

@@ -9,6 +9,7 @@ import json
 import re
 import runpy
 from pathlib import Path
+from common_skill_learnsets import display_ranks
 
 SKILLS = ['剣術', '槍術', '斧術', '弓術', '格闘術', '黒魔術', '白魔術', '指揮術', '歩兵術', '馬術', '重装術', '飛行術']
 LEVELS = ['E', 'E＋', 'D', 'D＋', 'C', 'C＋', 'B', 'B＋', 'A', 'A＋', 'S', 'S＋']
@@ -77,7 +78,8 @@ def main():
         match = re.search(r'<h1>(.*?)</h1>', text)
         if not match or html.unescape(match.group(1)) != character['name']:
             raise ValueError(f"Character name mismatch: {character['id']}")
-        values = [['\n'.join(character['skills'][skill][rank]) for rank in LEVELS] for skill in SKILLS]
+        ranks_by_skill = {skill: display_ranks(skill, character['skills'][skill]) for skill in SKILLS}
+        values = [['\n'.join(ranks_by_skill[skill][rank]) for rank in LEVELS] for skill in SKILLS]
         section = render(values)
         if 'class="character-skills"' in text:
             changed, count = re.subn(r'        <section class="character-skills"[\s\S]*?        </section>', lambda _: section, text)
