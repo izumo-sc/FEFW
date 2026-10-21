@@ -16,6 +16,9 @@ export function openLocalD1(filename = ':memory:', schema = 'all') {
     if (columns.length && !columns.some(column => column.name === 'is_hidden')) {
       sqlite.exec(fs.readFileSync(new URL('../sql/board-hidden.sql', import.meta.url), 'utf8'));
     }
+    if (columns.length && !columns.some(column => column.name === 'is_approved')) {
+      sqlite.exec(fs.readFileSync(new URL('../sql/board-approval.sql', import.meta.url), 'utf8'));
+    }
     sqlite.exec(fs.readFileSync(new URL('../sql/board.sql', import.meta.url), 'utf8'));
   }
   return {

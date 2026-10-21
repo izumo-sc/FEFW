@@ -75,3 +75,9 @@ node --test tests/board.test.mjs tests/board-admin.test.mjs tests/page-counter.t
 - APIは本文サイズ、文字数、型、同一Originを検査する。SQLはバインドし、投稿はHTMLとして解釈しない。
 - 通常の掲示板として広く公開する場合は、通報やTurnstileなどの対策を別途追加する。
 - 管理者が緊急削除する場合はD1コンソールで対象IDを確認し、`DELETE FROM board_posts WHERE id = 対象ID;` を実行する。
+
+## 承認制
+
+一般投稿は承認待ちで保存し、管理者画面の「承認」を確定すると公開する。管理者投稿は即時公開。一般APIの一覧・ページ別表示は承認済みかつ非表示でない投稿のみ返す。再表示操作だけでは未承認投稿は公開されない。
+
+既存の本番D1では、コードのデプロイ前に `sql/board-approval.sql` を一度だけ実行する。既存投稿の公開・非表示状態は保持する。ローカルDBは起動時に自動移行する。

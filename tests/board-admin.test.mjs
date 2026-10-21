@@ -44,11 +44,18 @@ test('未認証・偽Cookieは一覧・投稿・削除の管理者APIを利用�
 test('管理者投稿のバッジ・非表示と再表示・通常ユーザーの権限分離', async t => {
   const {call, login, db} = setup(t);
   const token = 'a'.repeat(64);
-  const spoof = await call('POST', {body: '通常投稿', name: '通常ユーザー', page: 'weapons', token, is_admin: 1, admin: true}, {public: true});
+  const spoof = await call('POST', {body: '通常投稿', name: '通常ユーザー', page: 'weapons', token, is_admin: 1, admin: true, is_approved: 1, approved: true}, {public: true});
   assert.equal(spoof.status, 201);
   const ordinary = (await spoof.json()).post;
   assert.equal(ordinary.is_admin, 0);
   const cookie = await login();
+  assert.equal((await (await call('GET', undefined, {public: true})).json()).posts.length, 0);
+  assert.equal((await call('PATCH', {id: ordinary.id, approved: true}, {public: true, cookie})).status, 405);
+  assert.equal((await call('PATCH', {id: ordinary.id, approved: true})).status, 401);
+  assert.equal((await (await call('GET', undefined, {cookie})).json()).posts[0].is_approved, 0);
+  assert.equal((await call('PATCH', {id: ordinary.id, hidden: false}, {cookie})).status, 200);
+  assert.equal((await (await call('GET', undefined, {public: true, query: '?page=weapons&limit=10'})).json()).posts.length, 0);
+  assert.equal((await call('PATCH', {id: ordinary.id, approved: true}, {cookie})).status, 200);
   db.sqlite.exec('UPDATE board_rate_limits SET last_post = 0');
   const response = await call('POST', {body: 'お知らせ', page: 'weapons', token}, {cookie});
   assert.equal(response.status, 201);

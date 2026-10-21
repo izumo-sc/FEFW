@@ -31,12 +31,13 @@ test('投稿・一覧は利用でき、所有者でも通常APIからは削除�
   const listing = await request(db);
   assert.equal(listing.headers.get('cache-control'), 'no-store');
   const data = await listing.json();
-  assert.equal(data.posts[0].body, '<img src=x onerror=alert(1)>\nテスト');
+  assert.deepEqual(data.posts, []);
+  assert.equal(db.sqlite.prepare('SELECT is_approved FROM board_posts').get().is_approved, 0);
   assert.equal((await request(db, 'DELETE', {id: post.id, token: 'b'.repeat(64)})).status, 405);
   const deletion = await request(db, 'DELETE', {id: post.id, token, admin: true});
   assert.equal(deletion.status, 405);
   assert.equal(deletion.headers.get('Allow'), 'GET, POST');
-  assert.equal((await (await request(db)).json()).posts.length, 1);
+  assert.equal((await (await request(db)).json()).posts.length, 0);
   assert.equal((await request(db, 'POST', {body: '連投', token})).status, 429);
 });
 test('禁止語は名前・本文とも保存せず、拒否後の修正投稿を妨げない', async t => {
@@ -94,7 +95,7 @@ test('連続・並行投稿は制限し、30秒後は許可', async t => {
 });
 test('ページングで重複せず全件を取得', async t => {
   const db = setup(t);
-  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash) VALUES(?,?,?,?,?)');
+  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,is_approved) VALUES(?,?,?,?,?,1)');
   for (let n = 1; n <= 35; n++) insert.run('名無し', String(n), n, 'hash', 'test');
   const first = await (await request(db)).json();
   assert.equal(first.posts.length, 30); assert.equal(first.next, 6);
@@ -105,7 +106,7 @@ test('ページングで重複せず全件を取得', async t => {
 });
 test('指定ページの最新10件だけを返し、全体一覧・絞り込みのページングも保つ', async t => {
   const db = setup(t);
-  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,page) VALUES(?,?,?,?,?,?)');
+  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,page,is_approved) VALUES(?,?,?,?,?,?,1)');
   for (let n = 1; n <= 35; n++) insert.run('名無し', String(n), n, 'hash', 'test', n % 2 ? 'weapons' : 'materials');
   const first = await (await request(db, 'GET', undefined, {query: '?page=weapons&limit=10'})).json();
   assert.equal(first.posts.length, 10);
@@ -158,7 +159,7 @@ test('非表示への移行で既存投稿を公開状態のまま保持する',
 
 test('非表示投稿を飛ばして公開投稿だけをページングする', async t => {
   const db = setup(t);
-  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,is_hidden) VALUES(?,?,?,?,?,?)');
+  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,is_hidden,is_approved) VALUES(?,?,?,?,?,?,1)');
   for (let n = 1; n <= 35; n++) insert.run('名無し', String(n), n, 'hash', 'test', n % 2);
   const first = await (await request(db, 'GET', undefined, {query: '?limit=10'})).json();
   assert.deepEqual(first.posts.map(p => p.id), [34, 32, 30, 28, 26, 24, 22, 20, 18, 16]);
@@ -207,7 +208,7 @@ test('掲示板には検索除外がありPV集計に出ない', () => {
   assert(!js.includes('innerHTML'));
 });
 
-for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面の非表示権限・絞り込み・投稿先指定`, async () => {
+for (const [admin, pending] of [[false, false], [true, false], [true, true]]) test(`${pending ? '承認待ち' : admin ? '管理者' : '通常'}画面の非表示権限・絞り込み・投稿先指定`, async () => {
   class Element {
     constructor() { this.children = []; this.dataset = {}; this.attributes = {}; this.handlers = {}; }
     append(...children) { for (const child of children) { this.children.push(child); child.parent = this; } }
@@ -233,7 +234,7 @@ for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面
       calls.push({url, ...options});
       return {ok: true, async json() {
         return options.method === 'PATCH' ? {post: {id: 1, is_hidden: 1}} : options.method === 'POST' ? {post: {id: 2}} :
-          {posts: [{id: 1, name: 'テスト', body: '<script>literal</script>', created_at: 1}], next: null};
+          {posts: [{id: 1, is_approved: pending ? 0 : 1, name: 'テスト', body: '<script>literal</script>', created_at: 1}], next: null};
       }};
     },
   });
@@ -244,20 +245,20 @@ for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面
   assert.equal(article.children[1].textContent, '<script>literal</script>');
   if (admin) {
     await button.onclick();
-    assert.equal(button.textContent, '非表示を確定');
+    assert.equal(button.textContent, pending ? '承認を確定' : '非表示を確定');
     assert.equal(cancel.hidden, false);
     assert.equal(calls.length, 1);
     cancel.onclick();
-    assert.equal(button.textContent, '非表示');
+    assert.equal(button.textContent, pending ? '承認' : '非表示');
     await button.onclick();
     await button.onclick();
     assert.equal(calls.length, 3);
     assert.equal(calls[1].method, 'PATCH');
     assert.equal(calls[1].url, '/api/board-admin');
     assert.equal(calls[1].credentials, 'same-origin');
-    assert.deepEqual(JSON.parse(calls[1].body), {id: 1, hidden: true});
+    assert.deepEqual(JSON.parse(calls[1].body), pending ? {id: 1, approved: true} : {id: 1, hidden: true});
     assert.equal(elements.get('posts').children.length, 1);
-    assert.equal(elements.get('board-status').textContent, '非表示にしました。');
+    assert.equal(elements.get('board-status').textContent, pending ? '承認にしました。' : '非表示にしました。');
   } else {
     // Old ownership records must not make a delete button reappear.
     assert.equal(article.children.length, 2);
@@ -296,4 +297,12 @@ test('各ページの表示は本文をHTMLにせず、そのページの10件�
   assert.equal(list.children[0].children[0].children[0].textContent, '投稿0');
   assert.equal(list.children[0].children[0].children[2].textContent, '管理者');
   assert.equal(list.children[1].children[0].children.length, 2);
+});
+
+test('承認制への移行で既存の公開状態と非表示状態を保持する', t => {
+  const db = new DatabaseSync(':memory:'); t.after(() => db.close());
+  db.exec('CREATE TABLE board_posts(id INTEGER PRIMARY KEY, is_hidden INTEGER); INSERT INTO board_posts VALUES(1,0),(2,1);');
+  db.exec(fs.readFileSync(new URL('../sql/board-approval.sql', import.meta.url), 'utf8'));
+  assert.deepEqual(db.prepare('SELECT * FROM board_posts').all().map(r => ({...r})), [
+    {id:1, is_hidden:0, is_approved:1}, {id:2, is_hidden:1, is_approved:1}]);
 });

@@ -66,10 +66,11 @@
     article.append(meta, body);
     if (admin) {
       const hidden = post.is_hidden === 1;
+      const pending = post.is_approved === 0;
       const badge = document.createElement('span');
-      badge.textContent = hidden ? '非表示中' : '公開中'; meta.append(badge);
+      badge.textContent = pending ? '承認待ち' : hidden ? '非表示中' : '公開中'; meta.append(badge);
       const button = document.createElement('button');
-      const label = hidden ? '再表示' : '非表示';
+      const label = pending ? '承認' : hidden ? '再表示' : '非表示';
       button.type = 'button'; button.className = 'post-delete'; button.textContent = label;
       button.setAttribute('aria-label', '投稿を' + label);
       const cancel = document.createElement('button');
@@ -86,7 +87,7 @@
         }
         busy = true; button.disabled = cancel.disabled = true;
         try {
-          await api('PATCH', {id: post.id, hidden: !hidden});
+          await api('PATCH', pending ? {id: post.id, approved: true} : {id: post.id, hidden: !hidden});
           busy = false;
           await load();
           if (status.dataset.error !== 'true') message(label + 'にしました。');
@@ -124,7 +125,7 @@
       filterPage.value = targetPage;
       busy = false;
       await load();
-      if (status.dataset.error !== 'true') message('投稿しました。');
+      if (status.dataset.error !== 'true') message(admin ? '投稿しました。' : '投稿を受け付けました。管理者の承認後に公開されます。');
     } catch (error) { message(error.message, true); }
     finally { busy = false; submit.disabled = postPage.disabled = filterPage.disabled = false; }
   });
