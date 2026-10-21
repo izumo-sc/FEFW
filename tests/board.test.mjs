@@ -39,6 +39,18 @@ test('投稿・一覧は利用でき、所有者でも通常APIからは削除�
   assert.equal((await (await request(db)).json()).posts.length, 1);
   assert.equal((await request(db, 'POST', {body: '連投', token})).status, 429);
 });
+test('禁止語は名前・本文とも保存せず、拒否後の修正投稿を妨げない', async t => {
+  const db = setup(t);
+  for (const fields of [{name: 'ｷﾁｶﾞｲ', body: '質問です'}, {body: 'き\u200bちがい'},
+    {body: 'ＦＵＣＫ'}, {body: '殺してやる', admin: true}]) {
+    const response = await request(db, 'POST', {...fields, token});
+    assert.equal(response.status, 400);
+    assert.match((await response.json()).error, /使用できない言葉/);
+  }
+  assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_posts').get().n, 0);
+  assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_rate_limits').get().n, 0);
+  assert.equal((await request(db, 'POST', {body: '馬殺しの弓の入手先は？', token})).status, 201);
+});
 test('不正形式・過大入力・別Originを拒否', async t => {
   const db = setup(t);
   for (const body of [{body: '', token}, {body: 'x'.repeat(2001), token},

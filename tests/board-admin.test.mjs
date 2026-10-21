@@ -65,6 +65,13 @@ test('管理者投稿のバッジ・全投稿削除と通常ユーザーの権�
   assert.equal((await call('DELETE', {id: post.id}, {cookie})).status, 404);
 });
 
+test('管理者投稿にも禁止語チェックを適用する', async t => {
+  const {call, login, db} = setup(t);
+  const cookie = await login();
+  assert.equal((await call('POST', {body: '殺してやる'}, {cookie})).status, 400);
+  assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_posts').get().n, 0);
+  assert.equal((await call('POST', {body: '投稿時のお願い'}, {cookie})).status, 201);
+});
 test('Cookie属性・ハッシュ保存・失効・ログアウト・秘密値変更', async t => {
   const {call, login, db} = setup(t);
   const response = await call('POST', {password}, {query: '?action=login'});
