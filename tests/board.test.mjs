@@ -138,6 +138,25 @@ test('既存DBの移行で投稿本文・日時・削除情報・連投記録を
   assert.deepEqual(after, before);
   assert.equal(db.prepare('SELECT last_post FROM board_rate_limits').get().last_post, 1000);
 });
+test('非表示への移行で既存投稿を公開状態のまま保持する', t => {
+  const db = new DatabaseSync(':memory:');
+  t.after(() => db.close());
+  db.exec('CREATE TABLE board_posts(id INTEGER PRIMARY KEY, body TEXT); INSERT INTO board_posts VALUES(1, \'既存本文\');');
+  db.exec(fs.readFileSync(new URL('../sql/board-hidden.sql', import.meta.url), 'utf8'));
+  assert.deepEqual({...db.prepare('SELECT * FROM board_posts').get()}, {id: 1, body: '既存本文', is_hidden: 0});
+});
+
+test('非表示投稿を飛ばして公開投稿だけをページングする', async t => {
+  const db = setup(t);
+  const insert = db.sqlite.prepare('INSERT INTO board_posts(name,body,created_at,owner_hash,client_hash,is_hidden) VALUES(?,?,?,?,?,?)');
+  for (let n = 1; n <= 35; n++) insert.run('名無し', String(n), n, 'hash', 'test', n % 2);
+  const first = await (await request(db, 'GET', undefined, {query: '?limit=10'})).json();
+  assert.deepEqual(first.posts.map(p => p.id), [34, 32, 30, 28, 26, 24, 22, 20, 18, 16]);
+  const next = await (await request(db, 'GET', undefined, {query: '?limit=10&before=' + first.next})).json();
+  assert.deepEqual(next.posts.map(p => p.id), [14, 12, 10, 8, 6, 4, 2]);
+  assert.equal(next.next, null);
+});
+
 test('18ページに表示欄を設置し、個別キャラは一覧ページに統一する', () => {
   assert.equal(boardPages.length, 19);
   assert(boardPages.some(page => page.id === 'other/characters'));
@@ -148,6 +167,7 @@ test('18ページに表示欄を設置し、個別キャラは一覧ページに
     const html = fs.readFileSync(file, 'utf8');
     assert.equal((html.match(/id="page-board-posts"/g) || []).length, 1, page.id);
     assert(html.includes(`data-board-page="${page.id}"`), page.id);
+    assert(html.split('</header>')[0].includes(`/other/board/?page=${encodeURIComponent(page.id)}`), page.id);
   }
   for (const dir of fs.readdirSync(new URL('other/characters/', root), {withFileTypes: true}).filter(entry => entry.isDirectory())) {
     assert(!fs.readFileSync(new URL(`other/characters/${dir.name}/index.html`, root), 'utf8').includes('page-board'));
@@ -169,18 +189,15 @@ test('掲示板は専用DBだけを使い、未設定でも閲覧数DBへ代替�
   assert.equal(db.sqlite.prepare("SELECT count(*) AS n FROM sqlite_master WHERE name='page_views'").get().n, 0);
   assert.equal((await request(undefined, 'GET', undefined, {env: {COUNTER_DB: counter}})).status, 503);
 });
-test('隠し画面には検索除外があり通常メニューとPV集計に出ない', () => {
+test('掲示板には検索除外がありPV集計に出ない', () => {
   const html = fs.readFileSync(new URL('../dist/other/board/index.html', import.meta.url), 'utf8');
   assert.match(html, /name="robots" content="noindex, nofollow, noarchive"/);
   assert(!html.includes('page-counter.js'));
-  for (const file of ['dist/index.html', 'dist/other/index.html']) {
-    assert(!/<a\b[^>]*href=["'][^"']*\/board\//.test(fs.readFileSync(new URL('../' + file, import.meta.url), 'utf8')));
-  }
   const js = fs.readFileSync(new URL('../dist/other/board/board.js', import.meta.url), 'utf8');
   assert(!js.includes('innerHTML'));
 });
 
-for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面の削除権限・絞り込み・投稿先指定`, async () => {
+for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面の非表示権限・絞り込み・投稿先指定`, async () => {
   class Element {
     constructor() { this.children = []; this.dataset = {}; this.attributes = {}; this.handlers = {}; }
     append(...children) { for (const child of children) { this.children.push(child); child.parent = this; } }
@@ -205,7 +222,7 @@ for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面
     async fetch(url, options) {
       calls.push({url, ...options});
       return {ok: true, async json() {
-        return options.method === 'DELETE' ? {deleted: 1} : options.method === 'POST' ? {post: {id: 2}} :
+        return options.method === 'PATCH' ? {post: {id: 1, is_hidden: 1}} : options.method === 'POST' ? {post: {id: 2}} :
           {posts: [{id: 1, name: 'テスト', body: '<script>literal</script>', created_at: 1}], next: null};
       }};
     },
@@ -217,20 +234,20 @@ for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面
   assert.equal(article.children[1].textContent, '<script>literal</script>');
   if (admin) {
     await button.onclick();
-    assert.equal(button.textContent, '削除を確定');
+    assert.equal(button.textContent, '非表示を確定');
     assert.equal(cancel.hidden, false);
     assert.equal(calls.length, 1);
     cancel.onclick();
-    assert.equal(button.textContent, '削除');
+    assert.equal(button.textContent, '非表示');
     await button.onclick();
     await button.onclick();
-    assert.equal(calls.length, 2);
-    assert.equal(calls[1].method, 'DELETE');
+    assert.equal(calls.length, 3);
+    assert.equal(calls[1].method, 'PATCH');
     assert.equal(calls[1].url, '/api/board-admin');
     assert.equal(calls[1].credentials, 'same-origin');
-    assert.deepEqual(JSON.parse(calls[1].body), {id: 1});
-    assert.equal(elements.get('posts').children.length, 0);
-    assert.equal(elements.get('board-status').textContent, '削除しました。');
+    assert.deepEqual(JSON.parse(calls[1].body), {id: 1, hidden: true});
+    assert.equal(elements.get('posts').children.length, 1);
+    assert.equal(elements.get('board-status').textContent, '非表示にしました。');
   } else {
     // Old ownership records must not make a delete button reappear.
     assert.equal(article.children.length, 2);

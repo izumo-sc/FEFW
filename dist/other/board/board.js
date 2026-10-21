@@ -66,28 +66,31 @@
     const body = document.createElement('p'); body.className = 'post-body'; body.textContent = post.body;
     article.append(meta, body);
     if (admin) {
+      const hidden = post.is_hidden === 1;
+      const badge = document.createElement('span');
+      badge.textContent = hidden ? '非表示中' : '公開中'; meta.append(badge);
       const button = document.createElement('button');
-      button.type = 'button'; button.className = 'post-delete'; button.textContent = '削除';
-      button.setAttribute('aria-label', '投稿 #' + post.id + ' を削除');
+      const label = hidden ? '再表示' : '非表示';
+      button.type = 'button'; button.className = 'post-delete'; button.textContent = label;
+      button.setAttribute('aria-label', '投稿 #' + post.id + ' を' + label);
       const cancel = document.createElement('button');
       cancel.type = 'button'; cancel.textContent = 'キャンセル'; cancel.hidden = true;
       let confirming = false;
       cancel.onclick = () => {
-        confirming = false; cancel.hidden = true; button.textContent = '削除';
-        button.setAttribute('aria-label', '投稿 #' + post.id + ' を削除');
+        confirming = false; cancel.hidden = true; button.textContent = label;
       };
       button.onclick = async () => {
         if (busy) return;
         if (!confirming) {
-          confirming = true; cancel.hidden = false; button.textContent = '削除を確定';
-          button.setAttribute('aria-label', '投稿 #' + post.id + ' の削除を確定');
+          confirming = true; cancel.hidden = false; button.textContent = label + 'を確定';
           return;
         }
         busy = true; button.disabled = cancel.disabled = true;
         try {
-          await api('DELETE', {id: post.id});
-          article.remove();
-          message('削除しました。');
+          await api('PATCH', {id: post.id, hidden: !hidden});
+          busy = false;
+          await load();
+          if (status.dataset.error !== 'true') message(label + 'にしました。');
         } catch (error) { message(error.message, true); }
         finally { busy = false; button.disabled = cancel.disabled = false; }
       };

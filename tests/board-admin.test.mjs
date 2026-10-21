@@ -33,7 +33,7 @@ function setup(t) {
 test('未認証・偽Cookieは一覧・投稿・削除の管理者APIを利用できない', async t => {
   const {call, db} = setup(t);
   for (const cookie of [undefined, '__Host-fefw-board-admin=' + 'a'.repeat(64)]) {
-    for (const method of ['GET', 'POST', 'DELETE']) {
+    for (const method of ['GET', 'POST', 'PATCH']) {
       const response = await call(method, method === 'GET' ? undefined : {body: '偽装', id: 1, admin: true, is_admin: 1}, {cookie});
       assert.equal(response.status, 401);
     }
@@ -41,7 +41,7 @@ test('未認証・偽Cookieは一覧・投稿・削除の管理者APIを利用�
   assert.equal(db.sqlite.prepare('SELECT count(*) AS n FROM board_posts').get().n, 0);
 });
 
-test('管理者投稿のバッジ・全投稿削除と通常ユーザーの権限分離', async t => {
+test('管理者投稿のバッジ・非表示と再表示・通常ユーザーの権限分離', async t => {
   const {call, login, db} = setup(t);
   const token = 'a'.repeat(64);
   const spoof = await call('POST', {body: '通常投稿', name: '管理者', page: 'weapons', token, is_admin: 1, admin: true}, {public: true});
@@ -60,9 +60,19 @@ test('管理者投稿のバッジ・全投稿削除と通常ユーザーの権�
   assert(!JSON.stringify(listing).includes('password'));
   assert(!JSON.stringify(listing).includes('owner_hash'));
   assert.equal((await call('DELETE', {id: post.id, token}, {public: true, cookie})).status, 405);
-  assert.equal((await call('DELETE', {id: ordinary.id}, {cookie})).status, 200);
-  assert.equal((await call('DELETE', {id: post.id}, {cookie})).status, 200);
-  assert.equal((await call('DELETE', {id: post.id}, {cookie})).status, 404);
+  assert.equal((await call('DELETE', {id: ordinary.id}, {cookie})).status, 405);
+  assert.equal((await call('PATCH', {id: ordinary.id, hidden: true}, {public: true, cookie})).status, 405);
+  assert.equal((await call('PATCH', {id: ordinary.id, hidden: true}, {cookie})).status, 200);
+  const visible = await (await call('GET', undefined, {public: true, query: '?page=weapons&limit=10'})).json();
+  assert.deepEqual(visible.posts.map(p => p.id), [post.id]);
+  assert.equal(db.sqlite.prepare('SELECT body FROM board_posts WHERE id = ?').get(ordinary.id).body, '通常投稿');
+  const managed = await (await call('GET', undefined, {cookie})).json();
+  assert.equal(managed.posts.find(p => p.id === ordinary.id).is_hidden, 1);
+  assert.equal((await call('PATCH', {id: ordinary.id, hidden: false}, {cookie})).status, 200);
+  assert.equal((await (await call('GET', undefined, {public: true})).json()).posts.length, 2);
+  assert.equal((await call('PATCH', {id: 999, hidden: true}, {cookie})).status, 404);
+  assert.equal((await call('PATCH', {id: post.id, hidden: 'true'}, {cookie})).status, 400);
+
 });
 
 test('管理者投稿にも禁止語チェックを適用する', async t => {
@@ -111,7 +121,7 @@ test('CSRF・非HTTPS・不正形式・設定不足で拒否する', async t => 
   for (const headers of [{Origin: 'https://evil.test'}, {Origin: 'null'}, {'Sec-Fetch-Site': 'cross-site'}]) {
     assert.equal((await call('POST', {password}, {headers, query: '?action=login'})).status, 403);
     assert.equal((await call('POST', {}, {headers, cookie, query: '?action=logout'})).status, 403);
-    assert.equal((await call('DELETE', {id: 1}, {headers, cookie})).status, 403);
+    assert.equal((await call('PATCH', {id: 1, hidden: true}, {headers, cookie})).status, 403);
   }
   assert.equal((await call('GET', undefined, {origin: 'http://example.test'})).status, 403);
   assert.equal((await call('POST', {}, {headers: {'Content-Type': 'text/plain'}, query: '?action=login'})).status, 415);

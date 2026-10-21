@@ -7,7 +7,8 @@ CREATE TABLE IF NOT EXISTS board_posts (
   owner_hash TEXT NOT NULL,
   client_hash TEXT NOT NULL,
   page TEXT NOT NULL DEFAULT 'general',
-  is_admin INTEGER NOT NULL DEFAULT 0 CHECK(is_admin IN (0, 1))
+  is_admin INTEGER NOT NULL DEFAULT 0 CHECK(is_admin IN (0, 1)),
+  is_hidden INTEGER NOT NULL DEFAULT 0 CHECK(is_hidden IN (0, 1))
 );
 CREATE INDEX IF NOT EXISTS board_posts_client_time ON board_posts(client_hash, created_at);
 CREATE INDEX IF NOT EXISTS board_posts_page_id ON board_posts(page, id DESC);
