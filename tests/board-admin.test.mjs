@@ -59,7 +59,7 @@ test('管理者投稿のバッジ・全投稿削除と通常ユーザーの権�
   assert.deepEqual(listing.posts.map(post => post.is_admin), [1, 0]);
   assert(!JSON.stringify(listing).includes('password'));
   assert(!JSON.stringify(listing).includes('owner_hash'));
-  assert.equal((await call('DELETE', {id: post.id, token}, {public: true, cookie})).status, 404);
+  assert.equal((await call('DELETE', {id: post.id, token}, {public: true, cookie})).status, 405);
   assert.equal((await call('DELETE', {id: ordinary.id}, {cookie})).status, 200);
   assert.equal((await call('DELETE', {id: post.id}, {cookie})).status, 200);
   assert.equal((await call('DELETE', {id: post.id}, {cookie})).status, 404);

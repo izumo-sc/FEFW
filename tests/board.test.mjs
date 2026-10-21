@@ -20,7 +20,7 @@ function request(db, method = 'GET', body, options = {}) {
 }
 function setup(t) { const db = openLocalD1(); t.after(() => db.close()); return db; }
 
-test('投稿・一覧・所有者による削除。非公開フィールドは返さない', async t => {
+test('投稿・一覧は利用でき、所有者でも通常APIからは削除できない', async t => {
   const db = setup(t);
   const response = await request(db, 'POST', {name: '', body: '<img src=x onerror=alert(1)>\nテスト', token});
   assert.equal(response.status, 201);
@@ -32,10 +32,11 @@ test('投稿・一覧・所有者による削除。非公開フィールドは�
   assert.equal(listing.headers.get('cache-control'), 'no-store');
   const data = await listing.json();
   assert.equal(data.posts[0].body, '<img src=x onerror=alert(1)>\nテスト');
-  assert.equal((await request(db, 'DELETE', {id: post.id, token: 'b'.repeat(64)})).status, 404);
-  assert.equal((await request(db, 'DELETE', {id: post.id, token})).status, 200);
-  assert.equal((await (await request(db)).json()).posts.length, 0);
-  // Deletion must not bypass the rate limit.
+  assert.equal((await request(db, 'DELETE', {id: post.id, token: 'b'.repeat(64)})).status, 405);
+  const deletion = await request(db, 'DELETE', {id: post.id, token, admin: true});
+  assert.equal(deletion.status, 405);
+  assert.equal(deletion.headers.get('Allow'), 'GET, POST');
+  assert.equal((await (await request(db)).json()).posts.length, 1);
   assert.equal((await request(db, 'POST', {body: '連投', token})).status, 429);
 });
 test('不正形式・過大入力・別Originを拒否', async t => {
@@ -167,7 +168,7 @@ test('隠し画面には検索除外があり通常メニューとPV集計に出
   assert(!js.includes('innerHTML'));
 });
 
-test('画面の削除確認・絞り込み・投稿先指定がAPIへ正しく伝わる', async () => {
+for (const admin of [false, true]) test(`${admin ? '管理者' : '通常'}画面の削除権限・絞り込み・投稿先指定`, async () => {
   class Element {
     constructor() { this.children = []; this.dataset = {}; this.attributes = {}; this.handlers = {}; }
     append(...children) { for (const child of children) { this.children.push(child); child.parent = this; } }
@@ -181,11 +182,13 @@ test('画面の削除確認・絞り込み・投稿先指定がAPIへ正しく�
   const storage = new Map([['fefw-board-owner-v1', token], ['fefw-board-posts-v1', '[1]']]);
   const calls = [];
   const document = {
+    currentScript: {dataset: {boardAdmin: String(admin)}},
     getElementById(id) { if (!elements.has(id)) elements.set(id, new Element()); return elements.get(id); },
     createElement() { return new Element(); },
   };
+  const window = {BOARD_PAGES: boardPages, location: {search: ''}};
   vm.runInNewContext(fs.readFileSync(new URL('../dist/other/board/board.js', import.meta.url), 'utf8'), {
-    document, crypto, URLSearchParams, window: {BOARD_PAGES: boardPages, location: {search: ''}},
+    document, crypto, URLSearchParams, window,
     localStorage: {getItem: key => storage.get(key) ?? null, setItem: (key, value) => storage.set(key, value)},
     async fetch(url, options) {
       calls.push({url, ...options});
@@ -195,26 +198,35 @@ test('画面の削除確認・絞り込み・投稿先指定がAPIへ正しく�
       }};
     },
   });
+  if (admin) window.startAdminBoard();
   await new Promise(resolve => setImmediate(resolve));
   const article = elements.get('posts').children[0];
   const button = article.children[2], cancel = article.children[3];
   assert.equal(article.children[1].textContent, '<script>literal</script>');
-  await button.onclick();
-  assert.equal(button.textContent, '削除を確定');
-  assert.equal(cancel.hidden, false);
-  assert.equal(calls.length, 1);
-  cancel.onclick();
-  assert.equal(button.textContent, '削除');
-  await button.onclick();
-  await button.onclick();
-  assert.equal(calls.length, 2);
-  assert.equal(calls[1].method, 'DELETE');
-  assert.deepEqual(JSON.parse(calls[1].body), {id: 1, token});
-  assert.equal(elements.get('posts').children.length, 0);
-  assert.equal(elements.get('board-status').textContent, '削除しました。');
+  if (admin) {
+    await button.onclick();
+    assert.equal(button.textContent, '削除を確定');
+    assert.equal(cancel.hidden, false);
+    assert.equal(calls.length, 1);
+    cancel.onclick();
+    assert.equal(button.textContent, '削除');
+    await button.onclick();
+    await button.onclick();
+    assert.equal(calls.length, 2);
+    assert.equal(calls[1].method, 'DELETE');
+    assert.equal(calls[1].url, '/api/board-admin');
+    assert.equal(calls[1].credentials, 'same-origin');
+    assert.deepEqual(JSON.parse(calls[1].body), {id: 1});
+    assert.equal(elements.get('posts').children.length, 0);
+    assert.equal(elements.get('board-status').textContent, '削除しました。');
+  } else {
+    // Old ownership records must not make a delete button reappear.
+    assert.equal(article.children.length, 2);
+    assert.equal(calls.some(call => call.method === 'DELETE'), false);
+  }
   elements.get('filter-page').value = 'weapons';
   await elements.get('filter-page').handlers.change();
-  assert.equal(calls.at(-1).url, '/api/board?page=weapons');
+  assert.equal(calls.at(-1).url, `${admin ? '/api/board-admin' : '/api/board'}?page=weapons`);
   elements.get('post-page').value = 'other/characters';
   elements.get('post-body').value = 'キャラへの投稿';
   document.getElementById('post-name').value = '名前';

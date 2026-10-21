@@ -26,17 +26,6 @@
     localStorage.setItem(storageKey, owner);
     return owner;
   }
-  function owned() {
-    try {
-      const ids = JSON.parse(localStorage.getItem('fefw-board-posts-v1') || '[]');
-      return Array.isArray(ids) ? ids.filter(Number.isSafeInteger) : [];
-    } catch { return []; }
-  }
-  function remember(id, remove = false) {
-    const ids = owned().filter(value => value !== id);
-    if (!remove) ids.push(id);
-    localStorage.setItem('fefw-board-posts-v1', JSON.stringify(ids.slice(-1000)));
-  }
   async function api(method = 'GET', data, before) {
     const params = new URLSearchParams();
     if (method === 'GET') {
@@ -76,7 +65,7 @@
     }
     const body = document.createElement('p'); body.className = 'post-body'; body.textContent = post.body;
     article.append(meta, body);
-    if (admin || owned().includes(post.id)) {
+    if (admin) {
       const button = document.createElement('button');
       button.type = 'button'; button.className = 'post-delete'; button.textContent = '削除';
       button.setAttribute('aria-label', '投稿 #' + post.id + ' を削除');
@@ -96,9 +85,8 @@
         }
         busy = true; button.disabled = cancel.disabled = true;
         try {
-          await api('DELETE', {id: post.id, ...(admin ? {} : {token: token()})});
+          await api('DELETE', {id: post.id});
           article.remove();
-          try { if (!admin) remember(post.id, true); } catch { /* Server deletion already succeeded. */ }
           message('削除しました。');
         } catch (error) { message(error.message, true); }
         finally { busy = false; button.disabled = cancel.disabled = false; }
@@ -129,8 +117,7 @@
     busy = true; submit.disabled = postPage.disabled = filterPage.disabled = true;
     const targetPage = postPage.value;
     try {
-      const result = await api('POST', {name: $('post-name').value, body: $('post-body').value, page: targetPage, token: ownerToken});
-      try { if (!admin) remember(result.post.id); } catch { /* Do not encourage a duplicate submission. */ }
+      await api('POST', {name: $('post-name').value, body: $('post-body').value, page: targetPage, token: ownerToken});
       $('post-body').value = ''; $('body-count').textContent = '0 / 2000';
       filterPage.value = targetPage;
       busy = false;
