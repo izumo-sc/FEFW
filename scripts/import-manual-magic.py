@@ -17,6 +17,7 @@ NS = {'s': 'http://schemas.openxmlformats.org/spreadsheetml/2006/main'}
 REL = 'http://schemas.openxmlformats.org/officeDocument/2006/relationships'
 LEVELS = ['E', 'E＋', 'D', 'D＋', 'C', 'C＋', 'B', 'B＋', 'A', 'A＋', 'S', 'S＋']
 MAGIC = ('黒魔術', '白魔術')
+NON_MAGIC = ('剣術', '槍術', '斧術', '弓術', '格闘術', '指揮術', '歩兵術', '馬術', '重装術', '飛行術')
 
 
 def split_names(value, rank):
@@ -34,7 +35,7 @@ def split_names(value, rank):
         yield target, name
 
 
-def extract(workbook, character_names):
+def extract(workbook, character_names, skills=MAGIC):
     result = {}
     with ZipFile(workbook) as archive:
         strings = []
@@ -59,10 +60,10 @@ def extract(workbook, character_names):
             if cells.get('A9') != '技能' or [cells.get(f'{chr(66+i)}9') for i in range(12)] != LEVELS:
                 raise ValueError(f'Unexpected skill table layout: {name}')
             result[name] = {}
-            for skill in MAGIC:
+            for skill in skills:
                 rows = [r for r in range(10, 22) if cells.get(f'A{r}') == skill]
                 if len(rows) != 1:
-                    raise ValueError(f'Missing magic row: {name}/{skill}')
+                    raise ValueError(f'Missing skill row: {name}/{skill}')
                 ranks = {rank: [] for rank in LEVELS}
                 for i, rank in enumerate(LEVELS):
                     for target_rank, entry in split_names(cells.get(f'{chr(66+i)}{rows[0]}', ''), rank):
@@ -77,11 +78,13 @@ def extract(workbook, character_names):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('workbook', type=Path)
+    parser.add_argument('--non-magic', action='store_true', help='Import the ten non-magic skills, preserving magic data')
     args = parser.parse_args()
     root = Path(__file__).resolve().parents[1]
     source = root / 'data/character-learnsets.json'
     data = json.loads(source.read_text(encoding='utf-8'))
-    learned = extract(args.workbook, {c['name'] for c in data['characters']})
+    learned = extract(args.workbook, {c['name'] for c in data['characters']},
+                      NON_MAGIC if args.non_magic else MAGIC)
     for character in data['characters']:
         character['skills'].update(learned[character['name']])
     source.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
