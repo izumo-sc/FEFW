@@ -1,0 +1,13 @@
+.character-training { margin-block: 24px; }
+.training-buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.training-buttons [aria-pressed="true"] { background: #203c53; color: #fff; }
+.training-panel[hidden] { display: none; }
+.training-route { margin: 14px 0; }
+.training-panel h3 { font-size: 1rem; margin: 14px 0 6px; }
+.training-stages { margin: 0; }
+.training-stages > div { display: grid; grid-template-columns: 6em minmax(0, 1fr); gap: 12px; padding: 7px 0; border-bottom: 1px solid #dce3e8; }
+.training-stages dt { font-weight: 700; }
+.training-stages dd { margin: 0; min-width: 0; }
+.training-stages ol { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 4px 8px; }
+.training-stages li { overflow-wrap: anywhere; }
+.training-stages li + li::before { content: "→"; margin-right: 8px; }

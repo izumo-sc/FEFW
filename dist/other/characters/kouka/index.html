@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../../styles.css?v=18" />
     <link rel="stylesheet" href="../../other.css?v=3" />
     <link rel="stylesheet" href="../characters.css?v=7" />
+    <link rel="stylesheet" href="../character-training.css?v=1" />
   </head>
   <body>
     <header class="site-header other-header">
@@ -46,6 +47,43 @@
             </tbody>
           </table>
         </section>
+        <!-- character-training:start -->
+        <section class="character-training" aria-labelledby="training-title">
+          <h2 id="training-title">推奨育成ルート</h2>
+          <div class="training-buttons" aria-label="育成方法">
+            <button type="button" class="character-control" data-training-mode="shortest" aria-controls="training-shortest" aria-pressed="true">最短育成</button>
+            <button type="button" class="character-control" data-training-mode="complete" aria-controls="training-complete" aria-pressed="false">完熟育成</button>
+          </div>
+          <div id="training-shortest" class="training-panel" aria-label="最短育成">
+            <p class="training-route">推奨ルート：<span></span></p>
+            <h3>1部2部</h3>
+            <dl class="training-stages">
+              <div><dt>初級職</dt><dd><ol></ol></dd></div>
+              <div><dt>中級職</dt><dd><ol></ol></dd></div>
+              <div><dt>上級職</dt><dd><ol></ol></dd></div>
+            </dl>
+            <h3>3部</h3>
+            <dl class="training-stages">
+              <div><dt>最上級職</dt><dd><ol></ol></dd></div>
+              <div><dt>神将職</dt><dd><ol></ol></dd></div>
+            </dl>
+          </div>
+          <div id="training-complete" class="training-panel" aria-label="完熟育成" hidden>
+            <p class="training-route">推奨ルート：<span></span></p>
+            <h3>1部2部</h3>
+            <dl class="training-stages">
+              <div><dt>初級職</dt><dd><ol></ol></dd></div>
+              <div><dt>中級職</dt><dd><ol></ol></dd></div>
+              <div><dt>上級職</dt><dd><ol></ol></dd></div>
+            </dl>
+            <h3>3部</h3>
+            <dl class="training-stages">
+              <div><dt>最上級職</dt><dd><ol></ol></dd></div>
+              <div><dt>神将職</dt><dd><ol></ol></dd></div>
+            </dl>
+          </div>
+        </section>
+        <!-- character-training:end -->
         <section class="character-skills" aria-labelledby="character-skills-title">
           <h2 id="character-skills-title">スキル・戦技習得表</h2>
           <div class="character-skill-buttons" aria-label="表示する技能">
@@ -118,5 +156,6 @@
       <p>本サイトは非公式の個人攻略サイトで、任天堂および関係各社とは関係ありません。ゲーム内の名称等の権利は各権利者に帰属します。</p>
     </footer>
     <script src="../character-skills.js?v=1" defer></script>
+    <script src="../character-training.js?v=1" defer></script>
   </body>
 </html>
