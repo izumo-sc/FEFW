@@ -120,12 +120,11 @@ def main():
         text = page.read_text(encoding='utf-8')
         section = render(c)
         if '<!-- character-training:start -->' in text:
-            text, n = re.subn(r'        <!-- character-training:start -->[\s\S]*?<!-- character-training:end -->', lambda _: section, text)
+            text, n = re.subn(r'        <!-- character-training:start -->[\s\S]*?<!-- character-training:end -->\n?', '', text)
             assert n == 1
-        else:
-            marker = '        <section class="character-skills"'
-            assert text.count(marker) == 1
-            text = text.replace(marker, section + '\n' + marker, 1)
+        text, n = re.subn(r'(        <section class="character-skills"[\s\S]*?        </section>)',
+                          lambda match: match[1] + '\n' + section, text)
+        assert n == 1
         if 'character-training.css' not in text:
             text = text.replace('</head>', '  <link rel="stylesheet" href="../character-training.css?v=1" />\n  </head>')
         if 'character-training.js' not in text:
