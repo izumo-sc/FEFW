@@ -37,12 +37,19 @@ class TrainingTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             M['import_sheets'](sheets, [{'id':'kai','name':'カイ'}])
 
-    def test_invalid_route_and_wrong_tier_rejected(self):
-        for field, value in [('B5', '全ルート'), ('B7', '剣士')]:
+    def test_invalid_route_rejected(self):
+        for field, value in [('B5', '全ルート')]:
             sheets = self.source()
             sheets['カイ'][field] = value
             with self.assertRaises(ValueError):
                 M['import_sheets'](sheets, [{'id': 'kai', 'name': 'カイ'}])
+
+    def test_free_text_in_class_cells(self):
+        sheets = self.source()
+        sheets['カイ'].update({'B7':'飛駝兵でLv10まで育成\nその後変更', 'D7':'技能を優先する'})
+        c = M['import_sheets'](sheets, [{'id':'kai','name':'カイ'}])['characters'][0]
+        self.assertEqual(c['modes']['shortest']['stages']['初級職'][0], sheets['カイ']['B7'])
+        self.assertEqual(c['modes']['complete']['rounds'][1]['初級職'], ['技能を優先する'])
 
     def test_added_rows_and_safe_render(self):
         sheets = self.source()

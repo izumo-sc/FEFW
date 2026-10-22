@@ -59,9 +59,6 @@ def read_sheets(path):
 
 
 def import_sheets(sheets, characters):
-    candidates = sheets['入力規則']
-    allowed = {tier: {v for cell, v in candidates.items() if re.fullmatch(f'{chr(65+i)}[0-9]+', cell)
-                      and int(cell[1:]) >= 2 and v} for i, tier in enumerate(TIERS)}
     result = []
     for c in characters:
         cells = sheets[c['name']]
@@ -77,15 +74,13 @@ def import_sheets(sheets, characters):
                 tier = cells.get(f'A{row}')
                 value = cells.get(f'{col}{row}', '')
                 if tier in TIERS and value:
-                    if value not in allowed[tier]:
-                        raise ValueError(f"兵種区分を確認してください: {c['name']}/{col}{row}/{value}")
                     target['modes'][key]['stages'][tier].append(value)
         add_rounds(target)
         for index, col in [(1, 'D'), (2, 'E')]:
             for row in sorted({int(cell[1:]) for cell in cells if re.fullmatch(r'A\d+', cell)}):
                 tier, value = cells.get(f'A{row}'), cells.get(f'{col}{row}', '')
                 if tier in TIERS and value:
-                    if tier not in TIERS[:3] or value not in allowed[tier]:
+                    if tier not in TIERS[:3]:
                         raise ValueError(f"周回の入力を確認してください: {c['name']}/{col}{row}")
                     target['modes']['complete']['rounds'][index][tier].append(value)
         result.append(target)

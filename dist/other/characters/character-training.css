@@ -18,3 +18,5 @@
 .training-rounds th:first-child { width: 5em; }
 .training-rounds ol { list-style: none; margin: 0; padding: 0; }
 .training-rounds li + li { margin-top: 6px; }
+
+.training-stages li, .training-rounds li { white-space: pre-line; }
