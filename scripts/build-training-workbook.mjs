@@ -26,6 +26,11 @@ export async function build(workbook) {
     s.getRange('A1:E15').format.rowHeight=24;
     s.getRange('A2').values=[[source.characters[i].name]];
     s.getRange('A2').format.font={bold:true,size:15};
+    s.mergeCells('B2:E2');
+    s.getRange('A2:E2').format.horizontalAlignment='left';
+    s.getRange('A2:E2').format.verticalAlignment='top';
+    s.getRange('B2:E2').format.wrapText=true;
+    s.getRange('A2:E2').format.autofitRows();
     s.getRange('A4:C4').values=[['兵種区分','最短育成','完熟育成']];
     s.getRange('A4:C4').format={fill:'#203C53',font:{bold:true,color:'#FFFFFF'}};
     s.mergeCells('C4:E4');
