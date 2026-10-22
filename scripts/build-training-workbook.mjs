@@ -43,7 +43,8 @@ export async function build(workbook) {
       s.getRange(`A${row}`).values=[[tiers[tier]]];
       const inputs=s.getRange(`B${row}:${tier<3 ? "E" : "C"}${row}`);
       inputs.format.fill='#FFF8E5';
-      inputs.dataValidation={rule:{type:'list',formula1:`INDIRECT("'入力規則'!$${col}$2:$${col}$100")`}};
+      const lastRow=classes.filter(c=>c.group===tiers[tier]).length+1;
+      inputs.dataValidation={rule:{type:'list',formula1:`INDIRECT("'入力規則'!$${col}$2:$${col}$${lastRow}")`}};
       inputs.format.borders={insideHorizontal:{style:'hair',color:'#E5E7EB'}};
     }
     s.mergeCells('A14:C14'); s.getRange('A14').values=[['兵種欄は自由入力可能。空欄はサイトに表示しません。']];
