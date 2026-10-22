@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../../../styles.css?v=18" />
     <link rel="stylesheet" href="../../other.css?v=3" />
     <link rel="stylesheet" href="../characters.css?v=7" />
-    <link rel="stylesheet" href="../character-training.css?v=1" />
+    <link rel="stylesheet" href="../character-training.css?v=2" />
   </head>
   <body>
     <header class="site-header other-header">
@@ -136,11 +136,12 @@
           <div id="training-complete" class="training-panel" aria-label="完熟育成" hidden>
             <p class="training-route">推奨ルート：<span></span></p>
             <h3>1部2部</h3>
-            <dl class="training-stages">
-              <div><dt>初級職</dt><dd><ol></ol></dd></div>
-              <div><dt>中級職</dt><dd><ol></ol></dd></div>
-              <div><dt>上級職</dt><dd><ol></ol></dd></div>
-            </dl>
+            <div class="training-rounds-scroll"><table class="training-rounds">
+              <thead><tr><th scope="col">兵種区分</th><th scope="col">1周目</th><th scope="col">2周目</th><th scope="col">3周目</th></tr></thead><tbody>
+              <tr><th scope="row">初級職</th><td><ol></ol></td><td><ol></ol></td><td><ol></ol></td></tr>
+              <tr><th scope="row">中級職</th><td><ol></ol></td><td><ol></ol></td><td><ol></ol></td></tr>
+              <tr><th scope="row">上級職</th><td><ol></ol></td><td><ol></ol></td><td><ol></ol></td></tr>
+              </tbody></table></div>
             <h3>3部</h3>
             <dl class="training-stages">
               <div><dt>最上級職</dt><dd><ol></ol></dd></div>

@@ -21,9 +21,21 @@ class TrainingTest(unittest.TestCase):
         c = data['characters'][0]
         self.assertEqual(c['modes']['shortest']['route'], 'レダ編')
         self.assertEqual(c['modes']['shortest']['stages']['初級職'], ['闘士', '兵士'])
-        self.assertEqual(c['modes']['complete']['stages']['初級職'], ['闘士'])
-        self.assertEqual(c['modes']['complete']['stages']['中級職'], [])
+        self.assertEqual(c['modes']['complete']['rounds'][0]['初級職'], ['闘士'])
+        self.assertEqual(c['modes']['complete']['rounds'][0]['中級職'], [])
         self.assertEqual(sheets, original)
+
+    def test_three_rounds_only_for_parts_one_two(self):
+        sheets = self.source()
+        sheets['カイ'].update({'D7': '兵士', 'E10': '剣士', 'A23': '最上級職'})
+        c = M['import_sheets'](sheets, [{'id':'kai','name':'カイ'}])['characters'][0]
+        complete = c['modes']['complete']
+        self.assertEqual(complete['rounds'][1]['初級職'], ['兵士'])
+        self.assertEqual(complete['rounds'][2]['中級職'], ['剣士'])
+        self.assertEqual(set(complete['stages']), {'最上級職','神将職'})
+        sheets['カイ']['D23'] = '兵士'
+        with self.assertRaises(ValueError):
+            M['import_sheets'](sheets, [{'id':'kai','name':'カイ'}])
 
     def test_invalid_route_and_wrong_tier_rejected(self):
         for field, value in [('B5', '全ルート'), ('B7', '剣士')]:

@@ -25,6 +25,15 @@ def empty_character(character):
         key: {'route': '', 'stages': {tier: [] for tier in TIERS}} for key, _, _ in MODES}}
 
 
+def add_rounds(character):
+    complete = character['modes']['complete']
+    if 'rounds' not in complete:
+        complete['rounds'] = [{tier: complete['stages'][tier] for tier in TIERS[:3]}]
+        complete['rounds'] += [{tier: [] for tier in TIERS[:3]} for _ in range(2)]
+    complete['stages'] = {tier: complete['stages'][tier] for tier in TIERS[3:]}
+    return character
+
+
 def read_sheets(path):
     sheets = {}
     with ZipFile(path) as z:
@@ -71,8 +80,16 @@ def import_sheets(sheets, characters):
                     if value not in allowed[tier]:
                         raise ValueError(f"兵種区分を確認してください: {c['name']}/{col}{row}/{value}")
                     target['modes'][key]['stages'][tier].append(value)
+        add_rounds(target)
+        for index, col in [(1, 'D'), (2, 'E')]:
+            for row in sorted({int(cell[1:]) for cell in cells if re.fullmatch(r'A\d+', cell)}):
+                tier, value = cells.get(f'A{row}'), cells.get(f'{col}{row}', '')
+                if tier in TIERS and value:
+                    if tier not in TIERS[:3] or value not in allowed[tier]:
+                        raise ValueError(f"周回の入力を確認してください: {c['name']}/{col}{row}")
+                    target['modes']['complete']['rounds'][index][tier].append(value)
         result.append(target)
-    return {'schemaVersion': 1, 'characters': result}
+    return {'schemaVersion': 2, 'characters': result}
 
 
 def render(character):
@@ -90,6 +107,15 @@ def render(character):
         lines.append(f'          <div id="training-{key}" class="training-panel" aria-label="{label}"{hidden}>')
         lines.append(f'            <p class="training-route">推奨ルート：<span>{e(values["route"])}</span></p>')
         for period, tiers in [('1部2部', TIERS[:3]), ('3部', TIERS[3:])]:
+            if key == 'complete' and period == '1部2部':
+                lines.extend(['            <h3>1部2部</h3>',
+                              '            <div class="training-rounds-scroll"><table class="training-rounds">',
+                              '              <thead><tr><th scope="col">兵種区分</th><th scope="col">1周目</th><th scope="col">2周目</th><th scope="col">3周目</th></tr></thead><tbody>'])
+                for tier in tiers:
+                    cells = ''.join('<td><ol>' + ''.join(f'<li>{e(name)}</li>' for name in run[tier]) + '</ol></td>' for run in values['rounds'])
+                    lines.append(f'              <tr><th scope="row">{tier}</th>{cells}</tr>')
+                lines.append('              </tbody></table></div>')
+                continue
             lines.extend([f'            <h3>{period}</h3>', '            <dl class="training-stages">'])
             for tier in tiers:
                 items = ''.join(f'<li>{e(name)}</li>' for name in values['stages'][tier])
@@ -112,8 +138,10 @@ def main():
         data = json.loads(source.read_text(encoding='utf-8'))
     else:
         data = {'schemaVersion': 1, 'characters': [empty_character(c) for c in characters]}
-    if data.get('schemaVersion') != 1 or [(c['id'], c['name']) for c in data['characters']] != [(c['id'], c['name']) for c in characters]:
+    if data.get('schemaVersion') not in (1, 2) or [(c['id'], c['name']) for c in data['characters']] != [(c['id'], c['name']) for c in characters]:
         raise ValueError('キャラ一覧が一致しません')
+    data['characters'] = [add_rounds(c) for c in data['characters']]
+    data['schemaVersion'] = 2
     updates = []
     for c in data['characters']:
         page = ROOT / f'dist/other/characters/{c["id"]}/index.html'
@@ -129,6 +157,7 @@ def main():
             text = text.replace('</head>', '  <link rel="stylesheet" href="../character-training.css?v=1" />\n  </head>')
         if 'character-training.js' not in text:
             text = text.replace('</body>', '  <script src="../character-training.js?v=1" defer></script>\n  </body>')
+        text = text.replace('character-training.css?v=1', 'character-training.css?v=2')
         updates.append((page, text))
     source.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
     for page, text in updates:
