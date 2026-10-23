@@ -1880,6 +1880,11 @@ window.MAGIC_LEARNERS = {
       "name": "ファイアー",
       "learners": [
         {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "D＋"
+        },
+        {
           "id": "kai",
           "name": "カイ",
           "rank": "D"
@@ -2050,6 +2055,11 @@ window.MAGIC_LEARNERS = {
       "name": "サンダー",
       "learners": [
         {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "C"
+        },
+        {
           "id": "kai",
           "name": "カイ",
           "rank": "C"
@@ -2078,11 +2088,6 @@ window.MAGIC_LEARNERS = {
           "id": "nudiinu",
           "name": "ヌディーヌ",
           "rank": "D"
-        },
-        {
-          "id": "nudiinu",
-          "name": "ヌディーヌ",
-          "rank": "B"
         },
         {
           "id": "daitou",
@@ -2240,6 +2245,11 @@ window.MAGIC_LEARNERS = {
       "name": "ボルガノン",
       "learners": [
         {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "B"
+        },
+        {
           "id": "kai",
           "name": "カイ",
           "rank": "B"
@@ -2380,6 +2390,11 @@ window.MAGIC_LEARNERS = {
           "rank": "B"
         },
         {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "A"
+        },
+        {
           "id": "geitsu",
           "name": "ゲイツ",
           "rank": "B"
@@ -2410,6 +2425,11 @@ window.MAGIC_LEARNERS = {
       "name": "トロン",
       "learners": [
         {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "A"
+        },
+        {
           "id": "kai",
           "name": "カイ",
           "rank": "A"
@@ -2433,6 +2453,11 @@ window.MAGIC_LEARNERS = {
           "id": "majiide",
           "name": "マジーデ",
           "rank": "A"
+        },
+        {
+          "id": "nudiinu",
+          "name": "ヌディーヌ",
+          "rank": "B"
         },
         {
           "id": "daitou",
@@ -2565,6 +2590,11 @@ window.MAGIC_LEARNERS = {
           "rank": "A"
         },
         {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "A＋"
+        },
+        {
           "id": "goraiasu",
           "name": "ゴライアス",
           "rank": "B"
@@ -2583,6 +2613,26 @@ window.MAGIC_LEARNERS = {
           "id": "tahounia",
           "name": "タホウニア",
           "rank": "A"
+        }
+      ]
+    },
+    {
+      "name": "アロー",
+      "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "S"
+        },
+        {
+          "id": "bonaparute",
+          "name": "ボナパルテ",
+          "rank": "S"
+        },
+        {
+          "id": "oruheru",
+          "name": "オルヘル",
+          "rank": "S"
         }
       ]
     },
@@ -2867,6 +2917,41 @@ window.MAGIC_LEARNERS = {
       ]
     },
     {
+      "name": "エクスカリバー",
+      "learners": [
+        {
+          "id": "tiara",
+          "name": "ティアラ",
+          "rank": "S"
+        },
+        {
+          "id": "arekisandora",
+          "name": "アレキサンドラ",
+          "rank": "S"
+        },
+        {
+          "id": "shirokko",
+          "name": "シロッコ",
+          "rank": "S"
+        },
+        {
+          "id": "kataanya",
+          "name": "カターニャ",
+          "rank": "S"
+        },
+        {
+          "id": "muu",
+          "name": "ムウ",
+          "rank": "S"
+        },
+        {
+          "id": "tarimuun",
+          "name": "タリムーン",
+          "rank": "S"
+        }
+      ]
+    },
+    {
       "name": "ブリザー",
       "learners": [
         {
@@ -2967,7 +3052,7 @@ window.MAGIC_LEARNERS = {
         {
           "id": "toroia",
           "name": "トロイア",
-          "rank": "C"
+          "rank": "C＋"
         },
         {
           "id": "geitsu",
@@ -3125,9 +3210,94 @@ window.MAGIC_LEARNERS = {
           "rank": "D"
         },
         {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "A"
+        },
+        {
           "id": "saran",
           "name": "サラン",
           "rank": "E＋"
+        }
+      ]
+    },
+    {
+      "name": "サンダーストーム",
+      "learners": [
+        {
+          "id": "orimpia",
+          "name": "オリンピア",
+          "rank": "S"
+        },
+        {
+          "id": "dante",
+          "name": "ダンテ",
+          "rank": "S"
+        },
+        {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "S"
+        }
+      ]
+    },
+    {
+      "name": "ドーラ Δ",
+      "learners": [
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "D"
+        }
+      ]
+    },
+    {
+      "name": "スライムB",
+      "learners": [
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "C"
+        }
+      ]
+    },
+    {
+      "name": "デスΓ",
+      "learners": [
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "B"
+        }
+      ]
+    },
+    {
+      "name": "ルナΛ",
+      "learners": [
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "A"
+        }
+      ]
+    },
+    {
+      "name": "ダークスパイクT",
+      "learners": [
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "S"
+        }
+      ]
+    },
+    {
+      "name": "硝子の車輪",
+      "learners": [
+        {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "A"
         }
       ]
     }
@@ -3136,6 +3306,11 @@ window.MAGIC_LEARNERS = {
     {
       "name": "ライブ",
       "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "D＋"
+        },
         {
           "id": "kai",
           "name": "カイ",
@@ -3292,6 +3467,11 @@ window.MAGIC_LEARNERS = {
           "rank": "D"
         },
         {
+          "id": "toroia",
+          "name": "トロイア",
+          "rank": "A"
+        },
+        {
           "id": "kouka",
           "name": "コウカ",
           "rank": "C＋"
@@ -3310,6 +3490,301 @@ window.MAGIC_LEARNERS = {
           "id": "asuwan",
           "name": "アスワン",
           "rank": "D"
+        }
+      ]
+    },
+    {
+      "name": "エンジェル",
+      "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "C"
+        },
+        {
+          "id": "kai",
+          "name": "カイ",
+          "rank": "B"
+        },
+        {
+          "id": "tiara",
+          "name": "ティアラ",
+          "rank": "A"
+        },
+        {
+          "id": "urutando",
+          "name": "ウルタンド",
+          "rank": "C"
+        },
+        {
+          "id": "arekisandora",
+          "name": "アレキサンドラ",
+          "rank": "C"
+        },
+        {
+          "id": "esumeraruda",
+          "name": "エスメラルダ",
+          "rank": "B"
+        },
+        {
+          "id": "roretta",
+          "name": "ロレッタ",
+          "rank": "B"
+        },
+        {
+          "id": "fiana",
+          "name": "フィアナ",
+          "rank": "C"
+        },
+        {
+          "id": "rurudiyaa",
+          "name": "ルルディヤー",
+          "rank": "B"
+        },
+        {
+          "id": "kataanya",
+          "name": "カターニャ",
+          "rank": "C"
+        },
+        {
+          "id": "io",
+          "name": "イオ",
+          "rank": "B"
+        },
+        {
+          "id": "pepe",
+          "name": "ペペ",
+          "rank": "B"
+        },
+        {
+          "id": "seodora",
+          "name": "セオドラ",
+          "rank": "C"
+        },
+        {
+          "id": "reda",
+          "name": "レダ",
+          "rank": "B"
+        },
+        {
+          "id": "tarimuun",
+          "name": "タリムーン",
+          "rank": "C"
+        },
+        {
+          "id": "oruheru",
+          "name": "オルヘル",
+          "rank": "B"
+        },
+        {
+          "id": "geitsu",
+          "name": "ゲイツ",
+          "rank": "B"
+        },
+        {
+          "id": "asuwan",
+          "name": "アスワン",
+          "rank": "B"
+        },
+        {
+          "id": "kurapuka",
+          "name": "クラプカ",
+          "rank": "A"
+        }
+      ]
+    },
+    {
+      "name": "リカバー",
+      "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "B"
+        },
+        {
+          "id": "kai",
+          "name": "カイ",
+          "rank": "A"
+        },
+        {
+          "id": "tiara",
+          "name": "ティアラ",
+          "rank": "B"
+        },
+        {
+          "id": "guzaran",
+          "name": "グザラン",
+          "rank": "A"
+        },
+        {
+          "id": "youkai",
+          "name": "ヨーカイ",
+          "rank": "A"
+        },
+        {
+          "id": "arekisandora",
+          "name": "アレキサンドラ",
+          "rank": "A"
+        },
+        {
+          "id": "roretta",
+          "name": "ロレッタ",
+          "rank": "A"
+        },
+        {
+          "id": "fiana",
+          "name": "フィアナ",
+          "rank": "B"
+        },
+        {
+          "id": "sofia",
+          "name": "ソフィア",
+          "rank": "A"
+        },
+        {
+          "id": "shirokko",
+          "name": "シロッコ",
+          "rank": "B"
+        },
+        {
+          "id": "dante",
+          "name": "ダンテ",
+          "rank": "B"
+        },
+        {
+          "id": "reda",
+          "name": "レダ",
+          "rank": "A"
+        },
+        {
+          "id": "fabio",
+          "name": "ファビオ",
+          "rank": "B"
+        },
+        {
+          "id": "bonaparute",
+          "name": "ボナパルテ",
+          "rank": "B"
+        },
+        {
+          "id": "tarimuun",
+          "name": "タリムーン",
+          "rank": "B"
+        },
+        {
+          "id": "oruheru",
+          "name": "オルヘル",
+          "rank": "B"
+        },
+        {
+          "id": "toroia",
+          "name": "トロイア",
+          "rank": "S"
+        },
+        {
+          "id": "saran",
+          "name": "サラン",
+          "rank": "B"
+        }
+      ]
+    },
+    {
+      "name": "リザーブ",
+      "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "A"
+        },
+        {
+          "id": "mikaera",
+          "name": "ミカエラ",
+          "rank": "A"
+        },
+        {
+          "id": "zaakone",
+          "name": "ザーコネ",
+          "rank": "A"
+        },
+        {
+          "id": "shirokko",
+          "name": "シロッコ",
+          "rank": "A"
+        },
+        {
+          "id": "uushura",
+          "name": "ウーシュラ",
+          "rank": "A"
+        },
+        {
+          "id": "reda",
+          "name": "レダ",
+          "rank": "S"
+        },
+        {
+          "id": "oruheru",
+          "name": "オルヘル",
+          "rank": "S"
+        },
+        {
+          "id": "saran",
+          "name": "サラン",
+          "rank": "S"
+        }
+      ]
+    },
+    {
+      "name": "オーラ",
+      "learners": [
+        {
+          "id": "kyuuseishu",
+          "name": "救世主",
+          "rank": "S"
+        },
+        {
+          "id": "tiara",
+          "name": "ティアラ",
+          "rank": "S"
+        },
+        {
+          "id": "youkai",
+          "name": "ヨーカイ",
+          "rank": "S"
+        },
+        {
+          "id": "urutando",
+          "name": "ウルタンド",
+          "rank": "S"
+        },
+        {
+          "id": "nine",
+          "name": "ニネ",
+          "rank": "S"
+        },
+        {
+          "id": "sofia",
+          "name": "ソフィア",
+          "rank": "S"
+        },
+        {
+          "id": "muu",
+          "name": "ムウ",
+          "rank": "S"
+        },
+        {
+          "id": "seodora",
+          "name": "セオドラ",
+          "rank": "S"
+        },
+        {
+          "id": "oruheru",
+          "name": "オルヘル",
+          "rank": "A"
+        },
+        {
+          "id": "asuwan",
+          "name": "アスワン",
+          "rank": "A"
         }
       ]
     },
@@ -3464,187 +3939,52 @@ window.MAGIC_LEARNERS = {
       ]
     },
     {
-      "name": "エンジェル",
+      "name": "ワープ",
       "learners": [
         {
           "id": "kai",
           "name": "カイ",
+          "rank": "S"
+        },
+        {
+          "id": "majiide",
+          "name": "マジーデ",
           "rank": "B"
         },
         {
-          "id": "tiara",
-          "name": "ティアラ",
-          "rank": "A"
-        },
-        {
-          "id": "urutando",
-          "name": "ウルタンド",
-          "rank": "C"
-        },
-        {
-          "id": "arekisandora",
-          "name": "アレキサンドラ",
-          "rank": "C"
-        },
-        {
-          "id": "esumeraruda",
-          "name": "エスメラルダ",
-          "rank": "B"
-        },
-        {
-          "id": "roretta",
-          "name": "ロレッタ",
-          "rank": "B"
-        },
-        {
-          "id": "fiana",
-          "name": "フィアナ",
-          "rank": "C"
-        },
-        {
-          "id": "rurudiyaa",
-          "name": "ルルディヤー",
-          "rank": "B"
-        },
-        {
-          "id": "kataanya",
-          "name": "カターニャ",
-          "rank": "C"
-        },
-        {
-          "id": "io",
-          "name": "イオ",
-          "rank": "B"
-        },
-        {
-          "id": "pepe",
-          "name": "ペペ",
-          "rank": "B"
-        },
-        {
-          "id": "seodora",
-          "name": "セオドラ",
-          "rank": "C"
-        },
-        {
-          "id": "reda",
-          "name": "レダ",
-          "rank": "B"
-        },
-        {
-          "id": "tarimuun",
-          "name": "タリムーン",
-          "rank": "C"
-        },
-        {
-          "id": "oruheru",
-          "name": "オルヘル",
-          "rank": "B"
-        },
-        {
-          "id": "geitsu",
-          "name": "ゲイツ",
-          "rank": "B"
-        },
-        {
-          "id": "asuwan",
-          "name": "アスワン",
-          "rank": "B"
-        },
-        {
-          "id": "kurapuka",
-          "name": "クラプカ",
-          "rank": "A"
-        }
-      ]
-    },
-    {
-      "name": "リカバー",
-      "learners": [
-        {
-          "id": "kai",
-          "name": "カイ",
-          "rank": "A"
-        },
-        {
-          "id": "tiara",
-          "name": "ティアラ",
-          "rank": "B"
-        },
-        {
-          "id": "guzaran",
-          "name": "グザラン",
-          "rank": "A"
-        },
-        {
-          "id": "youkai",
-          "name": "ヨーカイ",
-          "rank": "A"
-        },
-        {
-          "id": "arekisandora",
-          "name": "アレキサンドラ",
-          "rank": "A"
-        },
-        {
-          "id": "roretta",
-          "name": "ロレッタ",
-          "rank": "A"
-        },
-        {
-          "id": "fiana",
-          "name": "フィアナ",
-          "rank": "B"
-        },
-        {
-          "id": "sofia",
-          "name": "ソフィア",
+          "id": "setesu",
+          "name": "セテス",
           "rank": "A"
         },
         {
           "id": "shirokko",
           "name": "シロッコ",
-          "rank": "B"
-        },
-        {
-          "id": "dante",
-          "name": "ダンテ",
-          "rank": "B"
-        },
-        {
-          "id": "reda",
-          "name": "レダ",
-          "rank": "A"
-        },
-        {
-          "id": "fabio",
-          "name": "ファビオ",
-          "rank": "B"
-        },
-        {
-          "id": "bonaparute",
-          "name": "ボナパルテ",
-          "rank": "B"
-        },
-        {
-          "id": "tarimuun",
-          "name": "タリムーン",
-          "rank": "B"
-        },
-        {
-          "id": "oruheru",
-          "name": "オルヘル",
-          "rank": "E"
-        },
-        {
-          "id": "toroia",
-          "name": "トロイア",
           "rank": "S"
         },
         {
-          "id": "saran",
-          "name": "サラン",
-          "rank": "B"
+          "id": "kataanya",
+          "name": "カターニャ",
+          "rank": "A"
+        },
+        {
+          "id": "muu",
+          "name": "ムウ",
+          "rank": "A"
+        },
+        {
+          "id": "anatoria",
+          "name": "アナトリア",
+          "rank": "A"
+        },
+        {
+          "id": "kouka",
+          "name": "コウカ",
+          "rank": "S"
+        },
+        {
+          "id": "neisan",
+          "name": "ネイサン",
+          "rank": "A"
         }
       ]
     },
@@ -3714,12 +4054,12 @@ window.MAGIC_LEARNERS = {
         {
           "id": "oruheru",
           "name": "オルヘル",
-          "rank": "E＋"
+          "rank": "B"
         },
         {
           "id": "toroia",
           "name": "トロイア",
-          "rank": "A"
+          "rank": "A＋"
         },
         {
           "id": "kiriiku",
@@ -3992,11 +4332,6 @@ window.MAGIC_LEARNERS = {
           "rank": "C"
         },
         {
-          "id": "nuttso",
-          "name": "ヌッツォ",
-          "rank": "A"
-        },
-        {
           "id": "raisandaa",
           "name": "ライサンダー",
           "rank": "B"
@@ -4124,41 +4459,6 @@ window.MAGIC_LEARNERS = {
       ]
     },
     {
-      "name": "ワープ",
-      "learners": [
-        {
-          "id": "majiide",
-          "name": "マジーデ",
-          "rank": "B"
-        },
-        {
-          "id": "setesu",
-          "name": "セテス",
-          "rank": "A"
-        },
-        {
-          "id": "kataanya",
-          "name": "カターニャ",
-          "rank": "A"
-        },
-        {
-          "id": "muu",
-          "name": "ムウ",
-          "rank": "A"
-        },
-        {
-          "id": "anatoria",
-          "name": "アナトリア",
-          "rank": "A"
-        },
-        {
-          "id": "neisan",
-          "name": "ネイサン",
-          "rank": "A"
-        }
-      ]
-    },
-    {
       "name": "レスキア",
       "learners": [
         {
@@ -4212,6 +4512,11 @@ window.MAGIC_LEARNERS = {
           "rank": "A"
         },
         {
+          "id": "nuttso",
+          "name": "ヌッツォ",
+          "rank": "A"
+        },
+        {
           "id": "inioni",
           "name": "イニオニ",
           "rank": "B"
@@ -4220,6 +4525,11 @@ window.MAGIC_LEARNERS = {
           "id": "kiroika",
           "name": "キロイカ",
           "rank": "A"
+        },
+        {
+          "id": "orimpia",
+          "name": "オリンピア",
+          "rank": "S"
         },
         {
           "id": "rurudiyaa",
@@ -4299,37 +4609,17 @@ window.MAGIC_LEARNERS = {
       ]
     },
     {
-      "name": "リザーブ",
-      "learners": [
-        {
-          "id": "mikaera",
-          "name": "ミカエラ",
-          "rank": "A"
-        },
-        {
-          "id": "zaakone",
-          "name": "ザーコネ",
-          "rank": "A"
-        },
-        {
-          "id": "shirokko",
-          "name": "シロッコ",
-          "rank": "A"
-        },
-        {
-          "id": "uushura",
-          "name": "ウーシュラ",
-          "rank": "A"
-        }
-      ]
-    },
-    {
       "name": "レスキュー",
       "learners": [
         {
           "id": "nudiinu",
           "name": "ヌディーヌ",
           "rank": "A"
+        },
+        {
+          "id": "roretta",
+          "name": "ロレッタ",
+          "rank": "S"
         },
         {
           "id": "raisandaa",
@@ -4340,6 +4630,11 @@ window.MAGIC_LEARNERS = {
           "id": "jasumin",
           "name": "ジャスミン",
           "rank": "A"
+        },
+        {
+          "id": "fiana",
+          "name": "フィアナ",
+          "rank": "S"
         },
         {
           "id": "bakkania",
@@ -4370,6 +4665,16 @@ window.MAGIC_LEARNERS = {
           "id": "tahounia",
           "name": "タホウニア",
           "rank": "A"
+        }
+      ]
+    },
+    {
+      "name": "彷徨える壁",
+      "learners": [
+        {
+          "id": "daitou",
+          "name": "ダイトウ",
+          "rank": "E＋"
         }
       ]
     },
@@ -4479,17 +4784,7 @@ window.MAGIC_LEARNERS = {
         {
           "id": "oruheru",
           "name": "オルヘル",
-          "rank": "C"
-        }
-      ]
-    },
-    {
-      "name": "オーラ",
-      "learners": [
-        {
-          "id": "asuwan",
-          "name": "アスワン",
-          "rank": "A"
+          "rank": "B"
         }
       ]
     }
