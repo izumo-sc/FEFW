@@ -3210,6 +3210,11 @@ window.MAGIC_LEARNERS = {
           "rank": "D"
         },
         {
+          "id": "anatoria",
+          "name": "アナトリア",
+          "rank": "B＋"
+        },
+        {
           "id": "kouka",
           "name": "コウカ",
           "rank": "A"
@@ -3295,9 +3300,34 @@ window.MAGIC_LEARNERS = {
       "name": "硝子の車輪",
       "learners": [
         {
+          "id": "anatoria",
+          "name": "アナトリア",
+          "rank": "B＋"
+        },
+        {
           "id": "kouka",
           "name": "コウカ",
           "rank": "A"
+        }
+      ]
+    },
+    {
+      "name": "裁きの剣",
+      "learners": [
+        {
+          "id": "anatoria",
+          "name": "アナトリア",
+          "rank": "B＋"
+        }
+      ]
+    },
+    {
+      "name": "大地の顎",
+      "learners": [
+        {
+          "id": "anatoria",
+          "name": "アナトリア",
+          "rank": "B＋"
         }
       ]
     }
