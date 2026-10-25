@@ -34,7 +34,8 @@
             <button class="quiet-button" type="button" data-reset="counts">作成数をリセット</button>
           </div>
           <p class="forging-description">作成数を入力すると、武器ごとの必要数と素材の合計数を計算します。</p>
-          <p class="forging-description">参考数は<a href="../character-weapons/">キャラ所持武器管理</a>に配置した武器の合計です。作成数には自動入力されません。</p>
+          <p class="forging-description">参考数は<a href="../character-weapons/">キャラ所持武器管理</a>に配置した武器の合計です。ボタンを押すと、すべての作成数を参考数で上書きします（1個までの武器は最大1個）。</p>
+          <p><button id="forging-apply-reference" class="quiet-button" type="button">参考数値を入力</button></p>
           <table class="forging-table weapon-table">
             <thead><tr><th scope="col">武器</th><th scope="col">1個分の素材</th><th scope="col">参考数</th><th scope="col">作成数</th><th scope="col">必要合計数</th></tr></thead>
             <tbody id="forging-weapons"></tbody>
@@ -89,7 +90,7 @@
     <script src="../character-weapons/characters-data.js?v=1"></script>
   <script src="../character-weapons/classes-data.js?v=1"></script>
     <script src="../character-weapons/loadout-model.js?v=6"></script>
-    <script src="./forging.js?v=4"></script>
+    <script src="./forging.js?v=5"></script>
     <script src="../../order.js?v=1"></script>
     <script src="../../page-counter.js?v=1" data-page="other/forging"></script>
   </body>

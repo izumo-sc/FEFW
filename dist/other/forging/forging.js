@@ -101,10 +101,25 @@
     find("forging-inventory-rows").append(row);
     inventoryRows.set(name, {fields, outputs});
   }
+  function readReferences() {
+    return window.WEAPON_LOADOUT.weaponCounts(JSON.parse(localStorage.getItem(window.WEAPON_LOADOUT.storageKey)));
+  }
+  find("forging-apply-reference").addEventListener("click", () => {
+    let references;
+    try { references = readReferences(); }
+    catch {
+      status.textContent = "参考数を読み込めませんでした。作成数は変更していません。";
+      return;
+    }
+    changeState(current => {
+      current.counts = Object.fromEntries(weapons.map(weapon => [weapon.id, weaponQuantity(weapon, references[weapon.id])]));
+    });
+    if (!storageFailed) status.textContent = "参考数値を作成数に入力し、保存しました。";
+  });
   function update() {
     const needed = requirements(state.counts);
     let references = {};
-    try { references = window.WEAPON_LOADOUT.weaponCounts(JSON.parse(localStorage.getItem(window.WEAPON_LOADOUT.storageKey))); } catch {}
+    try { references = readReferences(); } catch {}
     for (const weapon of weapons) {
       referenceOutputs.get(weapon.id).textContent = number(references[weapon.id] || 0);
       const count = weaponQuantity(weapon, state.counts[weapon.id]);
