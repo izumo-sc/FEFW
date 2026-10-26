@@ -5,6 +5,10 @@
   const characters = node ? require('./characters-data.js') : root.LOADOUT_CHARACTERS;
   const classes = node ? require('./classes-data.js') : root.LOADOUT_CLASSES;
   const classMap = new Map(classes.map(item => [item.id, item]));
+  const uniqueClasses = new Set(classes.filter(item => /^(ザ・|ジ・)/.test(item.name)).map(item => item.id));
+  function canSelectClass(state, slot, id) {
+    return !uniqueClasses.has(id) || !state.some((item, index) => index !== slot && item.classId === id);
+  }
   const weaponTypes = Object.fromEntries([
     ['剣', ['wood-sword','zanbato','flissa','thunder-sword','great-sword','purifying-sword']],
     ['槍', ['wood-spear','javelin','short-spear','knight-killer','aurora','solel','shinza','mahamadou','gracida','assal']],
@@ -30,11 +34,16 @@
       source[oldSavior] = null;
     }
     const usedCharacters = new Set();
+    const usedClasses = new Set();
     return Array.from({length:slotCount}, (_, i) => {
       const id = source[i]?.character;
       const character = i === saviorSlot ? saviorId : id !== saviorId && characterIds.has(id) && !usedCharacters.has(id) ? id : null;
       if (character) usedCharacters.add(character);
-      const classId = classMap.has(source[i]?.classId) ? source[i].classId : null;
+      let classId = classMap.has(source[i]?.classId) ? source[i].classId : null;
+      if (uniqueClasses.has(classId)) {
+        if (usedClasses.has(classId)) classId = null;
+        else usedClasses.add(classId);
+      }
       return {character, classId, weapons: Array.from({length:weaponSlotCount}, (_, j) => {
         const id = source[i]?.weapons?.[j];
         return weaponIds.has(id) && (!classId || canEquip(classId, id)) ? id : null;
@@ -52,6 +61,7 @@
     if (!target || !payload || !validSlot(target.slot) || target.category !== payload.category) return false;
     if (target.category === 'class') {
       if (payload.sourceSlot !== undefined || (payload.id !== null && !classMap.has(payload.id))) return false;
+      if (!canSelectClass(state, target.slot, payload.id)) return false;
       const slot = state[target.slot]; slot.classId = payload.id;
       slot.weapons = slot.weapons.map(id => id && canEquip(payload.id, id) ? id : null);
       return true;
@@ -83,6 +93,6 @@
     else state[target.slot].weapons[target.weaponSlot] = payload.id;
     return true;
   }
-  const api = {weapons, characters, classes, weaponTypes, canEquip, storageKey, slotCount, teamSlotCount, saviorSlot, saviorId, weaponSlotCount, cleanState, weaponCounts, applyItem};
+  const api = {weapons, characters, classes, weaponTypes, canEquip, canSelectClass, storageKey, slotCount, teamSlotCount, saviorSlot, saviorId, weaponSlotCount, cleanState, weaponCounts, applyItem};
   if (node) module.exports = api; else root.WEAPON_LOADOUT = api;
 })(typeof window !== 'undefined' ? window : globalThis);

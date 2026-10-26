@@ -119,8 +119,9 @@
     for (const item of filtered(pickerTarget.category, find('loadout-picker-search').value)) {
       const usedSlot = pickerTarget.category === 'character' ? state.findIndex(slot => slot.character === item.id) : -1;
       const weaponLocked = pickerTarget.category === 'weapon' && !canEquip(slot.classId, item.id);
-      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : weaponLocked ? `${item.name}（装備不可）` : item.name);
-      pick.disabled = usedSlot >= 0 || weaponLocked;
+      const classLocked = pickerTarget.category === 'class' && !model.canSelectClass(state, pickerTarget.slot, item.id);
+      const pick = button(usedSlot >= 0 ? `${item.name}（チーム${Math.floor(usedSlot / 8) + 1}に配置済み）` : classLocked ? `${item.name}（選択済み）` : weaponLocked ? `${item.name}（装備不可）` : item.name);
+      pick.disabled = usedSlot >= 0 || weaponLocked || classLocked;
       if (pickerTarget.category === 'class') pick.append(el('small', 'loadout-class-types', `${item.group}／${item.weaponTypes.join('・') || '対象武器なし'}`));
       pick.addEventListener('click', () => {
         if (place(pickerTarget, {category:pickerTarget.category, id:item.id})) picker.close();

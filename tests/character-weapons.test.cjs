@@ -3,6 +3,39 @@ const assert = require('node:assert/strict');
 const {cleanState, weaponCounts, applyItem, characters, weapons, classes, weaponTypes, canEquip} = require('../dist/other/character-weapons/loadout-model.js');
 const forging = require('../dist/other/forging/forging-data.js');
 
+test('ザ・ジ・の兵種は全チームと救世主で各1人、解除後は再選択できる', () => {
+  for (const job of classes.filter(item => /^(ザ・|ジ・)/.test(item.name))) {
+    const state = cleanState([]);
+    const select = slot => applyItem(state, {category:'class',slot}, {category:'class',id:job.id});
+    assert.equal(select(0),true);
+    assert.equal(select(0),true);
+    assert.equal(select(8),false);
+    assert.equal(select(40),false);
+    assert.equal(applyItem(state,{category:'class',slot:0},{category:'class',id:null}),true);
+    assert.equal(select(40),true);
+    assert.equal(select(0),false);
+  }
+  const regular = classes.find(item => !/^(ザ・|ジ・)/.test(item.name));
+  const state = cleanState([]);
+  for (const slot of [0,8,40]) assert.equal(applyItem(state,{category:'class',slot},{category:'class',id:regular.id}),true);
+});
+
+test('保存済みの限定兵種重複は先頭を残し、後続のキャラと武器を保持する', () => {
+  const job = classes.find(item => /^(ザ・|ジ・)/.test(item.name));
+  const weapon = weapons.find(item => canEquip(job.id,item.id));
+  const source = cleanState([]);
+  for (const slot of [0,8,40]) source[slot].classId=job.id;
+  source[8].character=characters.find(item => item.id!=='kyuuseishu').id;
+  source[8].weapons[0]=weapon.id;
+  const cleaned=cleanState(source);
+  assert.equal(cleaned[0].classId,job.id);
+  assert.equal(cleaned[8].classId,null);
+  assert.equal(cleaned[40].classId,null);
+  assert.equal(cleaned[8].character,source[8].character);
+  assert.equal(cleaned[8].weapons[0],weapon.id);
+  assert.equal(source[8].classId,job.id);
+});
+
 test('救世主を旧チーム枠から固定枠へ移し、兵種と武器を保持して二重計上しない', () => {
   const old = Array.from({length:40},()=>({character:null,weapons:[]}));
   old[16] = {character:'kyuuseishu',classId:'class-8',weapons:['thunder-sword','wood-spear']};
