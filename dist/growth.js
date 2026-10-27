@@ -10,6 +10,7 @@
   ];
   const classMountTypes = new Map([
     ["軽騎兵", "馬"],
+    ["戦象兵", "象"],
     ["戦車兵", "馬"],
     ["フォレストナイト", "馬"],
     ["バーディンガー", "馬"],
@@ -29,7 +30,7 @@
     ["ドラグーン", "バウ"],
     ["ドラゴンマスター", "バウ"],
   ]);
-  const animalMountTypes = { 馬: "馬", 飛駝: "駝兵", 天馬: "ペガサス", 飛竜: "バウ" };
+  const animalMountTypes = { 馬: "馬", 飛駝: "駝兵", 天馬: "ペガサス", 飛竜: "バウ", 象: "象" };
 
   const itemById = new Map(
     categories.flatMap(({ dataKey }) => data[dataKey]).map((item) => [item.id, item]),
