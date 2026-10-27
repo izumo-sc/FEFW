@@ -161,3 +161,33 @@ test('既存投稿は一般投稿のまま移行し、管理画面は投稿先�
     assert(!fs.readFileSync(new URL('../dist/' + file, import.meta.url), 'utf8').includes('/board/admin'));
   }
 });
+
+test('管理者返信の保存・編集・非表示と親投稿の公開状態を守る', async t => {
+  const {call, login} = setup(t);
+  const cookie = await login();
+  const posted = await call('POST', {body: '質問', token: 'a'.repeat(64), page: 'weapons', reply_body: '偽返信'}, {public: true});
+  const id = (await posted.json()).post.id;
+  const data = {id, reply: {body: '<img src=x onerror=alert(1)>回答', hidden: false}};
+  assert.equal((await call('PATCH', data)).status, 401);
+  assert.equal((await call('PATCH', data, {public: true, cookie})).status, 405);
+  assert.equal((await call('PATCH', data, {cookie, headers: {Origin: 'https://evil.test'}})).status, 403);
+  assert.equal((await call('PATCH', data, {cookie})).status, 200);
+  const listing = async (admin = false) => (await (await call('GET', undefined, admin ? {cookie} : {public: true, query: '?page=weapons&limit=10'})).json()).posts;
+  assert.equal((await listing()).length, 0);
+  assert.equal((await listing(true))[0].reply_body, data.reply.body);
+  await call('PATCH', {id, approved: true}, {cookie});
+  assert.equal((await listing())[0].reply_body, data.reply.body);
+  await call('PATCH', {id, reply: {body: '編集済み', hidden: true}}, {cookie});
+  assert.equal((await listing())[0].reply_body, '');
+  assert.equal((await listing())[0].reply_updated_at, null);
+  assert.equal((await listing(true))[0].reply_body, '編集済み');
+  await call('PATCH', {id, reply: {body: '編集済み', hidden: false}}, {cookie});
+  assert.equal((await listing())[0].reply_body, '編集済み');
+  await call('PATCH', {id, hidden: true}, {cookie});
+  assert.equal((await listing()).length, 0);
+  for (const body of ['', ' '.repeat(3), 'a'.repeat(2001), '殺してやる']) {
+    assert.equal((await call('PATCH', {id, reply: {body, hidden: false}}, {cookie})).status, 400);
+  }
+  assert.equal((await call('PATCH', {...data, id: 999}, {cookie})).status, 404);
+  assert.equal((await listing(true))[0].reply_body, '編集済み');
+});

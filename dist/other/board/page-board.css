@@ -15,3 +15,5 @@
 
 header:has(> .board-header-link) { position: relative; padding-bottom: 64px; }
 .board-header-link { position: absolute; right: max(16px, calc((100% - 1380px) / 2)); bottom: 16px; display: inline-flex; align-items: center; justify-content: center; padding: 8px 14px; border: 1px solid currentColor; border-radius: 6px; text-decoration: none; font-size: .9rem; }
+
+.board-reply { margin: 12px 0 0 16px; padding: 12px; border-left: 3px solid #163e64; background: #f0f5f9; color: #142d40; }

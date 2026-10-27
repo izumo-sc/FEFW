@@ -64,6 +64,13 @@
     }
     const body = document.createElement('p'); body.className = 'post-body'; body.textContent = post.body;
     article.append(meta, body);
+
+    if (post.reply_body && post.reply_hidden !== 1) {
+      const reply = document.createElement('div'); reply.className = 'board-reply';
+      const badge = document.createElement('strong'); badge.className = 'board-admin-badge'; badge.textContent = '管理者';
+      const text = document.createElement('p'); text.className = 'post-body'; text.textContent = post.reply_body;
+      reply.append(badge, text); article.append(reply);
+    }
     if (admin) {
       const hidden = post.is_hidden === 1;
       const pending = post.is_approved === 0;
@@ -95,6 +102,30 @@
         finally { busy = false; button.disabled = cancel.disabled = false; }
       };
       article.append(button, cancel);
+      const editor = document.createElement('details'); editor.className = 'reply-editor';
+      const summary = document.createElement('summary'); summary.textContent = post.reply_body ? '管理者返信を編集' : '管理者として返信';
+      const replyForm = document.createElement('form');
+      const input = document.createElement('textarea'); input.required = true; input.maxLength = 2000;
+      input.rows = 4; input.value = post.reply_body || ''; input.setAttribute('aria-label', '管理者返信');
+      const visibility = document.createElement('label');
+      const hide = document.createElement('input'); hide.type = 'checkbox'; hide.checked = post.reply_hidden === 1;
+      visibility.append(hide, '返信を非表示にする');
+      const save = document.createElement('button'); save.type = 'submit'; save.textContent = '返信を保存';
+      const feedback = document.createElement('p'); feedback.setAttribute('role', 'status');
+      replyForm.append(input, visibility, save, feedback); editor.append(summary, replyForm); article.append(editor);
+      replyForm.onsubmit = async event => {
+        event.preventDefault();
+        if (busy || !replyForm.reportValidity()) return;
+        busy = true; save.disabled = true;
+        try {
+          await api('PATCH', {id: post.id, reply: {body: input.value, hidden: hide.checked}});
+          busy = false;
+          await load();
+          if (status.dataset.error !== 'true') message('返信を保存しました。');
+        } catch (error) { feedback.textContent = error.message; }
+        finally { busy = false; save.disabled = false; }
+      };
+
     }
     list.append(article);
   }

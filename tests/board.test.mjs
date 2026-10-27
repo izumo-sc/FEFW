@@ -211,7 +211,7 @@ test('掲示板には検索除外がありPV集計に出ない', () => {
 for (const [admin, pending] of [[false, false], [true, false], [true, true]]) test(`${pending ? '承認待ち' : admin ? '管理者' : '通常'}画面の非表示権限・絞り込み・投稿先指定`, async () => {
   class Element {
     constructor() { this.children = []; this.dataset = {}; this.attributes = {}; this.handlers = {}; }
-    append(...children) { for (const child of children) { this.children.push(child); child.parent = this; } }
+    append(...children) { for (const child of children) { this.children.push(child); if (typeof child === 'object') child.parent = this; } }
     setAttribute(name, value) { this.attributes[name] = value; }
     addEventListener(name, handler) { this.handlers[name] = handler; }
     replaceChildren() { this.children = []; }
@@ -259,6 +259,14 @@ for (const [admin, pending] of [[false, false], [true, false], [true, true]]) te
     assert.deepEqual(JSON.parse(calls[1].body), pending ? {id: 1, approved: true} : {id: 1, hidden: true});
     assert.equal(elements.get('posts').children.length, 1);
     assert.equal(elements.get('board-status').textContent, pending ? '承認にしました。' : '非表示にしました。');
+    const editor = elements.get('posts').children[0].children[4];
+    const replyForm = editor.children[1];
+    replyForm.children[0].value = '<b>返信</b>';
+    replyForm.children[1].children[0].checked = true;
+    await replyForm.onsubmit({preventDefault() {}});
+    const savedReply = calls.filter(call => call.method === 'PATCH').at(-1);
+    assert.deepEqual(JSON.parse(savedReply.body), {id: 1, reply: {body: '<b>返信</b>', hidden: true}});
+
   } else {
     // Old ownership records must not make a delete button reappear.
     assert.equal(article.children.length, 2);
@@ -283,7 +291,7 @@ test('各ページの表示は本文をHTMLにせず、そのページの10件�
   const status = element(), list = element(), calls = [];
   const posts = [
     {name: '別ページ', page: 'materials', body: '非表示', created_at: 1},
-    ...Array.from({length: 12}, (_, i) => ({name: '投稿' + i, is_admin: i === 0 ? 1 : 0, page: 'weapons', body: '<script>文字列</script>', created_at: i + 1})),
+    ...Array.from({length: 12}, (_, i) => ({name: '投稿' + i, is_admin: i === 0 ? 1 : 0, page: 'weapons', body: '<script>文字列</script>', reply_body: '<img>返信', created_at: i + 1})),
   ];
   vm.runInNewContext(fs.readFileSync(new URL('../dist/other/board/page-board.js', import.meta.url), 'utf8'), {
     document: {currentScript: {dataset: {boardPage: 'weapons'}},

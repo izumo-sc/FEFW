@@ -29,8 +29,8 @@ for (const file of walk(dist).sort()) {
   if ((html.match(/<\/main>/g) || []).length !== 1) throw new Error(`Expected one main: ${file}`);
   const assets = [
     '    <!-- page-board-assets -->',
-    '    <link rel="stylesheet" href="/other/board/page-board.css?v=5">',
-    `    <script src="/other/board/page-board.js?v=4" data-board-page="${id}" defer></script>`,
+    '    <link rel="stylesheet" href="/other/board/page-board.css?v=6">',
+    `    <script src="/other/board/page-board.js?v=5" data-board-page="${id}" defer></script>`,
     '    <!-- /page-board-assets -->',
   ].join(newline) + newline;
   const section = [

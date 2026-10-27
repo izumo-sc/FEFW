@@ -38,3 +38,11 @@
 }
 
 .board-admin-badge { display: inline-block; padding: 1px 7px; border-radius: 4px; background: #163e64; color: #fff; font-size: .75rem; font-weight: 700; line-height: 1.5; }
+
+.board-reply { margin: 12px 0 0 16px; padding: 12px; border-left: 3px solid #163e64; background: #f0f5f9; color: #142d40; }
+
+.reply-editor { margin-top: 12px; }
+.reply-editor summary { cursor: pointer; }
+.reply-editor form { display: grid; gap: 10px; margin-top: 10px; }
+.reply-editor textarea { box-sizing: border-box; width: 100%; resize: vertical; font: inherit; padding: 10px; }
+.reply-editor button { justify-self: start; }
