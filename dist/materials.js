@@ -99,10 +99,10 @@ window.MATERIALS = [
   },
   {
     "name": "ハクレン",
-    "category": "魚",
+    "category": "野菜",
     "required": 2,
-    "locations": [],
-    "remarks": "クエスト用",
+    "locations": ["おくり岩", "めぐり岩", "つなぎ岩"],
+    "remarks": "クエスト用、栽培限定",
     "routeLimited": false,
     "sectionStart": false
   },
