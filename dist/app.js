@@ -18,6 +18,7 @@
       "コーシャルーガー",
       "スカライ",
       "バザリーシャーク",
+      "ハクレン",
       "テフノミ",
       "ギンジ",
       "デーツ",
@@ -333,9 +334,11 @@
         if (!config.exchange) {
           const remarks = document.createElement("div");
           remarks.className = "remarks-cell";
+          const remarkTexts = material.remarks ? [material.remarks] : [];
           if (state.showExchange && exchangeWeapons.has(material.name)) {
-            remarks.textContent = [...exchangeWeapons.get(material.name)].join("、");
+            remarkTexts.push(...exchangeWeapons.get(material.name));
           }
+          remarks.textContent = remarkTexts.join("、");
           row.append(remarks);
         }
         list.append(row);

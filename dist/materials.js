@@ -98,6 +98,15 @@ window.MATERIALS = [
     "sectionStart": false
   },
   {
+    "name": "ハクレン",
+    "category": "魚",
+    "required": 2,
+    "locations": [],
+    "remarks": "クエスト用",
+    "routeLimited": false,
+    "sectionStart": false
+  },
+  {
     "name": "ギンジ",
     "category": "野菜",
     "required": 50,
