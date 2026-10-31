@@ -20,7 +20,7 @@
   for (const content of document.querySelectorAll('[data-progress-track]')) {
     const steps = [];
     const occurrences = new Map();
-    for (const section of content.querySelectorAll('.guide-section')) {
+    for (const section of content.querySelectorAll('.guide-section:not([data-progress-exclude])')) {
       const heading = section.querySelector('h2');
       for (const paragraph of [...section.querySelectorAll(':scope > p')]) {
         if (!paragraph.textContent.trimStart().startsWith('・')) continue;
