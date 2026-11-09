@@ -20,14 +20,14 @@ class Element {
   fire(type) { this.listeners[type]?.(); }
 }
 
-function tracker(exchange = false) {
+function tracker(exchange = false, saved = []) {
   const prefix = exchange ? "exchange-" : "";
   const ids = Object.fromEntries([
     "materials-list", "empty-state", "search-input", "controls", "reset-button", "reset-dialog",
     "save-status", "material-count", "required-total", "shortage-total",
-    ...exchange ? [] : ["exchange-display-toggle", "exchange-display-state"],
+    ...exchange ? [] : ["exchange-display-toggle", "exchange-display-state", "material-order-lock"],
   ].map(id => [prefix + id, new Element()]));
-  const data = new Map();
+  const data = new Map(saved);
   const listeners = {};
   const window = { addEventListener: (type, fn) => { listeners[type] = fn; }, setTimeout() {}, clearTimeout() {} };
   const context = vm.createContext({ window, localStorage: {
@@ -43,6 +43,11 @@ function tracker(exchange = false) {
   }
   const row = name => ids[prefix + "materials-list"].children.find(x => x.dataset.name === name);
   return {
+    saved: () => [...data],
+    names: () => ids[prefix + "materials-list"].children.map(row => row.dataset.name),
+    move: name => row(name).children.at(-1).fire("click"),
+    locked: name => row(name).children.at(-1).disabled,
+    lock: () => ids["material-order-lock"].fire("click"),
     get: id => ids[prefix + id].textContent,
     shortage: name => row(name).children[5].textContent,
     remarks: name => row(name).children[7].textContent,
@@ -135,4 +140,27 @@ test("括弧内は交換分のみで、復興分と独立して不足を表示�
   for (const route of [0, 1, 2, 3]) t.input("サンノミ", route, 10);
   assert.equal(t.shortage("サンノミ"), "25（0）");
   assert.equal(t.get("shortage-total"), "864");
+});
+
+test("行を最下段へ移動し、入力値と再読込後の順番を保持する", () => {
+  const t = tracker();
+  const first = t.names()[0];
+  t.input(first, 0, 5);
+  t.move(first);
+  assert.equal(t.names().at(-1), first);
+  const restored = tracker(false, t.saved());
+  assert.equal(restored.names().at(-1), first);
+  assert.equal(JSON.parse(new Map(t.saved()).get("fortune-weave-material-inventory-v3"))[first].leda, 5);
+  restored.toggle(); restored.toggle();
+  assert.equal(restored.names().at(-1), first);
+});
+test("鍵で行移動のみロックし解除できる", () => {
+  const t = tracker(); const first = t.names()[0];
+  t.lock(); assert.equal(t.locked(first), true);
+  t.move(first); assert.equal(t.names()[0], first);
+  const restored = tracker(false, t.saved());
+  assert.equal(restored.locked(first), true);
+  restored.input(first, 0, 3);
+  restored.lock(); restored.move(first);
+  assert.equal(restored.names().at(-1), first);
 });

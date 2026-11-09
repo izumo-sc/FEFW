@@ -96,6 +96,19 @@
       exchangeWeapons.set(material.name, weapons);
     }
     const displayStorageKey = "fortune-weave-exchange-materials-visible";
+    const orderStorageKey = "fortune-weave-material-row-order-v1";
+    const lockStorageKey = "fortune-weave-material-row-order-locked";
+    let movedNames = [];
+    let orderLocked = false;
+    function loadRowOrder() {
+      if (config.exchange) return;
+      try {
+        const saved = JSON.parse(localStorage.getItem(orderStorageKey) || "[]");
+        movedNames = Array.isArray(saved) ? [...new Set(saved.filter(name => typeof name === "string"))] : [];
+        orderLocked = localStorage.getItem(lockStorageKey) === "true";
+      } catch { movedNames = []; orderLocked = false; }
+    }
+    loadRowOrder();
     const state = {
       inventory: loadInventory(),
       filter: "all",
@@ -112,6 +125,21 @@
     const saveStatus = find("save-status");
 
     const displayToggle = find("exchange-display-toggle");
+    const orderLock = find("material-order-lock");
+    function updateOrderLock() {
+      if (!orderLock) return;
+      orderLock.textContent = orderLocked ? "🔒" : "🔓";
+      orderLock.setAttribute("aria-pressed", String(orderLocked));
+      orderLock.setAttribute("aria-label", orderLocked ? "素材の並び順をロック解除" : "素材の並び順をロック");
+      orderLock.title = orderLocked ? "並び順をロック解除" : "並び順をロック";
+    }
+    orderLock?.addEventListener("click", () => {
+      orderLocked = !orderLocked;
+      try { localStorage.setItem(lockStorageKey, String(orderLocked)); } catch {}
+      updateOrderLock();
+      render();
+    });
+    updateOrderLock();
 
     function loadExchangeDisplay() {
       if (config.exchange) return true;
@@ -219,6 +247,10 @@
 
     function render() {
       const visible = filteredMaterials();
+      if (!config.exchange) {
+        const order = new Map(movedNames.map((name, index) => [name, index]));
+        visible.sort((a, b) => (order.get(a.name) ?? -1) - (order.get(b.name) ?? -1));
+      }
       list.replaceChildren();
       emptyState.hidden = visible.length > 0;
 
@@ -340,6 +372,21 @@
           }
           remarks.textContent = remarkTexts.join("、");
           row.append(remarks);
+          const move = document.createElement("button");
+          move.type = "button";
+          move.className = "material-move-down quiet-button";
+          move.textContent = "↓";
+          move.title = "この素材を一番下へ移動";
+          move.setAttribute("aria-label", `${material.name}を一番下へ移動`);
+          move.disabled = orderLocked || material === visible[visible.length - 1];
+          move.addEventListener("click", () => {
+            if (orderLocked) return;
+            movedNames = movedNames.filter(name => name !== material.name);
+            movedNames.push(material.name);
+            try { localStorage.setItem(orderStorageKey, JSON.stringify(movedNames)); } catch {}
+            render();
+          });
+          row.append(move);
         }
         list.append(row);
       }
@@ -386,7 +433,9 @@
     });
 
     window.addEventListener("storage", (event) => {
-      if (event.key !== storageKey && event.key !== displayStorageKey && event.key !== null) return;
+      if (event.key !== storageKey && event.key !== displayStorageKey && event.key !== orderStorageKey && event.key !== lockStorageKey && event.key !== null) return;
+      loadRowOrder();
+      updateOrderLock();
       state.inventory = loadInventory();
       state.showExchange = loadExchangeDisplay();
       updateDisplayToggle();

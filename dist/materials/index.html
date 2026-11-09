@@ -11,7 +11,7 @@
     <title>万紫千紅 復興素材管理</title>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
     <link rel="stylesheet" href="../styles.css?v=12" />
-    <link rel="stylesheet" href="./exchange.css?v=5" />
+    <link rel="stylesheet" href="./exchange.css?v=6" />
     <!-- page-board-assets -->
     <link rel="stylesheet" href="/other/board/page-board.css?v=6">
     <script src="/other/board/page-board.js?v=5" data-board-page="materials" defer></script>
@@ -66,6 +66,10 @@
 
       <p id="save-status" class="save-status" aria-live="polite">入力内容はこのブラウザに自動保存されます</p>
 
+      <div class="material-order-toolbar">
+        <button id="material-order-lock" class="quiet-button" type="button" aria-pressed="false" aria-label="素材の並び順をロック" title="並び順をロック">🔓</button>
+      </div>
+
       <section class="materials-panel" aria-label="復興素材一覧">
         <div class="table-header" aria-hidden="true">
           <span>区分</span>
@@ -110,7 +114,7 @@
 
     <script src="../materials.js?v=4"></script>
     <script src="../exchange-data.js?v=5"></script>
-    <script src="../app.js?v=16"></script>
+    <script src="../app.js?v=17"></script>
     <script src="../page-counter.js?v=1" data-page="materials"></script>
   </body>
 </html>

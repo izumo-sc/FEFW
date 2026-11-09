@@ -60,3 +60,18 @@
   .remarks-cell:not(:empty)::before { content: "備考："; }
   .remarks-cell:empty { display: none; }
 }
+
+.material-order-toolbar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.materials-panel .table-header,
+.materials-panel .material-row { position: relative; padding-right: 48px; }
+.material-row > .material-move-down {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  min-height: 36px;
+  padding: 4px;
+  font-size: 1.2rem;
+}
+.material-move-down:disabled { opacity: 0.35; cursor: not-allowed; }
